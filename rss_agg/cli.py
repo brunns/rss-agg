@@ -34,15 +34,16 @@ def generate_new_rss_feed(items: list[ET.Element]):
     ET.SubElement(
         channel, "description"
     ).text = "@brunns's curated, de-duplicated theguardian.com feed"
-    ET.SubElement(channel, "link").text = "http://brunn.ing"
+    ET.SubElement(channel, "link").text = "https://brunn.ing"
     for item in items:
         channel.append(item)
     return ET.tostring(root, encoding="unicode")
 
 
 async def read_and_generate_rss():
+    base_url = yarl.URL("https://www.theguardian.com")
     with open("feeds.txt") as f:
-        feed_urls = [yarl.URL(url) for url in f]
+        feed_urls = [base_url / path.strip() / "rss" for path in f]
 
     items = await read_rss_feeds(feed_urls)
     new_rss_feed = generate_new_rss_feed(items)
