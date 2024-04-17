@@ -27,6 +27,7 @@ Lint code
 poetry run ruff check . --select I
 poetry run ruff format . --check
 poetry run pyright .
+poetry run refurb .
 ```
 
 ## Setup steps
@@ -40,6 +41,6 @@ git init
 poetry install
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
 poetry add aiohttp yarl
-poetry add ruff pyright pytest --group dev
+poetry add ruff pyright pytest refurb --group dev
 idea .
 ```
