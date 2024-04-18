@@ -10,6 +10,12 @@ Aggregate, de-duplicate and republish RSS feeds
 poetry run cli
 ```
 
+### web
+
+```sh
+poetry run flask --app rss_agg/web.py run
+```
+
 ### format
 
 Format code
