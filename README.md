@@ -7,7 +7,7 @@ Aggregate, de-duplicate and republish RSS feeds
 ### run
 
 ```sh
-poetry run agg
+poetry run cli
 ```
 
 ### format

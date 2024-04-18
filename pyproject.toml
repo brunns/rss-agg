@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.12"
 aiohttp = "^3.9.3"
 yarl = "^1.9.4"
+python-json-logger = "^2.0.7"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.2"
@@ -21,7 +22,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-agg = "rss_agg.cli:main"
+cli = "rss_agg.cli:main"
 
 [tool.ruff]
 line-length = 100
