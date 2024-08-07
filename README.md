@@ -21,8 +21,8 @@ poetry run flask --app rss_agg/web.py run
 Format code
 
 ```sh 
-poetry run ruff check . --select I --fix
 poetry run ruff format .
+poetry run ruff check . --fix
 ```
 
 ### lint
@@ -30,8 +30,8 @@ poetry run ruff format .
 Lint code
 
 ```sh 
-poetry run ruff check . --select I
 poetry run ruff format . --check
+poetry run ruff check .
 poetry run pyright .
 poetry run refurb .
 ```
