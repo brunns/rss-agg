@@ -95,3 +95,6 @@ max-complexity = 5
 [tool.pyright]
 include = ["rss_agg/"]
 pythonVersion = "3.12"
+
+[tool.poetry-plugin-lambda-build]
+package-artifact-path = "terraform/deployment_package.zip"

@@ -39,7 +39,7 @@ Lint code
 poetry run ruff format . --check
 poetry run ruff check .
 poetry run refurb .
-poetry run pyright .
+poetry run pyright
 ```
 
 ## Setup steps
