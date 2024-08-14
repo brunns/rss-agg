@@ -1,0 +1,7 @@
+version: '2'
+services:
+  mountebank:
+    image: "bbyars/mountebank"
+    ports:
+      - "2525:2525"
+      - "4545:4545"

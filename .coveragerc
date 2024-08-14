@@ -1,0 +1,2 @@
+[run]
+omit = rss_agg/cli.py
