@@ -1,13 +1,7 @@
-# .github/workflows/ci-cd.yml
-name: CI/CD Pipeline
+name: Deploy
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   test:
