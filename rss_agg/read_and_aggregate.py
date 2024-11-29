@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from xml.etree import ElementTree
 
-import aiohttp
+import httpx
 from defusedxml.ElementTree import fromstring
 from yarl import URL
 
@@ -12,15 +12,15 @@ if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Collection
 
 
-async def fetch(session: aiohttp.ClientSession, url: URL) -> str:
-    async with session.get(url) as response:
-        return await response.text()
+async def fetch(client: httpx.AsyncClient, url: URL) -> str:
+    response = await client.get(str(url))
+    return response.text
 
 
 async def read_rss_feeds(feed_urls: list[URL]) -> list[ElementTree.Element]:
     items: dict[str, ElementTree.Element] = OrderedDict()
-    async with aiohttp.ClientSession() as session:
-        tasks = [fetch(session, feed_url) for feed_url in feed_urls]
+    async with httpx.AsyncClient() as client:
+        tasks = [fetch(client, feed_url) for feed_url in feed_urls]
         responses: Collection[str] = await asyncio.gather(*tasks)
         for response in responses:
             feed: ElementTree.Element = fromstring(response)

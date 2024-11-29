@@ -3,7 +3,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
-import aiohttp
+import httpx
 import pytest
 from mbtest.imposters import Imposter, Predicate, Response, Stub
 from mbtest.server import MountebankServer
@@ -25,8 +25,8 @@ async def test_fetch_feed(mock_server: MountebankServer, rss_string: str):
         imposter_url = imposter.url
 
         url = URL(str(imposter_url)) / "valid"
-        async with aiohttp.ClientSession() as session:
-            feed = await fetch(session, url)
+        async with httpx.AsyncClient() as client:
+            feed = await fetch(client, url)
         assert feed is not None
         assert "title" in feed
 
