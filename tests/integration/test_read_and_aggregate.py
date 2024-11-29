@@ -1,4 +1,3 @@
-# tests/test_read_and_aggregate.py
 from pathlib import Path
 from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
@@ -77,12 +76,12 @@ async def test_read_and_generate_rss_creates_aggregated_feed(
         port=4545,
     )
 
-    with mock_server(imposter):
-        feed_urls = ["valid1", "valid2"]
-        file_path = "/foo/bar/test.txt"
-        fs.create_file(file_path, contents="\n".join(feed_urls))
-        feeds_file = Path(file_path)
+    feed_urls = ["valid1", "valid2"]
+    file_path = "/foo/bar/test.txt"
+    fs.create_file(file_path, contents="\n".join(feed_urls))
+    feeds_file = Path(file_path)
 
+    with mock_server(imposter):
         rss = await read_and_generate_rss(URL(str(imposter.url)), feeds_file=feeds_file)
         assert rss is not None
         assert "theguardian.com" in rss

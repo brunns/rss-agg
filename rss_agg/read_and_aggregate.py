@@ -34,9 +34,7 @@ def generate_new_rss_feed(items: list[ElementTree.Element]) -> str:
     root = ElementTree.Element("rss", version="2.0")
     channel = ElementTree.SubElement(root, "channel")
     ElementTree.SubElement(channel, "title").text = "theguardian.com"
-    ElementTree.SubElement(
-        channel, "description"
-    ).text = "@brunns's curated, de-duplicated theguardian.com feed"
+    ElementTree.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com feed"
     ElementTree.SubElement(channel, "link").text = "https://brunn.ing"
     for item in items:
         channel.append(item)
