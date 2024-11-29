@@ -27,10 +27,11 @@ jobs:
           pip install poetry
           poetry install
 
-      - name: Run tests
+      - name: Install xc
         uses: joerdav/setup-xc@v0.0.3
-        id: test
+
+      - name: Run tests
+        run: xc test
 
       - name: Run linting
-        uses: joerdav/setup-xc@v0.0.3
-        id: lint
+        run: xc lint
