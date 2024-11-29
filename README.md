@@ -39,7 +39,6 @@ Lint code
 ```sh 
 poetry run ruff format . --check
 poetry run ruff check .
-poetry run refurb .
 poetry run pyright
 ```
 
@@ -53,7 +52,7 @@ cd rss-agg
 git init
 poetry install
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
-poetry add aiohttp yarl
+poetry add flask[async] httpx yarl defusedxml
 poetry add ruff pyright pytest refurb --group dev
 idea .
 ```
