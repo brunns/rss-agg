@@ -15,4 +15,4 @@ async def get_data():
     base_url = URL("https://www.theguardian.com")
     feeds_file = Path("feeds.txt")
     rss = await read_and_generate_rss(base_url=base_url, feeds_file=feeds_file)
-    return Response(rss, mimetype="text/xml")
+    return Response(rss, mimetype="application/rss+xml")

@@ -4,10 +4,20 @@ Aggregate, de-duplicate and republish RSS feeds
 
 ## Tasks
 
+### pc
+
+Precommit tasks
+
+Requires: test, lint
+
+```python
+import this
+```
+
 ### run
 
 ```sh
-poetry run cli
+poetry run cli -vv
 ```
 
 ### web
@@ -29,7 +39,7 @@ Format code
 
 ```sh 
 poetry run ruff format .
-poetry run ruff check . --fix
+poetry run ruff check . --fix-only
 ```
 
 ### lint

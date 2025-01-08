@@ -28,7 +28,7 @@ def main():
 
 def parse_args() -> argparse.Namespace:
     args = create_parser().parse_args()
-    init_logging(args.verbosity, silence_packages=["urllib3"])
+    init_logging(args.verbosity, silence_packages=["urllib3", "httpcore"])
 
     return args
 

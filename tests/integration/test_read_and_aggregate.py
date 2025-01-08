@@ -1,7 +1,7 @@
 from pathlib import Path
-from xml.etree import ElementTree
 from xml.etree.ElementTree import Element
 
+import feedparser
 import httpx
 import pytest
 from mbtest.imposters import Imposter, Predicate, Response, Stub
@@ -82,26 +82,6 @@ async def test_read_and_generate_rss_creates_aggregated_feed(
     feeds_file = Path(file_path)
 
     with mock_server(imposter):
-        rss = await read_and_generate_rss(URL(str(imposter.url)), feeds_file=feeds_file)
-        assert rss is not None
-        assert "theguardian.com" in rss
-
-
-@pytest.fixture(scope="session")
-def rss_string() -> str:
-    rss_root = ElementTree.Element("rss", version="2.0")
-    channel = ElementTree.SubElement(rss_root, "channel")
-    ElementTree.SubElement(channel, "title").text = "Test channel"
-    ElementTree.SubElement(channel, "description").text = "Test channel"
-    ElementTree.SubElement(channel, "link").text = "https:/example.com"
-
-    for i in range(2):
-        item = ElementTree.Element("item")
-        ElementTree.SubElement(item, "title").text = f"Test article {i}"
-        ElementTree.SubElement(item, "description").text = f"Test article {i}"
-        ElementTree.SubElement(item, "link").text = f"https:/example.com/article{i}"
-        ElementTree.SubElement(item, "guid").text = f"guid-{i}"
-
-        channel.append(item)
-
-    return ElementTree.tostring(rss_root, encoding="unicode")
+        rss_text = await read_and_generate_rss(URL(str(imposter.url)), feeds_file=feeds_file)
+        rss = feedparser.parse(rss_text)
+        assert rss.feed.title == "theguardian.com"

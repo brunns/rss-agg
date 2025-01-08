@@ -19,10 +19,12 @@ pyright = "^1.1.353"
 pytest = "^8.1.1"
 pytest-asyncio = "^0.23"
 pytest-cov = "^4.0.0"
-brunns-matchers = "^2.7.0"
+brunns-matchers = "^2.8.0"
 mbtest = "^2.13.0"
 pytest-docker = "^3.1"
 pyfakefs = "^5.6.0"
+respx = "^0.21"
+feedparser = "^6.0"
 
 [build-system]
 requires = ["poetry-core"]
