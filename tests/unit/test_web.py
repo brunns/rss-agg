@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from http import HTTPStatus
 
 import httpx
@@ -30,7 +30,7 @@ def test_get_data_returns_rss_response(respx_mock, rss_string):
             .with_title("theguardian.com")
             .and_link(URL("https://brunn.ing"))
             .and_description("@brunns's curated, de-duplicated theguardian.com feed")
-            .and_published(datetime(2009, 9, 6, 17, 20))
+            .and_published(datetime(2009, 9, 6, 14, 20, tzinfo=timezone.utc))
         )
         .and_mimetype("application/rss+xml"),
     )

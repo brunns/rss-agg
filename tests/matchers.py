@@ -1,7 +1,6 @@
 import logging
 from datetime import datetime
-from time import mktime
-from typing import Union
+from typing import Optional, Union
 
 import feedparser
 import httpx
@@ -34,11 +33,7 @@ class RssFeedMatcher(BaseMatcher[str]):
         except (ValueError, httpx.HTTPError):
             return False
         else:
-            published = (
-                datetime.fromtimestamp(mktime(actual.feed.published_parsed))
-                if "published" in actual.feed.keys()
-                else None
-            )
+            published = self._get_published_date(actual.feed)
             return (
                 self.title.matches(actual.feed.title)
                 and self.link.matches(URL(actual.feed.link))
@@ -65,11 +60,7 @@ class RssFeedMatcher(BaseMatcher[str]):
             describe_field_mismatch(self.title, "title", actual.feed.title, mismatch_description)
             describe_field_mismatch(self.link, "link", URL(actual.feed.link), mismatch_description)
             describe_field_mismatch(self.description, "description", actual.feed.description, mismatch_description)
-            published = (
-                datetime.fromtimestamp(mktime(actual.feed.published_parsed))
-                if "published" in actual.feed.keys()
-                else None
-            )
+            published = self._get_published_date(actual.feed)
             describe_field_mismatch(self.published, "published", published, mismatch_description)
 
     def describe_match(self, item: T, match_description: Description) -> None:
@@ -78,10 +69,11 @@ class RssFeedMatcher(BaseMatcher[str]):
         describe_field_match(self.title, "title", actual.feed.title, match_description)
         describe_field_match(self.link, "link", URL(actual.feed.link), match_description)
         describe_field_match(self.description, "description", actual.feed.description, match_description)
-        published = (
-            datetime.fromtimestamp(mktime(actual.feed.published_parsed)) if "published" in actual.feed.keys() else None
-        )
+        published = self._get_published_date(actual.feed)
         describe_field_match(self.published, "published", published, match_description)
+
+    def _get_published_date(self, feed) -> Optional[datetime]:
+        return datetime.strptime(feed.published, "%a, %d %b %Y %H:%M:%S %z") if "published" in feed else None
 
     def with_title(self, title: Union[str, Matcher[str]]):
         self.title = wrap_matcher(title)

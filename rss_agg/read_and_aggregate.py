@@ -1,16 +1,14 @@
 import asyncio
 import logging
 from collections import OrderedDict
-from datetime import datetime
+from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
-from time import mktime
 from typing import TYPE_CHECKING
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree as ET  # noqa: N817
 
 import httpx
 from defusedxml.ElementTree import fromstring
-from feedparser import datetimes
 from yarl import URL
 
 if TYPE_CHECKING:  # pragma: no cover
@@ -30,9 +28,8 @@ async def fetch(client: httpx.AsyncClient, url: URL) -> str:
     else:
         if response.text:
             return response.text
-        else:
-            logger.warning("empty response from %s", url)
-            return ""
+        logger.warning("empty response from %s", url)
+        return ""
 
 
 async def read_rss_feeds(feed_urls: list[URL]) -> list[ET.Element]:
@@ -55,12 +52,12 @@ def generate_new_rss_feed(items: list[ET.Element]) -> str:
     ET.SubElement(channel, "title").text = "theguardian.com"
     ET.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com feed"
     ET.SubElement(channel, "link").text = "https://brunn.ing"
-    latest_published: datetime = datetime.min
+    latest_published: datetime = datetime.min.replace(tzinfo=timezone.utc)
     for item in items:
         channel.append(item)
         pub_date = item.find("pubDate")
-        if pub_date is not None:
-            item_published = datetime.fromtimestamp(mktime(datetimes._parse_date(pub_date.text)))
+        if pub_date is not None and pub_date.text:
+            item_published = datetime.strptime(pub_date.text, "%a, %d %b %Y %H:%M:%S %z")
             latest_published = max(latest_published, item_published)
     if latest_published != datetime.min:
         ET.SubElement(channel, "pubDate").text = format_datetime(latest_published)

@@ -11,6 +11,7 @@ Precommit tasks
 Requires: test, lint
 
 ```python
+#!/usr/bin/env python
 import this
 ```
 

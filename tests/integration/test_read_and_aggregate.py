@@ -47,7 +47,7 @@ async def test_read_rss_feeds(mock_server: MountebankServer, rss_string: str):
         feed_urls = [URL(str(imposter_url)) / "valid1", URL(str(imposter_url)) / "valid2"]
         feeds = await read_rss_feeds(feed_urls)
         assert feeds
-        assert len(feeds) == 2
+        assert len(feeds) == 3
 
         # Test reading an empty list of feeds
         feed_urls = []

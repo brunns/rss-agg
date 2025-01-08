@@ -1,4 +1,4 @@
-from xml.etree import ElementTree as ET
+from xml.etree import ElementTree as ET  # noqa: N817
 
 import pytest
 
@@ -12,13 +12,13 @@ def rss_string() -> str:
     ET.SubElement(channel, "link").text = "https:/example.com"
     ET.SubElement(channel, "pubDate").text = "Sun, 6 Sep 2009 16:20:00 +0000"
 
-    for i in range(2):
+    for i in range(3):
         item = ET.Element("item")
         ET.SubElement(item, "title").text = f"Test article {i}"
         ET.SubElement(item, "description").text = f"Test article {i}"
         ET.SubElement(item, "link").text = f"https:/example.com/article{i}"
         ET.SubElement(item, "guid").text = f"guid-{i}"
-        ET.SubElement(item, "pubDate").text = "Sun, 6 Sep 2009 15:20:00 +0000"
+        ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {i+12}:20:00 +0000"
 
         channel.append(item)
 
