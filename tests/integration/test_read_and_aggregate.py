@@ -17,7 +17,7 @@ from rss_agg.read_and_aggregate import (
 )
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_fetch_feed(mock_server: MountebankServer, rss_string: str):
     imposter = Imposter(Stub(Predicate(path="/valid"), Response(body=rss_string)), port=4545)
     with mock_server(imposter):
@@ -30,7 +30,7 @@ async def test_fetch_feed(mock_server: MountebankServer, rss_string: str):
         assert "title" in feed
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_read_rss_feeds(mock_server: MountebankServer, rss_string: str):
     imposter = Imposter(
         stubs=[
@@ -64,7 +64,7 @@ def test_generate_new_rss_feed_creates_correct_rss():
     assert "theguardian.com" in rss_feed
 
 
-@pytest.mark.asyncio()
+@pytest.mark.asyncio
 async def test_read_and_generate_rss_creates_aggregated_feed(
     mock_server: MountebankServer, rss_string: str, fs: FakeFilesystem
 ):

@@ -4,10 +4,10 @@ import asyncio
 import logging
 import sys
 import warnings
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
-from pythonjsonlogger import jsonlogger
+from pythonjsonlogger.json import JsonFormatter
 from yarl import URL
 
 from rss_agg.read_and_aggregate import read_and_generate_rss
@@ -73,7 +73,7 @@ def init_logging(
     if level <= logging.DEBUG:
         warnings.filterwarnings("ignore")
         msg_format = "%(asctime)s %(levelname)-8s " "%(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s"
-    handler.setFormatter(jsonlogger.JsonFormatter(msg_format))
+    handler.setFormatter(JsonFormatter(msg_format))
     logging.basicConfig(level=level, format=msg_format, handlers=[handler])
 
     for package in silence_packages:

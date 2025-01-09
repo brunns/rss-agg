@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
-from xml.etree import ElementTree as ET  # noqa: N817
+from xml.etree import ElementTree as ET
 
 import httpx
 from defusedxml.ElementTree import fromstring

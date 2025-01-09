@@ -1,4 +1,4 @@
-from xml.etree import ElementTree as ET  # noqa: N817
+from xml.etree import ElementTree as ET
 
 import pytest
 
