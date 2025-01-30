@@ -72,7 +72,7 @@ def init_logging(
     msg_format = "%(message)s"
     if level <= logging.DEBUG:
         warnings.filterwarnings("ignore")
-        msg_format = "%(asctime)s %(levelname)-8s " "%(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s"
+        msg_format = "%(asctime)s %(levelname)-8s %(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s"
     handler.setFormatter(JsonFormatter(msg_format))
     logging.basicConfig(level=level, format=msg_format, handlers=[handler])
 

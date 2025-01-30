@@ -13,6 +13,7 @@ profile/johnnaughton
 profile/jonathanfreedland
 profile/marinahyde
 science
+science/space
 society/alcohol
 society/women
 stage/comedy

@@ -18,7 +18,7 @@ def rss_string() -> str:
         ET.SubElement(item, "description").text = f"Test article {i}"
         ET.SubElement(item, "link").text = f"https:/example.com/article{i}"
         ET.SubElement(item, "guid").text = f"guid-{i}"
-        ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {i+12}:20:00 +0000"
+        ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {i + 12}:20:00 +0000"
 
         channel.append(item)
 
