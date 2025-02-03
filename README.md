@@ -63,7 +63,7 @@ cd rss-agg
 git init
 poetry install
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
-poetry add flask[async] httpx yarl defusedxml
-poetry add ruff pyright pytest refurb --group dev
+poetry add flask[async] httpx yarl arrow defusedxml
+poetry add ruff pyright pytest pytest-asyncio pytest-cov pytest-docker feedparser pyhamcrest mbtest respx brunns-matchers pyfakefs --group dev
 idea .
 ```
