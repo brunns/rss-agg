@@ -18,7 +18,7 @@ LOG_LEVELS = [logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG]
 logger = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     args = parse_args()
     logger.debug("args", extra=vars(args))
 
@@ -64,9 +64,9 @@ def create_parser() -> argparse.ArgumentParser:
 
 def init_logging(
     verbosity: int,
-    handler=None,
+    handler: logging.Handler | None = None,
     silence_packages: Sequence[str] = (),
-):
+) -> None:
     handler = handler or logging.StreamHandler(stream=sys.stdout)
     level = LOG_LEVELS[min(verbosity, len(LOG_LEVELS) - 1)]
     msg_format = "%(message)s"

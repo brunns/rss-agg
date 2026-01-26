@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from collections import OrderedDict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from email.utils import format_datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -52,14 +52,14 @@ def generate_new_rss_feed(items: list[ET.Element]) -> str:
     ET.SubElement(channel, "title").text = "theguardian.com"
     ET.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com feed"
     ET.SubElement(channel, "link").text = "https://brunn.ing"
-    latest_published: datetime = datetime.min.replace(tzinfo=timezone.utc)
+    latest_published: datetime = datetime.min.replace(tzinfo=UTC)
     for item in items:
         channel.append(item)
         pub_date = item.find("pubDate")
         if pub_date is not None and pub_date.text:
             item_published = datetime.strptime(pub_date.text, "%a, %d %b %Y %H:%M:%S %z")
             latest_published = max(latest_published, item_published)
-    if latest_published != datetime.min:
+    if latest_published != datetime.min.replace(tzinfo=UTC):
         ET.SubElement(channel, "pubDate").text = format_datetime(latest_published)
     return ET.tostring(root, encoding="unicode")
 

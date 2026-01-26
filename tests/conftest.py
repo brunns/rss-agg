@@ -9,14 +9,14 @@ def rss_string() -> str:
     channel = ET.SubElement(rss_root, "channel")
     ET.SubElement(channel, "title").text = "Test channel"
     ET.SubElement(channel, "description").text = "Test channel"
-    ET.SubElement(channel, "link").text = "https:/example.com"
+    ET.SubElement(channel, "link").text = "https://example.com"
     ET.SubElement(channel, "pubDate").text = "Sun, 6 Sep 2009 16:20:00 +0000"
 
-    for i in range(3):
+    for i in range(1, 4):
         item = ET.Element("item")
         ET.SubElement(item, "title").text = f"Test article {i}"
         ET.SubElement(item, "description").text = f"Test article {i}"
-        ET.SubElement(item, "link").text = f"https:/example.com/article{i}"
+        ET.SubElement(item, "link").text = f"https://example.com/article{i}"
         ET.SubElement(item, "guid").text = f"guid-{i}"
         ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {i + 12}:20:00 +0000"
 
@@ -31,7 +31,7 @@ def empty_rss_string() -> str:
     channel = ET.SubElement(rss_root, "channel")
     ET.SubElement(channel, "title").text = "Test channel"
     ET.SubElement(channel, "description").text = "Test channel"
-    ET.SubElement(channel, "link").text = "https:/example.com"
+    ET.SubElement(channel, "link").text = "https://example.com"
     ET.SubElement(channel, "pubDate").text = "Sun, 6 Sep 2009 16:20:00 +0000"
 
     return ET.tostring(rss_root, encoding="unicode")

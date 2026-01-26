@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 
 @app.route("/")
-async def get_data():
+async def get_data() -> Response:
     base_url = URL("https://www.theguardian.com")
     feeds_file = Path("feeds.txt")
     rss = await read_and_generate_rss(base_url=base_url, feeds_file=feeds_file)

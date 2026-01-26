@@ -1,12 +1,12 @@
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from http import HTTPStatus
 
 import httpx
 import pytest
+from brunns.matchers.rss import is_rss_entry, is_rss_feed
 from brunns.matchers.werkzeug import is_werkzeug_response as is_response
-from hamcrest import assert_that
-from matchers import is_rss_feed
+from hamcrest import assert_that, contains_inanyorder
 from yarl import URL
 
 from rss_agg.web import app
@@ -30,7 +30,14 @@ def test_get_data_returns_rss_response(respx_mock, rss_string):
             .with_title("theguardian.com")
             .and_link(URL("https://brunn.ing"))
             .and_description("@brunns's curated, de-duplicated theguardian.com feed")
-            .and_published(datetime(2009, 9, 6, 14, 20, tzinfo=timezone.utc))
+            .and_published(datetime(2009, 9, 6, 15, 20, tzinfo=UTC))
+            .and_entries(
+                contains_inanyorder(
+                    is_rss_entry().with_title("Test article 1").and_link(URL("https://example.com/article1")),
+                    is_rss_entry().with_title("Test article 2").and_link(URL("https://example.com/article2")),
+                    is_rss_entry().with_title("Test article 3").and_link(URL("https://example.com/article3")),
+                )
+            )
         )
         .and_mimetype("application/rss+xml"),
     )

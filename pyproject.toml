@@ -16,14 +16,14 @@ defusedxml = ">=0.7"
 [tool.poetry.group.dev.dependencies]
 ruff = ">=0.5"
 pyright = ">=1.1.353"
-pytest = ">=8.1.1"
+pytest = ">=9.0"
 pytest-asyncio = ">=0.23"
 pytest-cov = ">=4.0.0"
-brunns-matchers = ">=2.9.0"
+brunns-matchers = ">=2.10.0"
 mbtest = ">=2.14.0"
 pytest-docker = ">=3.1"
 pyfakefs = ">=5.6.0"
-respx = ">=0.21"
+respx = ">=0.22"
 feedparser = ">=6.0"
 
 [build-system]
@@ -35,66 +35,21 @@ cli = "rss_agg.cli:main"
 
 [tool.ruff]
 line-length = 120
+target-version = "py313"
 
 [tool.ruff.lint]
-select = [
-    "A",
-    "B",
-    "C",
-    "E",
-    "F",
-    "G",
-    "I",
-    "N",
-    "Q",
-    "S",
-    "T",
-    "W",
-    "ARG",
-    "ASYNC",
-    "BLE",
-    "COM",
-    "DJ",
-    "DTZ",
-    "EM",
-    "EXE",
-    "FURB",
-    "ICN",
-    "INT",
-    "ISC",
-    "LOG",
-    "NPY",
-    "PD",
-    "PGH",
-    "PIE",
-    "PL",
-    "PT",
-    "PTH",
-    "PYI",
-    "RET",
-    "RSE",
-    "RUF",
-    "SIM",
-    "SLF",
-    "SLOT",
-    "TCH",
-    "TD",
-    "TID",
-    "TRY",
-    "UP",
-    "YTT",
-]
-ignore = ["COM812", "ISC001"]
+select = ["ALL"]
+ignore = ["COM812", "ISC001", "D", "PGH003"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101", "S105", "S106", "PLR2004", "E501"]
+"tests/*" = ["S101", "S105", "S106", "PLR2004", "E501", "ANN", "INP"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 5
 
 [tool.pyright]
 include = ["rss_agg/"]
-pythonVersion = "3.12"
+pythonVersion = "3.13"
 
 [tool.poetry-plugin-lambda-build]
 package-artifact-path = "terraform/deployment_package.zip"
