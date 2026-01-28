@@ -4,11 +4,11 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "brunning-terraform-state"
-    key            = "rss-agg"
-    region         = "eu-west-2"
-    dynamodb_table = "brunning-terraform-lock-table"
-    encrypt        = true
+    bucket       = "brunns-rss-agg-terraform-state"
+    key          = "rss-agg"
+    region       = "eu-west-2"
+    encrypt      = true
+    use_lockfile = true
   }
 }
 
