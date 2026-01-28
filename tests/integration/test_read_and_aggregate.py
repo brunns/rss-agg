@@ -89,4 +89,4 @@ async def test_read_and_generate_rss_creates_aggregated_feed(
             URL(str(imposter.url)), feeds_file=feeds_file, self_url=URL("http://example.com")
         )
         rss = feedparser.parse(rss_text)
-        assert rss.feed.title == "theguardian.com"
+        assert rss.feed.title == "@brunns's theguardian.com"

@@ -29,9 +29,9 @@ def test_get_data_returns_rss_response(respx_mock, rss_string):
         .and_mimetype("application/rss+xml")
         .and_text(
             is_rss_feed()
-            .with_title("theguardian.com")
+            .with_title("@brunns's theguardian.com")
             .and_link(URL("https://brunn.ing"))
-            .and_description("@brunns's curated, de-duplicated theguardian.com feed")
+            .and_description("@brunns's curated, de-duplicated theguardian.com RSS feed")
             .and_published(datetime(2009, 9, 6, 15, 20, tzinfo=UTC))
             .and_entries(
                 contains_inanyorder(
@@ -60,9 +60,9 @@ def test_get_data_handles_empty_rss(respx_mock, empty_rss_string):
         .with_status_code(HTTPStatus.OK)
         .and_text(
             is_rss_feed()
-            .with_title("theguardian.com")
+            .with_title("@brunns's theguardian.com")
             .and_link(URL("https://brunn.ing"))
-            .and_description("@brunns's curated, de-duplicated theguardian.com feed")
+            .and_description("@brunns's curated, de-duplicated theguardian.com RSS feed")
         )
         .and_mimetype("application/rss+xml"),
     )
@@ -93,9 +93,9 @@ def test_empty_response(respx_mock):
         .with_status_code(HTTPStatus.OK)
         .and_text(
             is_rss_feed()
-            .with_title("theguardian.com")
+            .with_title("@brunns's theguardian.com")
             .and_link(URL("https://brunn.ing"))
-            .and_description("@brunns's curated, de-duplicated theguardian.com feed")
+            .and_description("@brunns's curated, de-duplicated theguardian.com RSS feed")
         )
         .and_mimetype("application/rss+xml"),
     )

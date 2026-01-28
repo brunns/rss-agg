@@ -67,8 +67,8 @@ def generate_new_rss_feed(items: list[ET.Element], self_url: URL, limit: int = 5
 
     root = ET.Element("rss", version="2.0")
     channel = ET.SubElement(root, "channel")
-    ET.SubElement(channel, "title").text = "theguardian.com"
-    ET.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com feed"
+    ET.SubElement(channel, "title").text = "@brunns's theguardian.com"
+    ET.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com RSS feed"
     ET.SubElement(channel, "link").text = "https://brunn.ing"
 
     atom_link = ET.SubElement(channel, f"{{{ATOM_NS}}}link")
