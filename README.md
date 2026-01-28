@@ -18,20 +18,20 @@ import this
 ### run
 
 ```sh
-poetry run cli -vv
+uv run cli -vv
 ```
 
 ### web
 
 ```sh
-poetry run flask --app rss_agg/web.py run
+uv run flask --app rss_agg/web.py run
 ```
 
 ### test
 
 ```sh
-# colima status || colima start
-poetry run pytest tests/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov rss_agg
+colima status || colima start
+uv run pytest tests/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov rss_agg
 ```
 
 ### format
@@ -39,8 +39,8 @@ poetry run pytest tests/ --durations=10 --cov-report term-missing --cov-fail-und
 Format code
 
 ```sh 
-poetry run ruff format .
-poetry run ruff check . --fix-only
+uv run ruff format .
+uv run ruff check . --fix-only
 ```
 
 ### lint
@@ -48,9 +48,9 @@ poetry run ruff check . --fix-only
 Lint code
 
 ```sh 
-poetry run ruff format . --check
-poetry run ruff check .
-poetry run pyright
+uv run ruff format . --check
+uv run ruff check .
+uv run pyright
 ```
 
 ## Setup steps
@@ -58,12 +58,12 @@ poetry run pyright
 For future reference...
 
 ```sh 
-poetry new rss-agg
+uv init rss-agg
 cd rss-agg
 git init
-poetry install
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
-poetry add flask[async] httpx yarl arrow defusedxml
-poetry add ruff pyright pytest pytest-asyncio pytest-cov pytest-docker feedparser pyhamcrest mbtest respx brunns-matchers pyfakefs --group dev
+uv sync
+uv add "flask[async]" httpx yarl arrow defusedxml python-json-logger aws-wsgi
+uv add ruff pyright pytest pytest-asyncio pytest-cov pytest-docker feedparser pyhamcrest mbtest respx brunns-matchers pyfakefs --dev
 idea .
 ```

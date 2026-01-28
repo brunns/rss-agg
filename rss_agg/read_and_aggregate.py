@@ -2,17 +2,18 @@ import asyncio
 import logging
 from collections import OrderedDict
 from datetime import UTC, datetime
-from email.utils import format_datetime
-from pathlib import Path
+from email.utils import format_datetime, parsedate_to_datetime
 from typing import TYPE_CHECKING
 from xml.etree import ElementTree as ET
 
 import httpx
 from defusedxml.ElementTree import fromstring
-from yarl import URL
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Collection
+    from pathlib import Path
+
+    from yarl import URL
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,7 @@ def generate_new_rss_feed(items: list[ET.Element]) -> str:
         channel.append(item)
         pub_date = item.find("pubDate")
         if pub_date is not None and pub_date.text:
-            item_published = datetime.strptime(pub_date.text, "%a, %d %b %Y %H:%M:%S %z")
+            item_published = parsedate_to_datetime(pub_date.text)
             latest_published = max(latest_published, item_published)
     if latest_published != datetime.min.replace(tzinfo=UTC):
         ET.SubElement(channel, "pubDate").text = format_datetime(latest_published)

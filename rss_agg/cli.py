@@ -4,13 +4,16 @@ import asyncio
 import logging
 import sys
 import warnings
-from collections.abc import Sequence
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from pythonjsonlogger.json import JsonFormatter
 from yarl import URL
 
 from rss_agg.read_and_aggregate import read_and_generate_rss
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 VERSION = "0.1.0"
 

@@ -1,12 +1,11 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
 
 import feedparser
 import httpx
 import pytest
 from mbtest.imposters import Imposter, Predicate, Response, Stub
-from mbtest.server import MountebankServer
-from pyfakefs.fake_filesystem import FakeFilesystem
 from yarl import URL
 
 from rss_agg.read_and_aggregate import (
@@ -15,6 +14,10 @@ from rss_agg.read_and_aggregate import (
     read_and_generate_rss,
     read_rss_feeds,
 )
+
+if TYPE_CHECKING:
+    from mbtest.server import MountebankServer
+    from pyfakefs.fake_filesystem import FakeFilesystem
 
 
 @pytest.mark.asyncio
