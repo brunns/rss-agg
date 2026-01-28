@@ -30,7 +30,7 @@ uv run flask --app rss_agg/web.py run
 ### test
 
 ```sh
-colima status || colima start
+if command -v colima > /dev/null; then colima status || colima start; fi
 uv run pytest tests/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov rss_agg
 ```
 
