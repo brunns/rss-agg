@@ -56,6 +56,7 @@ jobs:
           
           cp -r rss_agg package/
           cp lambda_function.py package/
+          cp feeds.txt package/
           
           cd package
           zip -r ../terraform/deployment_package.zip .
