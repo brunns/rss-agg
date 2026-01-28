@@ -48,19 +48,12 @@ jobs:
       - name: Set up Python
         run: uv python install 3.14
 
+      - name: Install xc
+        uses: joerdav/setup-xc@v1
+
       - name: Build Lambda Distribution
         run: |
-          uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
-          
-          uv pip install -r requirements.txt --target package --python 3.14
-          
-          cp -r rss_agg package/
-          cp lambda_function.py package/
-          cp feeds.txt package/
-          
-          cd package
-          zip -r ../terraform/deployment_package.zip .
-          cd ..
+          xc build
           
           echo "Build complete: terraform/deployment_package.zip created"
 

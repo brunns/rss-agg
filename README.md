@@ -78,7 +78,7 @@ cd ..
 
 Plan infrastructure changes
 
-Requires: build
+Requires: build, terraform-init
 
 ```sh
 cd terraform
@@ -94,6 +94,16 @@ infrastructure state. Run `aws configure` first to autenticate if necessary.
 ```sh
 aws s3 mb s3://brunns-rss-agg-terraform-state --region eu-west-2
 aws s3api put-bucket-versioning --bucket brunns-rss-agg-terraform-state --versioning-configuration Status=Enabled
+```
+
+### terraform-init
+
+Initialise terraform
+
+```sh
+cd terraform
+terraform init
+cd ..
 ```
 
 ## Setup steps
