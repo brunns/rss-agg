@@ -4,7 +4,6 @@ food/series/how-to-cook-the-perfect----
 games
 help/insideguardian
 music
-music/music+tone/albumreview
 news/series/pass-notes
 politics
 profile/alexispetridis
@@ -18,13 +17,18 @@ society/alcohol
 society/women
 stage/comedy
 technology
+tone/albumreview
 tone/comment
 tone/recipes
+tone/reviews+film/film
+tone/reviews+culture/television
 travel/uk
+uk-news
 uk/film
 uk/london
 uk/technology
 uk/tv-and-radio
+us-news
 world/feminism
 world/israel
 world/palestinian-territories
