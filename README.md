@@ -17,17 +17,23 @@ import this
 
 ### run
 
+Run CLI - outputs RSS to stdout
+
 ```sh
 uv run cli -vv
 ```
 
 ### web
 
+Run web server
+
 ```sh
 uv run flask --app rss_agg/web.py run
 ```
 
 ### test
+
+Run tests
 
 ```sh
 if command -v colima > /dev/null; then colima status || colima start; fi
@@ -51,6 +57,16 @@ Lint code
 uv run ruff format . --check
 uv run ruff check .
 uv run pyright
+```
+
+### create-s3-bucket
+
+One-off commands to set up the [AWS S3](https://aws.amazon.com/s3/) bucket that terraform will use to store 
+infrastructure state. Run `aws configure` first to autenticate if necessary.
+
+```sh
+aws s3 mb s3://brunns-rss-agg-terraform-state --region eu-west-2
+aws s3api put-bucket-versioning --bucket brunns-rss-agg-terraform-state --versioning-configuration Status=Enabled
 ```
 
 ## Setup steps
