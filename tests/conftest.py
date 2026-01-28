@@ -1,10 +1,15 @@
+from typing import TYPE_CHECKING
 from xml.etree import ElementTree as ET
 
 import pytest
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
-@pytest.fixture(scope="session")
-def rss_string() -> str:
+
+def _generate_rss_xml(count: int, time_formatter: Callable[[int], str] | None = None) -> str:
+    time_formatter = time_formatter or (lambda i: f"12:{i:02d}:00")
+
     rss_root = ET.Element("rss", version="2.0")
     channel = ET.SubElement(rss_root, "channel")
     ET.SubElement(channel, "title").text = "Test channel"
@@ -12,13 +17,15 @@ def rss_string() -> str:
     ET.SubElement(channel, "link").text = "https://example.com"
     ET.SubElement(channel, "pubDate").text = "Sun, 6 Sep 2009 16:20:00 +0000"
 
-    for i in range(1, 4):
+    for i in range(1, count + 1):
         item = ET.Element("item")
         ET.SubElement(item, "title").text = f"Test article {i}"
         ET.SubElement(item, "description").text = f"Test article {i}"
         ET.SubElement(item, "link").text = f"https://example.com/article{i}"
         ET.SubElement(item, "guid").text = f"guid-{i}"
-        ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {i + 12}:20:00 +0000"
+
+        time_str = time_formatter(i)
+        ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {time_str} +0000"
 
         channel.append(item)
 
@@ -26,12 +33,15 @@ def rss_string() -> str:
 
 
 @pytest.fixture(scope="session")
-def empty_rss_string() -> str:
-    rss_root = ET.Element("rss", version="2.0")
-    channel = ET.SubElement(rss_root, "channel")
-    ET.SubElement(channel, "title").text = "Test channel"
-    ET.SubElement(channel, "description").text = "Test channel"
-    ET.SubElement(channel, "link").text = "https://example.com"
-    ET.SubElement(channel, "pubDate").text = "Sun, 6 Sep 2009 16:20:00 +0000"
+def rss_string() -> str:
+    return _generate_rss_xml(count=3, time_formatter=lambda i: f"{i + 12}:20:00")
 
-    return ET.tostring(rss_root, encoding="unicode")
+
+@pytest.fixture(scope="session")
+def empty_rss_string() -> str:
+    return _generate_rss_xml(count=0)
+
+
+@pytest.fixture(scope="session")
+def large_rss_string() -> str:
+    return _generate_rss_xml(count=59, time_formatter=lambda i: f"12:{i:02d}:00")

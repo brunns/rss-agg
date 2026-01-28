@@ -6,7 +6,7 @@ import httpx
 import pytest
 from brunns.matchers.rss import is_rss_entry, is_rss_feed
 from brunns.matchers.werkzeug import is_werkzeug_response as is_response
-from hamcrest import assert_that, contains_inanyorder
+from hamcrest import assert_that, contains_inanyorder, has_items, has_length, not_
 from yarl import URL
 
 from rss_agg.web import app
@@ -96,4 +96,37 @@ def test_empty_response(respx_mock):
             .and_description("@brunns's curated, de-duplicated theguardian.com feed")
         )
         .and_mimetype("application/rss+xml"),
+    )
+
+
+@pytest.mark.respx(base_url="https://www.theguardian.com")
+def test_get_data_limits_to_50_newest_items(respx_mock, large_rss_string):
+    respx_mock.get(re.compile(r".*")).mock(return_value=httpx.Response(HTTPStatus.OK, text=large_rss_string))
+
+    # When
+    response = app.test_client().get("/")
+
+    # Then
+    assert_that(
+        response,
+        is_response()
+        .with_status_code(HTTPStatus.OK)
+        .and_text(
+            is_rss_feed()
+            .and_entries(has_length(50))
+            .and_entries(
+                has_items(
+                    is_rss_entry().with_title("Test article 59"),
+                    is_rss_entry().with_title("Test article 10"),
+                )
+            )
+            .and_entries(
+                not_(
+                    has_items(
+                        is_rss_entry().with_title("Test article 1"),
+                        is_rss_entry().with_title("Test article 9"),
+                    )
+                )
+            )
+        ),
     )
