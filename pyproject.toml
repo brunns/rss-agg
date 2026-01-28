@@ -49,7 +49,7 @@ select = ["ALL"]
 ignore = ["COM812", "ISC001", "D", "PGH003"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S101", "S105", "S106", "PLR2004", "E501", "ANN", "INP"]
+"tests/*" = ["S101", "S105", "S106", "PLR2004", "E501", "ANN", "INP", "FBT001", "FBT002", "S314"]
 "lambda_function.py" = ["ANN401"]
 
 [tool.ruff.lint.mccabe]

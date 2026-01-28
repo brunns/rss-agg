@@ -25,7 +25,9 @@ def main() -> None:
     args = parse_args()
     logger.debug("args", extra=vars(args))
 
-    rss = asyncio.run(read_and_generate_rss(base_url=args.base_url, feeds_file=args.feeds_file))
+    rss = asyncio.run(
+        read_and_generate_rss(base_url=args.base_url, feeds_file=args.feeds_file, self_url=URL("https://example.com"))
+    )
     print(rss)  # noqa: T201
 
 

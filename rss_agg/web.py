@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from flask import Flask, Response
+from flask import Flask, Response, request
 from yarl import URL
 
 from rss_agg.read_and_aggregate import read_and_generate_rss
@@ -14,5 +14,5 @@ app = Flask(__name__)
 async def get_data() -> Response:
     base_url = URL("https://www.theguardian.com")
     feeds_file = Path("feeds.txt")
-    rss = await read_and_generate_rss(base_url=base_url, feeds_file=feeds_file)
+    rss = await read_and_generate_rss(base_url=base_url, feeds_file=feeds_file, self_url=URL(request.base_url))
     return Response(rss, mimetype="application/rss+xml")

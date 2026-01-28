@@ -60,7 +60,7 @@ async def test_read_rss_feeds(mock_server: MountebankServer, rss_string: str):
 
 def test_generate_new_rss_feed_creates_correct_rss():
     items = [Element("item", {"guid": "1"}), Element("item", {"guid": "2"})]
-    rss_feed = generate_new_rss_feed(items)
+    rss_feed = generate_new_rss_feed(items, self_url=URL("http://example.com"))
     assert "<rss" in rss_feed
     assert "<channel" in rss_feed
     assert "<item" in rss_feed
@@ -85,6 +85,8 @@ async def test_read_and_generate_rss_creates_aggregated_feed(
     feeds_file = Path(file_path)
 
     with mock_server(imposter):
-        rss_text = await read_and_generate_rss(URL(str(imposter.url)), feeds_file=feeds_file)
+        rss_text = await read_and_generate_rss(
+            URL(str(imposter.url)), feeds_file=feeds_file, self_url=URL("http://example.com")
+        )
         rss = feedparser.parse(rss_text)
         assert rss.feed.title == "theguardian.com"

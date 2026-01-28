@@ -8,6 +8,11 @@ from xml.etree import ElementTree as ET
 
 import httpx
 from defusedxml.ElementTree import fromstring
+from yarl import URL
+
+ATOM_NS = "http://www.w3.org/2005/Atom"
+DC_NS = "http://purl.org/dc/elements/1.1/"
+
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Collection
@@ -57,33 +62,41 @@ def get_date(item: ET.Element) -> datetime:
     return datetime.min.replace(tzinfo=UTC)
 
 
-def generate_new_rss_feed(items: list[ET.Element], limit: int = 50) -> str:
+def generate_new_rss_feed(items: list[ET.Element], self_url: URL, limit: int = 50) -> str:
+    ET.register_namespace("atom", ATOM_NS)
+
     root = ET.Element("rss", version="2.0")
     channel = ET.SubElement(root, "channel")
     ET.SubElement(channel, "title").text = "theguardian.com"
     ET.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com feed"
     ET.SubElement(channel, "link").text = "https://brunn.ing"
 
+    atom_link = ET.SubElement(channel, f"{{{ATOM_NS}}}link")
+    atom_link.set("href", str(self_url))
+    atom_link.set("rel", "self")
+    atom_link.set("type", "application/rss+xml")
+
     newest_first = sorted(items, key=get_date, reverse=True)
     limited_items = newest_first[:limit]
-    latest_published: datetime = datetime.min.replace(tzinfo=UTC)
+
+    if limited_items:
+        latest_date = get_date(limited_items[0])
+        if latest_date != datetime.min.replace(tzinfo=UTC):
+            ET.SubElement(channel, "pubDate").text = format_datetime(latest_date)
 
     for item in limited_items:
+        for dc_date in item.findall(f"{{{DC_NS}}}date"):
+            item.remove(dc_date)
+
         channel.append(item)
-        pub_date = item.find("pubDate")
-        if pub_date is not None and pub_date.text:
-            item_published = get_date(item)
-            latest_published = max(latest_published, item_published)
 
-    if latest_published != datetime.min.replace(tzinfo=UTC):
-        ET.SubElement(channel, "pubDate").text = format_datetime(latest_published)
-
+    ET.indent(root, space=" ")
     return ET.tostring(root, encoding="unicode")
 
 
-async def read_and_generate_rss(base_url: URL, feeds_file: Path) -> str:
+async def read_and_generate_rss(base_url: URL, feeds_file: Path, self_url: URL) -> str:
     with feeds_file.open() as f:
         feed_urls = [base_url / path.strip() / "rss" for path in f]
 
     items = await read_rss_feeds(feed_urls)
-    return generate_new_rss_feed(items, limit=50)
+    return generate_new_rss_feed(items, self_url=self_url, limit=50)

@@ -5,12 +5,16 @@ import pytest
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+DC_NS = "http://purl.org/dc/elements/1.1/"
 
 
-def _generate_rss_xml(count: int, time_formatter: Callable[[int], str] | None = None) -> str:
+def _generate_rss_xml(
+    count: int, time_formatter: Callable[[int], str] | None = None, include_dc_date: bool = False
+) -> str:
     time_formatter = time_formatter or (lambda i: f"12:{i:02d}:00")
 
     rss_root = ET.Element("rss", version="2.0")
+    ET.register_namespace("dc", DC_NS)
     channel = ET.SubElement(rss_root, "channel")
     ET.SubElement(channel, "title").text = "Test channel"
     ET.SubElement(channel, "description").text = "Test channel"
@@ -27,6 +31,10 @@ def _generate_rss_xml(count: int, time_formatter: Callable[[int], str] | None = 
         time_str = time_formatter(i)
         ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {time_str} +0000"
 
+        if include_dc_date:
+            dc_date = ET.SubElement(item, f"{{{DC_NS}}}date")
+            dc_date.text = f"2009-09-06T{time_str}+00:00"
+
         channel.append(item)
 
     return ET.tostring(rss_root, encoding="unicode")
@@ -34,7 +42,7 @@ def _generate_rss_xml(count: int, time_formatter: Callable[[int], str] | None = 
 
 @pytest.fixture(scope="session")
 def rss_string() -> str:
-    return _generate_rss_xml(count=3, time_formatter=lambda i: f"{i + 12}:20:00")
+    return _generate_rss_xml(count=3, time_formatter=lambda i: f"{i + 12}:20:00", include_dc_date=True)
 
 
 @pytest.fixture(scope="session")
