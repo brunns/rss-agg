@@ -40,7 +40,7 @@ async def fetch(client: httpx.AsyncClient, url: URL) -> str:
 
 async def read_rss_feeds(feed_urls: list[URL]) -> list[ET.Element]:
     items: dict[str, ET.Element] = OrderedDict()
-    async with httpx.AsyncClient(follow_redirects=True) as client:
+    async with httpx.AsyncClient(follow_redirects=True, limits=httpx.Limits(max_connections=16)) as client:
         tasks = [fetch(client, feed_url) for feed_url in feed_urls]
         responses: Collection[str] = await asyncio.gather(*tasks)
         for response in responses:
