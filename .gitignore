@@ -338,3 +338,10 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,intellij,emacs
 /.idea/
+
+# Local build
+package/
+requirements.txt
+terraform/deployment_package.zip
+terraform/.terraform.lock.hcl
+terraform/.terraform

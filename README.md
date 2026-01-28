@@ -59,6 +59,33 @@ uv run ruff check .
 uv run pyright
 ```
 
+### build
+
+Build lambda image locally
+
+```sh
+uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
+uv pip install -r requirements.txt --target package --python 3.14
+cp -r rss_agg package/
+cp lambda_function.py package/
+cp feeds.txt package/
+cd package
+zip -r ../terraform/deployment_package.zip .
+cd ..
+```
+
+### plan
+
+Plan infrastructure changes
+
+Requires: build
+
+```sh
+cd terraform
+terraform plan
+cd ..
+```
+
 ### create-s3-bucket
 
 One-off commands to set up the [AWS S3](https://aws.amazon.com/s3/) bucket that terraform will use to store 
