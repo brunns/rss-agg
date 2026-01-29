@@ -5,7 +5,6 @@ description = "Aggregate, de-duplicate and republish RSS feeds"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "arrow>=1.4.0",
     "aws-wsgi>=0.2.7",
     "defusedxml>=0.7.1",
     "flask[async]>=3.1.2",

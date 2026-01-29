@@ -116,7 +116,7 @@ cd rss-agg
 git init
 curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs > .gitignore
 uv sync
-uv add "flask[async]" httpx yarl arrow defusedxml python-json-logger aws-wsgi
+uv add "flask[async]" httpx yarl defusedxml python-json-logger aws-wsgi
 uv add ruff pyright pytest pytest-asyncio pytest-cov pytest-docker feedparser pyhamcrest mbtest respx brunns-matchers pyfakefs --dev
 idea .
 ```
