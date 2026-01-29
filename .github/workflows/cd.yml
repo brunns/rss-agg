@@ -6,20 +6,13 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-
-      - name: Set up Python
-        run: uv python install 3.14
-
-      - name: Install dependencies
-        run: uv sync
 
       - name: Install xc
         uses: joerdav/setup-xc@v1
@@ -45,8 +38,8 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
-      - name: Set up Python
-        run: uv python install 3.14
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Install xc
         uses: joerdav/setup-xc@v1
@@ -54,11 +47,6 @@ jobs:
       - name: Build Lambda Distribution
         run: |
           xc build
-          
-          echo "Build complete: terraform/deployment_package.zip created"
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
         run: terraform init
