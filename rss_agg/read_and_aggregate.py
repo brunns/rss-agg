@@ -10,15 +10,17 @@ import httpx
 from defusedxml.ElementTree import fromstring
 from yarl import URL
 
-ATOM_NS = "http://www.w3.org/2005/Atom"
-DC_NS = "http://purl.org/dc/elements/1.1/"
-
-
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Collection
     from pathlib import Path
 
-    from yarl import URL
+FEED_TITLE = "@brunns's theguardian.com"
+FEED_DESCRIPTION = "@brunns's curated, de-duplicated theguardian.com RSS feed"
+FEED_LINK = URL("https://brunn.ing")
+MAX_ITEMS = 50
+MAX_CONNECTIONS = 32
+ATOM_NS = "http://www.w3.org/2005/Atom"
+DC_NS = "http://purl.org/dc/elements/1.1/"
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +42,7 @@ async def fetch(client: httpx.AsyncClient, url: URL) -> str:
 
 async def read_rss_feeds(feed_urls: list[URL]) -> list[ET.Element]:
     items: dict[str, ET.Element] = OrderedDict()
-    async with httpx.AsyncClient(follow_redirects=True, limits=httpx.Limits(max_connections=16)) as client:
+    async with httpx.AsyncClient(follow_redirects=True, limits=httpx.Limits(max_connections=MAX_CONNECTIONS)) as client:
         tasks = [fetch(client, feed_url) for feed_url in feed_urls]
         responses: Collection[str] = await asyncio.gather(*tasks)
         for response in responses:
@@ -67,9 +69,9 @@ def generate_new_rss_feed(items: list[ET.Element], self_url: URL, limit: int = 5
 
     root = ET.Element("rss", version="2.0")
     channel = ET.SubElement(root, "channel")
-    ET.SubElement(channel, "title").text = "@brunns's theguardian.com"
-    ET.SubElement(channel, "description").text = "@brunns's curated, de-duplicated theguardian.com RSS feed"
-    ET.SubElement(channel, "link").text = "https://brunn.ing"
+    ET.SubElement(channel, "title").text = FEED_TITLE
+    ET.SubElement(channel, "description").text = FEED_DESCRIPTION
+    ET.SubElement(channel, "link").text = str(FEED_LINK)
 
     atom_link = ET.SubElement(channel, f"{{{ATOM_NS}}}link")
     atom_link.set("href", str(self_url))
@@ -99,4 +101,4 @@ async def read_and_generate_rss(base_url: URL, feeds_file: Path, self_url: URL) 
         feed_urls = [base_url / path.strip() / "rss" for path in f]
 
     items = await read_rss_feeds(feed_urls)
-    return generate_new_rss_feed(items, self_url=self_url, limit=50)
+    return generate_new_rss_feed(items, self_url=self_url, limit=MAX_ITEMS)
