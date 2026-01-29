@@ -39,7 +39,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Install Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
 
       - name: Install xc
         uses: joerdav/setup-xc@v1
