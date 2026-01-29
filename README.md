@@ -1,6 +1,14 @@
 # RSS aggregator
 
-Aggregate, de-duplicate and republish RSS feeds
+Aggregate, de-duplicate and republish RSS feeds.
+
+Includes deployment to [AWS Lambda](https://aws.amazon.com/lambda/).
+
+Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [colima](https://github.com/abiosoft/colima) and [terraform](https://developer.hashicorp.com/terraform):
+
+```sh
+brew install uv xc colima terraform
+```
 
 ## Tasks
 
@@ -65,11 +73,11 @@ Build lambda image locally
 
 ```sh
 uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
-uv pip install -r requirements.txt --target package --python 3.14
-cp -r rss_agg package/
-cp lambda_function.py package/
-cp feeds.txt package/
-cd package
+uv pip install -r requirements.txt --target build --python 3.14
+cp -r rss_agg build/
+cp lambda_function.py build/
+cp feeds.txt build/
+cd build
 zip -r ../terraform/deployment_package.zip .
 cd ..
 ```
@@ -106,26 +114,40 @@ terraform init
 cd ..
 ```
 
-## Setup steps
+## Initial setup steps
 
 For future reference...
 
 ```sh 
-uv init rss-agg
-cd rss-agg
-git init
-curl https://www.toptal.com/developers/gitignore/api/python,intellij,emacs,terraform,dotenv > .gitignore
+PACKAGE="rss-agg"
+DESCRIPTION="Aggregate, de-duplicate and republish RSS feeds."
+
+uv init --package $PACKAGE --description $DESCRIPTION
+cd $PACKAGE
+mkdir -p tests/{unit,integration} terraform .github/workflows
+touch tests/{unit,integration}/__init__.py tests/conftest.py tests/integration/conftest.py terraform/main.tf .github/workflows/ci.yml
+
+curl https://www.toptal.com/developers/gitignore/api/python,flask,node,emacs,terraform,dotenv,macos > .gitignore
 cat <<EOF >> .gitignore
 
 # Custom
+
 .idea/
 requirements.txt
-package/
 terraform/.terraform.lock.hcl
 terraform/deployment_package.zip
 EOF
+
+cat <<EOF >> README.md
+# ${PACKAGE}
+
+${DESCRIPTION}
+EOF
+
 uv sync
 uv add "flask[async]" httpx yarl defusedxml python-json-logger aws-wsgi
 uv add ruff pyright pytest pytest-asyncio pytest-cov pytest-docker feedparser pyhamcrest mbtest respx brunns-matchers pyfakefs --dev
+
+git add .  && git commit -m"Initial commit."
 idea .
 ```
