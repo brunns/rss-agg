@@ -118,11 +118,11 @@ cd ..
 
 For future reference...
 
-```sh 
-PACKAGE="rss-agg"
+````sh 
+PACKAGE="rss_agg"
 DESCRIPTION="Aggregate, de-duplicate and republish RSS feeds."
 
-uv init --package $PACKAGE --description $DESCRIPTION
+uv init --package $PACKAGE --description $DESCRIPTION --python 3.14 --lib
 cd $PACKAGE
 mkdir -p tests/{unit,integration} terraform .github/workflows
 touch tests/{unit,integration}/__init__.py tests/conftest.py tests/integration/conftest.py terraform/main.tf .github/workflows/ci.yml
@@ -142,6 +142,88 @@ cat <<EOF >> README.md
 # ${PACKAGE}
 
 ${DESCRIPTION}
+
+Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [colima](https://github.com/abiosoft/colima) 
+and [terraform](https://developer.hashicorp.com/terraform):
+
+## Tasks
+
+### cli
+
+Run CLI
+
+\`\`\`sh 
+uv run cli
+\`\`\`
+
+### pc
+
+Precommit tasks
+
+Requires: test, lint
+
+\`\`\`python
+#!/usr/bin/env python
+import this
+\`\`\`
+
+### test
+
+Run tests
+
+\`\`\`sh
+if command -v colima > /dev/null; then colima status || colima start; fi
+uv run pytest tests/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov rss_agg
+\`\`\`
+
+### format
+
+Format code
+
+\`\`\`sh 
+uv run ruff format .
+uv run ruff check . --fix-only
+\`\`\`
+
+### lint
+
+Lint code
+
+\`\`\`sh 
+uv run ruff format . --check
+uv run ruff check .
+uv run pyright
+\`\`\`
+EOF
+
+cat <<EOF >> pyproject.toml
+
+[project.scripts]
+cli = "rss_agg.cli:main"
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["COM812", "ISC001", "D", "PGH003"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106", "PLR2004", "E501", "ANN", "INP", "FBT001", "FBT002", "S314"]
+"lambda_function.py" = ["ANN401"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5
+
+[tool.pyright]
+include = ["rss_agg/"]
+pythonVersion = "3.14"
+EOF
+
+cat <<EOF >> src/rss_agg/cli.py
+def main():
+    print("RSS Aggregator is starting...")
 EOF
 
 uv sync
@@ -150,4 +232,4 @@ uv add ruff pyright pytest pytest-asyncio pytest-cov pytest-docker feedparser py
 
 git add .  && git commit -m"Initial commit."
 idea .
-```
+````
