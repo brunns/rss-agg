@@ -4,24 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
+
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - uses: joerdav/setup-xc@v1
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install xc
-        uses: joerdav/setup-xc@v1
-
-      - name: Run tests
-        run: xc test
-
-      - name: Run linting
-        run: xc lint
+      - run: xc test
+      - run: xc lint
 
   deploy:
     runs-on: ubuntu-latest
@@ -30,30 +24,18 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: "eu-west-2"
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - uses: hashicorp/setup-terraform@v3
+      - uses: joerdav/setup-xc@v1
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install Terraform
-        uses: hashicorp/setup-terraform@v3
-
-      - name: Install xc
-        uses: joerdav/setup-xc@v1
-
-      - name: Build Lambda Distribution
-        run: |
-          xc build
-
-      - name: Terraform Init
-        run: terraform init
+      - run: xc build
+      - run: terraform init
         working-directory: ./terraform
-
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+      - run: terraform apply -auto-approve
         working-directory: ./terraform
         env:
           TF_VAR_lambda_payload_filename: "../terraform/deployment_package.zip"
