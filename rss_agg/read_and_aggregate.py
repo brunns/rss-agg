@@ -25,43 +25,24 @@ DC_NS = "http://purl.org/dc/elements/1.1/"
 logger = logging.getLogger(__name__)
 
 
-async def fetch(client: httpx.AsyncClient, url: URL) -> str:
-    try:
-        logger.info("getting from %s", url)
-        response = await client.get(str(url))
-        response.raise_for_status()
-    except Exception as e:
-        logger.exception("Unexpected", exc_info=e)
-        raise
-    else:
-        if response.text:
-            return response.text
-        logger.warning("empty response from %s", url)
-        return ""
+async def read_and_generate_rss(base_url: URL, feeds_file: Path, self_url: URL) -> str:
+    with feeds_file.open() as f:
+        feed_urls = [base_url / path.strip() / "rss" for path in f]
+
+    items = await read_rss_feeds(feed_urls)
+    return generate_new_rss_feed(items, self_url=self_url, limit=MAX_ITEMS)
 
 
 async def read_rss_feeds(feed_urls: list[URL]) -> list[ET.Element]:
     items: dict[str, ET.Element] = OrderedDict()
-    async with httpx.AsyncClient(follow_redirects=True, limits=httpx.Limits(max_connections=MAX_CONNECTIONS)) as client:
-        tasks = [fetch(client, feed_url) for feed_url in feed_urls]
-        responses: Collection[str] = await asyncio.gather(*tasks)
-        for response in responses:
-            if response:
-                feed: ET.Element = fromstring(response)
-                for item in feed.findall(".//item"):
-                    if (guid := item.findtext("guid")) and guid not in items:
-                        items[guid] = item
+    responses = await _fetch_all(feed_urls)
+    for response in responses:
+        if response:
+            feed: ET.Element = fromstring(response)
+            for item in feed.findall(".//item"):
+                if (guid := item.findtext("guid")) and guid not in items:
+                    items[guid] = item
     return list(items.values())
-
-
-def get_date(item: ET.Element) -> datetime:
-    pub_date = item.find("pubDate")
-    if pub_date is not None and pub_date.text:
-        try:
-            return parsedate_to_datetime(pub_date.text)
-        except (ValueError, TypeError):  # pragma: no cover
-            pass
-    return datetime.min.replace(tzinfo=UTC)
 
 
 def generate_new_rss_feed(items: list[ET.Element], self_url: URL, limit: int = 50) -> str:
@@ -96,9 +77,33 @@ def generate_new_rss_feed(items: list[ET.Element], self_url: URL, limit: int = 5
     return ET.tostring(root, encoding="unicode")
 
 
-async def read_and_generate_rss(base_url: URL, feeds_file: Path, self_url: URL) -> str:
-    with feeds_file.open() as f:
-        feed_urls = [base_url / path.strip() / "rss" for path in f]
+def get_date(item: ET.Element) -> datetime:
+    pub_date = item.find("pubDate")
+    if pub_date is not None and pub_date.text:
+        try:
+            return parsedate_to_datetime(pub_date.text)
+        except (ValueError, TypeError):  # pragma: no cover
+            pass
+    return datetime.min.replace(tzinfo=UTC)
 
-    items = await read_rss_feeds(feed_urls)
-    return generate_new_rss_feed(items, self_url=self_url, limit=MAX_ITEMS)
+
+async def _fetch_all(feed_urls: list[URL]) -> Collection[str]:
+    async with httpx.AsyncClient(follow_redirects=True, limits=httpx.Limits(max_connections=MAX_CONNECTIONS)) as client:
+        tasks = [fetch(client, feed_url) for feed_url in feed_urls]
+        responses: Collection[str] = await asyncio.gather(*tasks)
+    return responses
+
+
+async def fetch(client: httpx.AsyncClient, url: URL) -> str:
+    try:
+        logger.info("getting from %s", url)
+        response = await client.get(str(url))
+        response.raise_for_status()
+    except Exception as e:
+        logger.exception("Unexpected", exc_info=e)
+        raise
+    else:
+        if response.text:
+            return response.text
+        logger.warning("empty response from %s", url)
+        return ""
