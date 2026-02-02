@@ -13,8 +13,6 @@ from yarl import URL
 
 import rss_agg.read_and_aggregate
 
-container = wireup.create_sync_container(injectables=[rss_agg.read_and_aggregate])
-
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
@@ -28,13 +26,12 @@ def main() -> None:
     args = parse_args()
     logger.debug("args", extra=vars(args))
 
+    config = {"feeds_file": args.feeds_file, "max_items": 50, "max_connections": 32}
+    container = wireup.create_sync_container(injectables=[rss_agg.read_and_aggregate], config={**config})
+
     rss_service = container.get(rss_agg.read_and_aggregate.RSSService)
 
-    rss = asyncio.run(
-        rss_service.read_and_generate_rss(
-            base_url=args.base_url, feeds_file=args.feeds_file, self_url=URL("https://example.com")
-        )
-    )
+    rss = asyncio.run(rss_service.read_and_generate_rss(base_url=args.base_url, self_url=URL("https://example.com")))
     print(rss)  # noqa: T201
 
 

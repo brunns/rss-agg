@@ -4,14 +4,14 @@ from xml.etree import ElementTree as ET
 
 import pytest
 from hamcrest import assert_that, equal_to
-from mockito import mock, when
+from mockito import mock
 from yarl import URL
 
 from rss_agg.read_and_aggregate import RSSGenerator, RSSParser, RSSService
 
 
 @pytest.mark.asyncio
-async def test_rss_service_orchestration_mockito(fs):
+async def test_rss_service_orchestration_mockito(fs, when):
     # Given
     feeds_content = "uk\nworld\n"
     feeds_file = Path("/tmp/feeds.txt")
@@ -35,21 +35,19 @@ async def test_rss_service_orchestration_mockito(fs):
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
-    when(mock_generator).generate_new_rss_feed(mock_items, self_url=self_url, limit=RSSService.MAX_ITEMS).thenReturn(
-        expected_xml
-    )
+    when(mock_generator).generate_new_rss_feed(mock_items, self_url=self_url, limit=50).thenReturn(expected_xml)
 
-    service = RSSService(mock_parser, mock_generator)
+    service = RSSService(mock_parser, mock_generator, feeds_file, 50)
 
     # When
-    actual = await service.read_and_generate_rss(base_url, feeds_file, self_url)
+    actual = await service.read_and_generate_rss(base_url, self_url)
 
     # Then
     assert_that(actual, equal_to(expected_xml))
 
 
 @pytest.mark.asyncio
-async def test_rss_service_handles_empty_feeds_file(fs):
+async def test_rss_service_handles_empty_feeds_file(fs, when):
     # Given
     feeds_file = Path("/tmp/empty.txt")
     fs.create_file(str(feeds_file), contents="")
@@ -67,14 +65,12 @@ async def test_rss_service_handles_empty_feeds_file(fs):
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
-    when(mock_generator).generate_new_rss_feed(expected_urls, self_url=self_url, limit=RSSService.MAX_ITEMS).thenReturn(
-        expected_xml
-    )
+    when(mock_generator).generate_new_rss_feed(expected_urls, self_url=self_url, limit=50).thenReturn(expected_xml)
 
-    service = RSSService(mock_parser, mock_generator)
+    service = RSSService(mock_parser, mock_generator, feeds_file, 50)
 
     # When
-    actual = await service.read_and_generate_rss(base_url, feeds_file, self_url)
+    actual = await service.read_and_generate_rss(base_url, self_url)
 
     # Then
     assert_that(actual, equal_to(expected_xml))

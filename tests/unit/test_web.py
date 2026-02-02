@@ -22,9 +22,7 @@ async def test_get_data_route_logic(when):
     future = asyncio.Future()
     future.set_result(expected_rss)
 
-    when(mock_service).read_and_generate_rss(
-        base_url=mock_any(), feeds_file=mock_any(), self_url=mock_any()
-    ).thenReturn(future)
+    when(mock_service).read_and_generate_rss(base_url=mock_any(), self_url=mock_any()).thenReturn(future)
 
     with container.override.service(RSSService, new=mock_service), app.test_request_context("/"):
         # When

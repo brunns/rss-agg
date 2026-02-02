@@ -3,17 +3,17 @@ import logging
 from collections import OrderedDict
 from datetime import UTC, datetime
 from email.utils import format_datetime, parsedate_to_datetime
-from typing import TYPE_CHECKING
+from pathlib import Path  # noqa: TC003
+from typing import TYPE_CHECKING, Annotated
 from xml.etree import ElementTree as ET
 
 import httpx
 from defusedxml.ElementTree import fromstring
-from wireup import injectable
+from wireup import Inject, injectable
 from yarl import URL
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Collection
-    from pathlib import Path
 
 
 logger = logging.getLogger(__name__)
@@ -21,18 +21,24 @@ logger = logging.getLogger(__name__)
 
 @injectable
 class RSSService:
-    MAX_ITEMS = 50
-
-    def __init__(self, parser: RSSParser, generator: RSSGenerator) -> None:
+    def __init__(
+        self,
+        parser: RSSParser,
+        generator: RSSGenerator,
+        feeds_file: Annotated[Path, Inject(config="feeds_file")],
+        max_items: Annotated[int, Inject(config="max_items")],
+    ) -> None:
         self.parser = parser
         self.generator = generator
+        self.feeds_file = feeds_file
+        self.max_items = max_items
 
-    async def read_and_generate_rss(self, base_url: URL, feeds_file: Path, self_url: URL) -> str:
-        with feeds_file.open() as f:
+    async def read_and_generate_rss(self, base_url: URL, self_url: URL) -> str:
+        with self.feeds_file.open() as f:
             feed_urls = [base_url / path.strip() / "rss" for path in f]
 
         items = await self.parser.read_rss_feeds(feed_urls)
-        return self.generator.generate_new_rss_feed(items, self_url=self_url, limit=RSSService.MAX_ITEMS)
+        return self.generator.generate_new_rss_feed(items, self_url=self_url, limit=self.max_items)
 
 
 @injectable
@@ -104,11 +110,12 @@ class RSSGenerator:
 
 @injectable
 class Fetcher:
-    MAX_CONNECTIONS = 32
+    def __init__(self, max_connections: Annotated[int, Inject(config="max_connections")]) -> None:
+        self.max_connections = max_connections
 
     async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
         async with httpx.AsyncClient(
-            follow_redirects=True, limits=httpx.Limits(max_connections=Fetcher.MAX_CONNECTIONS)
+            follow_redirects=True, limits=httpx.Limits(max_connections=self.max_connections)
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             responses: Collection[str] = await asyncio.gather(*tasks)

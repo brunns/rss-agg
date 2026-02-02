@@ -26,6 +26,13 @@ resource "aws_lambda_function" "rss_aggregator" {
   source_code_hash = filebase64sha256("deployment_package.zip")
   runtime          = "python3.14"
   timeout          = 15
+  environment {
+    variables = {
+      FEEDS_FILE      = var.feeds_file
+      MAX_ITEMS       = var.max_items
+      MAX_CONNECTIONS = var.max_connections
+    }
+  }
 }
 
 resource "aws_iam_role" "rss_aggregator_lambda_exec" {
