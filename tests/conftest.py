@@ -9,7 +9,10 @@ DC_NS = "http://purl.org/dc/elements/1.1/"
 
 
 def _generate_rss_xml(
-    count: int, time_formatter: Callable[[int], str] | None = None, include_dc_date: bool = False
+    count: int,
+    time_formatter: Callable[[int], str] | None = None,
+    include_dc_date: bool = False,
+    guid_override: str | None = None,
 ) -> str:
     time_formatter = time_formatter or (lambda i: f"12:{i:02d}:00")
 
@@ -26,7 +29,7 @@ def _generate_rss_xml(
         ET.SubElement(item, "title").text = f"Test article {i}"
         ET.SubElement(item, "description").text = f"Test article {i}"
         ET.SubElement(item, "link").text = f"https://example.com/article{i}"
-        ET.SubElement(item, "guid").text = f"guid-{i}"
+        ET.SubElement(item, "guid").text = guid_override or f"guid-{i}"
 
         time_str = time_formatter(i)
         ET.SubElement(item, "pubDate").text = f"Sun, 6 Sep 2009 {time_str} +0000"
@@ -53,3 +56,10 @@ def empty_rss_string() -> str:
 @pytest.fixture(scope="session")
 def large_rss_string() -> str:
     return _generate_rss_xml(count=59, time_formatter=lambda i: f"12:{i:02d}:00")
+
+
+@pytest.fixture(scope="session")
+def rss_string_with_duplicate_guids() -> str:
+    return _generate_rss_xml(
+        count=2, time_formatter=lambda i: f"{i + 12}:20:00", include_dc_date=True, guid_override="guid"
+    )
