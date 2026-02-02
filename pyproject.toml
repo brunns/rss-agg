@@ -17,7 +17,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "brunns-matchers>=2.10.0",
-    "feedparser>=6.0.12",
     "mbtest>=2.14.0",
     "mockito>=1.5.5",
     "pyfakefs>=6.0.0",

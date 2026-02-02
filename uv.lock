@@ -666,7 +666,6 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "brunns-matchers" },
-    { name = "feedparser" },
     { name = "mbtest" },
     { name = "mockito" },
     { name = "pyfakefs" },
@@ -695,7 +694,6 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "brunns-matchers", specifier = ">=2.10.0" },
-    { name = "feedparser", specifier = ">=6.0.12" },
     { name = "mbtest", specifier = ">=2.14.0" },
     { name = "mockito", specifier = ">=1.5.5" },
     { name = "pyfakefs", specifier = ">=6.0.0" },
