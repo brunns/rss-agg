@@ -18,7 +18,6 @@ society/women
 stage/comedy
 technology
 tone/albumreview
-tone/comment
 tone/recipes
 tone/reviews+film/film
 tone/reviews+culture/television
