@@ -678,6 +678,7 @@ dev = [
     { name = "pytest-mockito" },
     { name = "respx" },
     { name = "ruff" },
+    { name = "scripttest" },
 ]
 
 [package.metadata]
@@ -706,6 +707,7 @@ dev = [
     { name = "pytest-mockito", specifier = ">=0.0.5" },
     { name = "respx", specifier = ">=0.22.0" },
     { name = "ruff", specifier = ">=0.14.14" },
+    { name = "scripttest", specifier = ">=2.0.post1" },
 ]
 
 [[package]]
@@ -732,6 +734,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/2c/aa/9f89c719c467dfaf8ad799b9bae0df494513fb21d31a6059cb5870e57e74/ruff-0.14.14-py3-none-win32.whl", hash = "sha256:b530c191970b143375b6a68e6f743800b2b786bbcf03a7965b06c4bf04568167", size = 10502442, upload-time = "2026-01-22T22:30:38.93Z" },
     { url = "https://files.pythonhosted.org/packages/87/44/90fa543014c45560cae1fffc63ea059fb3575ee6e1cb654562197e5d16fb/ruff-0.14.14-py3-none-win_amd64.whl", hash = "sha256:3dde1435e6b6fe5b66506c1dff67a421d0b7f6488d466f651c07f4cab3bf20fd", size = 11630486, upload-time = "2026-01-22T22:30:10.852Z" },
     { url = "https://files.pythonhosted.org/packages/9e/6a/40fee331a52339926a92e17ae748827270b288a35ef4a15c9c8f2ec54715/ruff-0.14.14-py3-none-win_arm64.whl", hash = "sha256:56e6981a98b13a32236a72a8da421d7839221fa308b223b9283312312e5ac76c", size = 10920448, upload-time = "2026-01-22T22:30:15.417Z" },
+]
+
+[[package]]
+name = "scripttest"
+version = "2.0.post1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6b/75/40225296f18bcd24c95258f3a01fce7e4a014b67141209846d794c3bb694/scripttest-2.0.post1.tar.gz", hash = "sha256:a6067f1feadf4b2ed3e594b0b32e41589640e7fa3974765aa63d508520c0bfdc", size = 16203, upload-time = "2025-04-09T20:06:34.35Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/97/84/5435e29eb508955dfd3caeefa193f0ddd09f5b0b4ddc3f9fc17819776a1b/scripttest-2.0.post1-py3-none-any.whl", hash = "sha256:ec818fd362d5ee0321e000ea43c0540020336771f5168bd591ddd5b37258ca06", size = 7462, upload-time = "2025-04-09T20:06:30.914Z" },
 ]
 
 [[package]]

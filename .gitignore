@@ -226,7 +226,8 @@ cython_debug/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -524,3 +525,4 @@ terraform.rc
 requirements.txt
 terraform/.terraform.lock.hcl
 terraform/deployment_package.zip
+tests/integration/test-output/
