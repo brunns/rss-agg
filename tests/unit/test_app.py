@@ -19,7 +19,7 @@ def test_get_data_route_logic(client, container, when):
     when(mock_service).read_and_generate_rss(self_url=mock_any()).thenReturn(make_coro())
 
     # When
-    with container.override.service(RSSService, new=mock_service):
+    with container.override.injectable(RSSService, new=mock_service):
         response = client.get("/")
 
     # Then

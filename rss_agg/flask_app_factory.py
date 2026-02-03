@@ -19,7 +19,6 @@ class WireupFlask(Flask):
 
 def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask, wireup.SyncContainer]:
     app = WireupFlask(__name__)
-    app.config["PROPAGATE_EXCEPTIONS"] = True
 
     # Configuration
     config = {
