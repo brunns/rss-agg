@@ -26,12 +26,12 @@ def main() -> None:
     args = parse_args()
     logger.debug("args", extra=vars(args))
 
-    config = {"feeds_file": args.feeds_file, "max_items": 50, "max_connections": 32}
+    config = {"feeds_file": args.feeds_file, "base_url": args.base_url, "max_items": 50, "max_connections": 32}
     container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config})
 
     rss_service = container.get(rss_agg.services.RSSService)
 
-    rss = asyncio.run(rss_service.read_and_generate_rss(base_url=args.base_url, self_url=URL("https://example.com")))
+    rss = asyncio.run(rss_service.read_and_generate_rss(self_url=URL("https://example.com")))
     print(rss)  # noqa: T201
 
 

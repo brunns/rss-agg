@@ -37,10 +37,10 @@ async def test_rss_service_orchestration_mockito(fs, when):
     mock_generator = mock(RSSGenerator)
     when(mock_generator).generate_new_rss_feed(mock_items, self_url=self_url, limit=50).thenReturn(expected_xml)
 
-    service = RSSService(mock_parser, mock_generator, feeds_file, 50)
+    service = RSSService(mock_parser, mock_generator, base_url, feeds_file, 50)
 
     # When
-    actual = await service.read_and_generate_rss(base_url, self_url)
+    actual = await service.read_and_generate_rss(self_url)
 
     # Then
     assert_that(actual, equal_to(expected_xml))
@@ -67,10 +67,10 @@ async def test_rss_service_handles_empty_feeds_file(fs, when):
     mock_generator = mock(RSSGenerator)
     when(mock_generator).generate_new_rss_feed(expected_urls, self_url=self_url, limit=50).thenReturn(expected_xml)
 
-    service = RSSService(mock_parser, mock_generator, feeds_file, 50)
+    service = RSSService(mock_parser, mock_generator, base_url, feeds_file, 50)
 
     # When
-    actual = await service.read_and_generate_rss(base_url, self_url)
+    actual = await service.read_and_generate_rss(self_url)
 
     # Then
     assert_that(actual, equal_to(expected_xml))

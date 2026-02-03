@@ -25,17 +25,19 @@ class RSSService:
         self,
         parser: RSSParser,
         generator: RSSGenerator,
+        base_url: Annotated[URL, Inject(config="base_url")],
         feeds_file: Annotated[Path, Inject(config="feeds_file")],
         max_items: Annotated[int, Inject(config="max_items")],
     ) -> None:
         self.parser = parser
         self.generator = generator
+        self.base_url = base_url
         self.feeds_file = feeds_file
         self.max_items = max_items
 
-    async def read_and_generate_rss(self, base_url: URL, self_url: URL) -> str:
+    async def read_and_generate_rss(self, self_url: URL) -> str:
         with self.feeds_file.open() as f:
-            feed_urls = [base_url / path.strip() / "rss" for path in f]
+            feed_urls = [self.base_url / path.strip() / "rss" for path in f]
 
         items = await self.parser.read_rss_feeds(feed_urls)
         return self.generator.generate_new_rss_feed(items, self_url=self_url, limit=self.max_items)

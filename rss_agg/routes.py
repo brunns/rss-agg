@@ -15,6 +15,5 @@ rss_bp = Blueprint("rss", __name__)
 async def get_data() -> Response:
     container = cast("WireupFlask", current_app).container
     rss_service = container.get(RSSService)
-    base_url = URL("https://www.theguardian.com")
-    rss = await rss_service.read_and_generate_rss(base_url=base_url, self_url=URL(request.base_url))
+    rss = await rss_service.read_and_generate_rss(self_url=URL(request.base_url))
     return Response(rss, mimetype="application/rss+xml")

@@ -16,7 +16,7 @@ def test_get_data_route_logic(client, container, when):
     async def make_coro():
         return expected_rss
 
-    when(mock_service).read_and_generate_rss(base_url=mock_any(), self_url=mock_any()).thenReturn(make_coro())
+    when(mock_service).read_and_generate_rss(self_url=mock_any()).thenReturn(make_coro())
 
     # When
     with container.override.service(RSSService, new=mock_service):
