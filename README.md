@@ -59,7 +59,7 @@ Integration tests
 
 ```sh
 if command -v colima > /dev/null; then colima status || colima start; fi
-uv run pytest tests/integration/ -s
+uv run pytest tests/integration/ -s --durations=10
 ```
 
 ### format
