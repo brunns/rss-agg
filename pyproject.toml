@@ -56,6 +56,9 @@ ignore = ["COM812", "ISC001", "D", "PGH003"]
 [tool.ruff.lint.mccabe]
 max-complexity = 5
 
+[tool.coverage.run]
+omit = ["rss_agg/cli.py", "rss_agg/web.py"]
+
 [tool.pyright]
 include = ["rss_agg/"]
 pythonVersion = "3.14"

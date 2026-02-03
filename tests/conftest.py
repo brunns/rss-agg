@@ -3,6 +3,8 @@ from xml.etree import ElementTree as ET
 
 import pytest
 
+from rss_agg.flask_app_factory import create_app
+
 if TYPE_CHECKING:
     from collections.abc import Callable
 DC_NS = "http://purl.org/dc/elements/1.1/"
@@ -63,3 +65,21 @@ def rss_string_with_duplicate_guids() -> str:
     return _generate_rss_xml(
         count=2, time_formatter=lambda i: f"{i + 12}:20:00", include_dc_date=True, guid_override="guid"
     )
+
+
+@pytest.fixture
+def app_and_container():
+    app, container = create_app({"TESTING": True, "max_items": 10})
+    return app, container
+
+
+@pytest.fixture
+def client(app_and_container):
+    app, _ = app_and_container
+    return app.test_client()
+
+
+@pytest.fixture
+def container(app_and_container):
+    _, container = app_and_container
+    return container
