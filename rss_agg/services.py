@@ -10,7 +10,7 @@ from xml.etree import ElementTree as ET
 import httpx
 from defusedxml.ElementTree import fromstring
 from wireup import Inject, injectable
-from yarl import URL
+from yarl import URL  # noqa: TC002
 
 if TYPE_CHECKING:  # pragma: no cover
     from collections.abc import Collection
@@ -62,20 +62,27 @@ class RSSParser:
 
 @injectable
 class RSSGenerator:
-    FEED_TITLE = "@brunns's theguardian.com"
-    FEED_DESCRIPTION = "@brunns's curated, de-duplicated theguardian.com RSS feed"
-    FEED_LINK = URL("https://brunn.ing")
     ATOM_NS = "http://www.w3.org/2005/Atom"
     DC_NS = "http://purl.org/dc/elements/1.1/"
+
+    def __init__(
+        self,
+        feed_title: Annotated[str, Inject(config="feed_title")],
+        feed_description: Annotated[str, Inject(config="feed_description")],
+        feed_link: Annotated[URL, Inject(config="feed_link")],
+    ) -> None:
+        self.feed_title = feed_title
+        self.feed_description = feed_description
+        self.feed_link = feed_link
 
     def generate_new_rss_feed(self, items: list[ET.Element], self_url: URL, limit: int = 50) -> str:
         ET.register_namespace("atom", RSSGenerator.ATOM_NS)
 
         root = ET.Element("rss", version="2.0")
         channel = ET.SubElement(root, "channel")
-        ET.SubElement(channel, "title").text = RSSGenerator.FEED_TITLE
-        ET.SubElement(channel, "description").text = RSSGenerator.FEED_DESCRIPTION
-        ET.SubElement(channel, "link").text = str(RSSGenerator.FEED_LINK)
+        ET.SubElement(channel, "title").text = self.feed_title
+        ET.SubElement(channel, "description").text = self.feed_description
+        ET.SubElement(channel, "link").text = str(self.feed_link)
 
         atom_link = ET.SubElement(channel, f"{{{RSSGenerator.ATOM_NS}}}link")
         atom_link.set("href", str(self_url))

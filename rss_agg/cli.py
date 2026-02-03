@@ -5,7 +5,7 @@ import logging
 import sys
 import warnings
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import wireup
 from pythonjsonlogger.json import JsonFormatter
@@ -26,18 +26,25 @@ def main() -> None:
     args = parse_args()
     logger.debug("args", extra=vars(args))
 
-    config = {
-        "feeds_file": args.feeds_file,
-        "base_url": args.base_url,
-        "max_items": args.max_items,
-        "max_connections": args.max_connections,
-    }
+    config = build_config(args)
     container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config})
 
     rss_service = container.get(rss_agg.services.RSSService)
 
     rss = asyncio.run(rss_service.read_and_generate_rss(self_url=URL("https://example.com")))
     print(rss)  # noqa: T201
+
+
+def build_config(args: argparse.Namespace) -> dict[str, Any]:
+    return {
+        "feeds_file": args.feeds_file,
+        "base_url": args.base_url,
+        "max_items": args.max_items,
+        "max_connections": args.max_connections,
+        "feed_title": "@brunns's theguardian.com",
+        "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
+        "feed_link": URL("https://brunn.ing"),
+    }
 
 
 def parse_args() -> argparse.Namespace:

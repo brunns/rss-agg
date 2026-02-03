@@ -20,19 +20,23 @@ class WireupFlask(Flask):
 def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask, wireup.SyncContainer]:
     app = WireupFlask(__name__)
 
-    # Configuration
-    config = {
-        "feeds_file": Path(os.environ.get("FEEDS_FILE", "feeds.txt")),
-        "base_url": URL("https://www.theguardian.com"),
-        "max_items": int(os.environ.get("MAX_ITEMS", "50")),
-        "max_connections": int(os.environ.get("MAX_CONNECTIONS", "32")),
-    }
-    if config_override:
-        config.update(config_override)
-
-    container = wireup.create_sync_container(injectables=[rss_agg.services], config=config)
+    config = build_config()
+    config_override = config_override or {}
+    container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config, **config_override})
     app.container = container
 
     app.register_blueprint(rss_bp)
 
     return app, container
+
+
+def build_config() -> dict[str, Any]:
+    return {
+        "feeds_file": Path(os.environ.get("FEEDS_FILE", "feeds.txt")),
+        "base_url": URL("https://www.theguardian.com"),
+        "max_items": int(os.environ.get("MAX_ITEMS", "50")),
+        "max_connections": int(os.environ.get("MAX_CONNECTIONS", "32")),
+        "feed_title": "@brunns's theguardian.com",
+        "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
+        "feed_link": URL("https://brunn.ing"),
+    }

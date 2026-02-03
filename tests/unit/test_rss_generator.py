@@ -10,7 +10,7 @@ from rss_agg.services import RSSGenerator
 
 def test_builds_rss_structure():
     # Given
-    generator = RSSGenerator()
+    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"))
     item = ET.Element("item")
     ET.SubElement(item, "pubDate").text = "Sun, 6 Sep 2009 15:20:00 +0000"
     ET.SubElement(item, "title").text = "Test article"
@@ -23,9 +23,9 @@ def test_builds_rss_structure():
     assert_that(
         actual,
         is_rss_feed()
-        .with_title("@brunns's theguardian.com")
-        .and_link(URL("https://brunn.ing"))
-        .and_description("@brunns's curated, de-duplicated theguardian.com RSS feed")
+        .with_title("some title")
+        .and_description("some description")
+        .and_link(URL("https://some.example.com"))
         .and_published(datetime(2009, 9, 6, 15, 20, tzinfo=UTC))
         .and_entries(
             contains_inanyorder(is_rss_entry().with_title("Test article").and_link(URL("https://example.com/foo")))
@@ -36,7 +36,7 @@ def test_builds_rss_structure():
 def test_handles_missing_or_invalid_pubdate():
     """Covers line 87 (latest_date == datetime.min) and the fallback in _get_date."""
     # Given
-    generator = RSSGenerator()
+    generator = RSSGenerator("some title", "description", URL("https://example.com"))
     item = ET.Element("item")
     ET.SubElement(item, "title").text = "No Date Article"
     # No pubDate element added at all
@@ -46,14 +46,14 @@ def test_handles_missing_or_invalid_pubdate():
 
     # Then
     # If no date is found, pubDate should not be present in the channel metadata
-    assert_that(actual, is_rss_feed().with_title(RSSGenerator.FEED_TITLE))
+    assert_that(actual, is_rss_feed().with_title("some title"))
     assert_that(actual, not_(has_entry("pubDate", iter)))  # Verifies channel pubDate is skipped
 
 
 def test_removes_dc_date_elements():
     """Covers line 102 (item.remove(dc_date))."""
     # Given
-    generator = RSSGenerator()
+    generator = RSSGenerator("some title", "description", URL("https://example.com"))
     item = ET.Element("item")
     ET.SubElement(item, "title").text = "DC Date Article"
     ET.SubElement(item, "pubDate").text = "Mon, 01 Jan 2024 00:00:00 +0000"
@@ -75,7 +75,7 @@ def test_removes_dc_date_elements():
 def test_sorts_items_by_date_descending():
     """Tests the sorting logic (line 82) to ensure coverage of various dates."""
     # Given
-    generator = RSSGenerator()
+    generator = RSSGenerator("some title", "description", URL("https://example.com"))
 
     old_item = ET.Element("item")
     ET.SubElement(old_item, "title").text = "Old"
