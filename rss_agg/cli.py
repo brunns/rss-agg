@@ -11,7 +11,7 @@ import wireup
 from pythonjsonlogger.json import JsonFormatter
 from yarl import URL
 
-import rss_agg.read_and_aggregate
+import rss_agg.services
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -27,9 +27,9 @@ def main() -> None:
     logger.debug("args", extra=vars(args))
 
     config = {"feeds_file": args.feeds_file, "max_items": 50, "max_connections": 32}
-    container = wireup.create_sync_container(injectables=[rss_agg.read_and_aggregate], config={**config})
+    container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config})
 
-    rss_service = container.get(rss_agg.read_and_aggregate.RSSService)
+    rss_service = container.get(rss_agg.services.RSSService)
 
     rss = asyncio.run(rss_service.read_and_generate_rss(base_url=args.base_url, self_url=URL("https://example.com")))
     print(rss)  # noqa: T201

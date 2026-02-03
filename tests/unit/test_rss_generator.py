@@ -5,7 +5,7 @@ from brunns.matchers.rss import is_rss_entry, is_rss_feed
 from hamcrest import assert_that, contains_inanyorder, has_entry, not_
 from yarl import URL
 
-from rss_agg.read_and_aggregate import RSSGenerator
+from rss_agg.services import RSSGenerator
 
 
 def test_builds_rss_structure():

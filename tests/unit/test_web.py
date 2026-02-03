@@ -9,7 +9,7 @@ from mockito import any as mock_any
 from mockito import mock
 from werkzeug.test import TestResponse
 
-from rss_agg.read_and_aggregate import RSSService
+from rss_agg.services import RSSService
 from rss_agg.web import app, container, get_data
 
 

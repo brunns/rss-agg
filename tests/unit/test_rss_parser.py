@@ -5,7 +5,7 @@ import pytest
 from hamcrest import assert_that, contains_inanyorder, has_length, instance_of
 from yarl import URL
 
-from rss_agg.read_and_aggregate import Fetcher, RSSParser
+from rss_agg.services import Fetcher, RSSParser
 
 
 @pytest.mark.asyncio

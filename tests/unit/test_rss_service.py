@@ -7,7 +7,7 @@ from hamcrest import assert_that, equal_to
 from mockito import mock
 from yarl import URL
 
-from rss_agg.read_and_aggregate import RSSGenerator, RSSParser, RSSService
+from rss_agg.services import RSSGenerator, RSSParser, RSSService
 
 
 @pytest.mark.asyncio

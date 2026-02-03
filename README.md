@@ -23,7 +23,7 @@ Requires: test, lint
 import this
 ```
 
-### run
+### cli
 
 Run CLI - outputs RSS to stdout
 
