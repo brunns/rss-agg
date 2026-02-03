@@ -30,7 +30,7 @@ def main() -> None:
         "feeds_file": args.feeds_file,
         "base_url": args.base_url,
         "max_items": args.max_items,
-        "max_connections": 32,
+        "max_connections": args.max_connections,
     }
     container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config})
 
@@ -68,6 +68,12 @@ def create_parser() -> argparse.ArgumentParser:
         type=int,
         default=50,
         help="Maximum items to return. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--max-connections",
+        type=int,
+        default=16,
+        help="Maximum concurrent HTTP connections. Default: %(default)s",
     )
 
     parser.add_argument(
