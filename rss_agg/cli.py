@@ -26,7 +26,12 @@ def main() -> None:
     args = parse_args()
     logger.debug("args", extra=vars(args))
 
-    config = {"feeds_file": args.feeds_file, "base_url": args.base_url, "max_items": 50, "max_connections": 32}
+    config = {
+        "feeds_file": args.feeds_file,
+        "base_url": args.base_url,
+        "max_items": args.max_items,
+        "max_connections": 32,
+    }
     container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config})
 
     rss_service = container.get(rss_agg.services.RSSService)
@@ -43,7 +48,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def create_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Display status of GitHub Actions..")
+    parser = argparse.ArgumentParser(description="Display status of GitHub Actions.")
 
     parser.add_argument(
         "--base_url",
@@ -56,6 +61,13 @@ def create_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("feeds.txt"),
         help="Feeds file. Default: %(default)s",
+    )
+    parser.add_argument(
+        "-m",
+        "--max-items",
+        type=int,
+        default=50,
+        help="Maximum items to return. Default: %(default)s",
     )
 
     parser.add_argument(
