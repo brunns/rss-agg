@@ -3,14 +3,19 @@ import os
 import scripttest
 from brunns.matchers.rss import is_rss_feed
 from hamcrest import assert_that, contains_string, has_length
+from mbtest.imposters import Imposter, Predicate, Response, Stub
 
 
-def test_cli_output():
+def test_cli_output(mock_server, large_rss_string, sausages_feeds_file):
     # Given
     env = scripttest.TestFileEnvironment()
+    imposter = Imposter(Stub(Predicate(path="/sausages/rss"), Response(body=large_rss_string)), port=4545)
 
-    # When
-    result = env.run("uv", "run", "cli", cwd=os.getcwd())
+    with mock_server(imposter):
+        # When
+        result = env.run(
+            "uv", "run", "cli", "--feeds-file", sausages_feeds_file, "--base-url", imposter.url, cwd=os.getcwd()
+        )
 
     # Then
     assert not result.returncode
@@ -18,12 +23,16 @@ def test_cli_output():
     assert_that(result.stdout, is_rss_feed().with_entries(has_length(50)))
 
 
-def test_cli_max_items():
+def test_cli_max_items(mock_server, large_rss_string, sausages_feeds_file):
     # Given
     env = scripttest.TestFileEnvironment()
+    imposter = Imposter(Stub(Predicate(path="/sausages/rss"), Response(body=large_rss_string)), port=4545)
 
     # When
-    result = env.run("uv", "run", "cli", "-m10", cwd=os.getcwd())
+    with mock_server(imposter):
+        result = env.run(
+            "uv", "run", "cli", "--feeds-file", sausages_feeds_file, "--base-url", imposter.url, "-m10", cwd=os.getcwd()
+        )
 
     # Then
     assert not result.returncode

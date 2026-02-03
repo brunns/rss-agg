@@ -58,13 +58,13 @@ def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Display status of GitHub Actions.")
 
     parser.add_argument(
-        "--base_url",
+        "--base-url",
         type=URL,
         default=URL("https://www.theguardian.com"),
         help="Base URL. Default: %(default)s",
     )
     parser.add_argument(
-        "--feeds_file",
+        "--feeds-file",
         type=Path,
         default=Path("feeds.txt"),
         help="Feeds file. Default: %(default)s",

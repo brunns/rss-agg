@@ -1,8 +1,15 @@
+import tempfile
+from pathlib import Path
+from typing import TYPE_CHECKING
+
 import httpx
 import pytest
 from httpx import RequestError
 from mbtest.server import MountebankServer
 from yarl import URL
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 
 @pytest.fixture(scope="session")
@@ -26,3 +33,16 @@ def is_responsive(url: URL) -> bool:
         return False
     else:
         return True
+
+
+@pytest.fixture
+def sausages_feeds_file() -> Generator[Path]:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as tf:
+        tf.write("sausages")
+        feeds_file = Path(tf.name)
+
+    try:
+        yield feeds_file
+    finally:
+        if feeds_file.exists():
+            feeds_file.unlink()
