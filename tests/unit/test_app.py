@@ -8,9 +8,8 @@ from mockito import mock
 from rss_agg.services import RSSService
 
 
-# @pytest.mark.asyncio
 def test_get_data_route_logic(client, container, when):
-    # Given: A mock service
+    # Given
     mock_service = mock(RSSService)
     expected_rss = "<rss>fake feed</rss>"
 
@@ -19,6 +18,7 @@ def test_get_data_route_logic(client, container, when):
 
     when(mock_service).read_and_generate_rss(base_url=mock_any(), self_url=mock_any()).thenReturn(make_coro())
 
+    # When
     with container.override.service(RSSService, new=mock_service):
         response = client.get("/")
 
