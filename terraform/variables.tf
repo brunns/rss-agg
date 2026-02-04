@@ -10,5 +10,5 @@ variable "max_items" {
 
 variable "max_connections" {
   type    = string
-  default = "32"
+  default = "16"
 }

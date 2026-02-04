@@ -27,6 +27,7 @@ travel/uk
 uk-news
 uk/film
 uk/london
+uk/rail-transport
 uk/technology
 uk/tv-and-radio
 us-news

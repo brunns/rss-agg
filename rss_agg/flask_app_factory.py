@@ -35,7 +35,7 @@ def build_config() -> dict[str, Any]:
         "feeds_file": Path(os.environ.get("FEEDS_FILE", "feeds.txt")),
         "base_url": URL("https://www.theguardian.com"),
         "max_items": int(os.environ.get("MAX_ITEMS", "50")),
-        "max_connections": int(os.environ.get("MAX_CONNECTIONS", "32")),
+        "max_connections": int(os.environ.get("MAX_CONNECTIONS", "16")),
         "feed_title": "@brunns's theguardian.com",
         "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
         "feed_link": URL("https://brunn.ing"),
