@@ -1,4 +1,3 @@
-import asyncio
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -8,6 +7,7 @@ from mockito import mock
 from yarl import URL
 
 from rss_agg.services import RSSGenerator, RSSParser, RSSService
+from tests.utils import future_returning
 
 
 @pytest.mark.asyncio
@@ -28,10 +28,7 @@ async def test_rss_service_orchestration_mockito(fs, when):
     mock_items = [ET.Element("item"), ET.Element("item")]
     mock_parser = mock(RSSParser)
 
-    future = asyncio.Future()
-    future.set_result(mock_items)
-
-    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(future)
+    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(future_returning(mock_items))
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
@@ -58,10 +55,7 @@ async def test_rss_service_handles_empty_feeds_file(fs, when):
     expected_urls = []
     mock_parser = mock(RSSParser)
 
-    future = asyncio.Future()
-    future.set_result(expected_urls)
-
-    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(future)
+    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(future_returning(expected_urls))
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)

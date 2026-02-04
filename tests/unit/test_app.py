@@ -6,6 +6,7 @@ from mockito import any as mock_any
 from mockito import mock
 
 from rss_agg.services import RSSService
+from tests.utils import future_returning
 
 
 def test_get_data_route_logic(client, container, when):
@@ -13,10 +14,7 @@ def test_get_data_route_logic(client, container, when):
     mock_service = mock(RSSService)
     expected_rss = "<rss>fake feed</rss>"
 
-    async def make_coro():
-        return expected_rss
-
-    when(mock_service).read_and_generate_rss(self_url=mock_any()).thenReturn(make_coro())
+    when(mock_service).read_and_generate_rss(self_url=mock_any()).thenReturn(future_returning(expected_rss))
 
     # When
     with container.override.injectable(RSSService, new=mock_service):

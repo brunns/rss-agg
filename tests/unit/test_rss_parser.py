@@ -1,18 +1,21 @@
-from unittest.mock import AsyncMock, MagicMock
 from xml.etree import ElementTree as ET
 
 import pytest
 from hamcrest import assert_that, contains_inanyorder, has_length, instance_of
+from mockito import any as mock_any
+from mockito import mock
 from yarl import URL
 
 from rss_agg.services import Fetcher, RSSParser
+from tests.utils import future_returning
 
 
 @pytest.mark.asyncio
-async def test_parses_rss(rss_string):
+async def test_parses_rss(rss_string, when):
     # Given
-    mock_fetcher = MagicMock(spec=Fetcher)
-    mock_fetcher.fetch_all = AsyncMock(return_value=[rss_string])
+    mock_fetcher = mock(Fetcher)
+    when(mock_fetcher).fetch_all(mock_any()).thenReturn(future_returning([rss_string]))
+
     parser = RSSParser(mock_fetcher)
 
     # When
@@ -23,10 +26,11 @@ async def test_parses_rss(rss_string):
 
 
 @pytest.mark.asyncio
-async def test_deduplicates_on_guid(rss_string_with_duplicate_guids):
+async def test_deduplicates_on_guid(rss_string_with_duplicate_guids, when):
     # Given
-    mock_fetcher = MagicMock(spec=Fetcher)
-    mock_fetcher.fetch_all = AsyncMock(return_value=[rss_string_with_duplicate_guids])
+    mock_fetcher = mock(Fetcher)
+    when(mock_fetcher).fetch_all(mock_any()).thenReturn(future_returning([rss_string_with_duplicate_guids]))
+
     parser = RSSParser(mock_fetcher)
 
     # When
