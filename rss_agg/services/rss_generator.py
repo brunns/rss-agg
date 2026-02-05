@@ -62,6 +62,6 @@ class RSSGenerator:
         if pub_date is not None and pub_date.text:
             try:
                 return parsedate_to_datetime(pub_date.text)
-            except (ValueError, TypeError):  # pragma: no cover
+            except ValueError, TypeError:  # pragma: no cover
                 pass
         return datetime.min.replace(tzinfo=UTC)
