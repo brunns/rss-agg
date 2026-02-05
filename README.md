@@ -4,7 +4,7 @@ Aggregate, de-duplicate and republish RSS feeds.
 
 Includes deployment to [AWS Lambda](https://aws.amazon.com/lambda/).
 
-Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [colima](https://github.com/abiosoft/colima) and [terraform](https://developer.hashicorp.com/terraform):
+Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), and [terraform](https://developer.hashicorp.com/terraform):
 
 ```sh
 brew install uv xc colima terraform
