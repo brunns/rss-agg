@@ -2,11 +2,11 @@ from http import HTTPStatus
 
 from brunns.matchers.werkzeug import is_werkzeug_response as is_response
 from hamcrest import assert_that, equal_to
-from mockito import any as mock_any
 from mockito import mock
+from mockito.matchers import ANY
 
 from rss_agg.services import RSSService
-from tests.utils import future_returning
+from tests.utils import async_value
 
 
 def test_get_data_route_logic(client, container, when):
@@ -14,7 +14,7 @@ def test_get_data_route_logic(client, container, when):
     mock_service = mock(RSSService)
     expected_rss = "<rss>fake feed</rss>"
 
-    when(mock_service).read_and_generate_rss(self_url=mock_any()).thenReturn(future_returning(expected_rss))
+    when(mock_service).read_and_generate_rss(self_url=ANY).thenReturn(async_value(expected_rss))
 
     # When
     with container.override.injectable(RSSService, new=mock_service):

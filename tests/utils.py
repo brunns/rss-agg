@@ -3,5 +3,5 @@ from typing import TypeVar
 T = TypeVar("T")
 
 
-async def future_returning[T](value: T) -> T:
+async def async_value[T](value: T) -> T:
     return value

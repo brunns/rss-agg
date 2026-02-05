@@ -2,19 +2,19 @@ from xml.etree import ElementTree as ET
 
 import pytest
 from hamcrest import assert_that, contains_inanyorder, has_length, instance_of
-from mockito import any as mock_any
 from mockito import mock
+from mockito.matchers import ANY
 from yarl import URL
 
 from rss_agg.services import Fetcher, RSSParser
-from tests.utils import future_returning
+from tests.utils import async_value
 
 
 @pytest.mark.asyncio
 async def test_parses_rss(rss_string, when):
     # Given
     mock_fetcher = mock(Fetcher)
-    when(mock_fetcher).fetch_all(mock_any()).thenReturn(future_returning([rss_string]))
+    when(mock_fetcher).fetch_all(ANY).thenReturn(async_value([rss_string]))
 
     parser = RSSParser(mock_fetcher)
 
@@ -29,7 +29,7 @@ async def test_parses_rss(rss_string, when):
 async def test_deduplicates_on_guid(rss_string_with_duplicate_guids, when):
     # Given
     mock_fetcher = mock(Fetcher)
-    when(mock_fetcher).fetch_all(mock_any()).thenReturn(future_returning([rss_string_with_duplicate_guids]))
+    when(mock_fetcher).fetch_all(ANY).thenReturn(async_value([rss_string_with_duplicate_guids]))
 
     parser = RSSParser(mock_fetcher)
 

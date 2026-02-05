@@ -7,7 +7,7 @@ from mockito import mock
 from yarl import URL
 
 from rss_agg.services import RSSGenerator, RSSParser, RSSService
-from tests.utils import future_returning
+from tests.utils import async_value
 
 
 @pytest.mark.asyncio
@@ -28,7 +28,7 @@ async def test_rss_service_orchestration_mockito(fs, when):
     mock_items = [ET.Element("item"), ET.Element("item")]
     mock_parser = mock(RSSParser)
 
-    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(future_returning(mock_items))
+    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(async_value(mock_items))
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
@@ -55,7 +55,7 @@ async def test_rss_service_handles_empty_feeds_file(fs, when):
     expected_urls = []
     mock_parser = mock(RSSParser)
 
-    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(future_returning(expected_urls))
+    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(async_value(expected_urls))
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
