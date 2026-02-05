@@ -19,7 +19,7 @@ async def test_parses_rss(rss_string, when):
     parser = RSSParser(mock_fetcher)
 
     # When
-    actual = await parser.read_rss_feeds([URL("http://example.com/")])
+    actual = await parser.read_rss_feeds([URL("https://example.com/")])
 
     # Then
     assert_that(actual, contains_inanyorder(instance_of(ET.Element), instance_of(ET.Element), instance_of(ET.Element)))
@@ -34,7 +34,7 @@ async def test_deduplicates_on_guid(rss_string_with_duplicate_guids, when):
     parser = RSSParser(mock_fetcher)
 
     # When
-    actual = await parser.read_rss_feeds([URL("http://example.com/")])
+    actual = await parser.read_rss_feeds([URL("https://example.com/")])
 
     # Then
     assert_that(actual, has_length(1))
