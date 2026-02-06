@@ -1,6 +1,6 @@
 from typing import Any
 
-import awsgi
+import aws_lambda_wsgi
 
 from rss_agg.web import app
 
@@ -16,4 +16,4 @@ def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     Returns:
         A dictionary formatted as an API Gateway response.
     """
-    return awsgi.response(app, event, context)
+    return aws_lambda_wsgi.response(app, event, context)
