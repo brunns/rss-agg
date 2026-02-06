@@ -109,6 +109,43 @@ terraform plan
 cd ..
 ```
 
+### healthcheck
+
+Check feed is running and returning XML
+
+Inputs: API_URL
+
+```shell
+echo "Testing API at: $API_URL"
+
+trap "rm -f response.xml" EXIT
+
+for i in {1..6}; do
+    HTTP_RESPONSE=$(curl -s -w "HTTP_STATUS:%{http_code}" "$API_URL")
+    HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
+    BODY=$(echo "$HTTP_RESPONSE" | sed -e 's/HTTP_STATUS:.*//')
+    
+    if [ "$HTTP_STATUS" -eq 200 ]; then
+      echo "$BODY" > response.xml
+      
+      if xmllint --noout response.xml; then
+        echo "Success: API returned valid XML"
+        exit 0
+      else
+        echo "Error: API returned 200 but the body is NOT valid XML"
+        cat response.xml
+        exit 1
+      fi
+    fi
+    
+    echo "Attempt $i: API returned $HTTP_STATUS, retrying in 5s..."
+    sleep 5
+done
+
+echo "Error: API failed to respond with 200 after 6 attempts"
+exit 1
+```
+
 ### create-s3-bucket
 
 One-off commands to set up the [AWS S3](https://aws.amazon.com/s3/) bucket that terraform will use to store 
