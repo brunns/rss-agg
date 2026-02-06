@@ -30,11 +30,12 @@ resource "aws_lambda_function" "rss_aggregator" {
 
   environment {
     variables = {
-      AWS_LAMBDA_EXEC_WRAPPER = "/opt/bootstrap"
-      PORT                    = "8080"
-      FEEDS_FILE              = var.feeds_file
-      MAX_ITEMS               = var.max_items
-      MAX_CONNECTIONS         = var.max_connections
+      AWS_LAMBDA_EXEC_WRAPPER    = "/opt/bootstrap"
+      AWS_LWA_PORT               = "8080"
+      AWS_LWA_ENABLE_COMPRESSION = "true"
+      FEEDS_FILE                 = var.feeds_file
+      MAX_ITEMS                  = var.max_items
+      MAX_CONNECTIONS            = var.max_connections
     }
   }
 }

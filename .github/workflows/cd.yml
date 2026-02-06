@@ -35,7 +35,10 @@ jobs:
       - run: xc build
       - run: terraform init
         working-directory: ./terraform
-      - run: terraform apply -auto-approve
+      - name: "terraform apply"
+        run: |
+          terraform apply -auto-approve
+          echo "api_url=$(terraform output -raw api_url)" >> $API_URL
         working-directory: ./terraform
         env:
           TF_VAR_lambda_payload_filename: "../terraform/deployment_package.zip"
