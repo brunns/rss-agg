@@ -36,7 +36,7 @@ uv run cli -vv
 Run web server
 
 ```sh
-uv run flask --app rss_agg/web.py run
+uv run gunicorn -b 0.0.0.0:8080 rss_agg.web:app
 ```
 
 ### test
@@ -83,14 +83,15 @@ uv run pyright
 
 ### build
 
-Build lambda image locally
+Build lambda image
 
 ```sh
 uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
 uv pip install -r requirements.txt --target build --python 3.14
 cp -r rss_agg build/
-cp lambda_function.py build/
+cp run.sh build/
 cp feeds.txt build/
+chmod +x build/run.sh
 cd build
 zip -r ../terraform/deployment_package.zip .
 cd ..
@@ -111,7 +112,7 @@ cd ..
 ### create-s3-bucket
 
 One-off commands to set up the [AWS S3](https://aws.amazon.com/s3/) bucket that terraform will use to store 
-infrastructure state. Run `aws configure` first to autenticate if necessary.
+infrastructure state. Run `aws configure` first to authenticate if necessary.
 
 ```sh
 aws s3 mb s3://brunns-rss-agg-terraform-state --region eu-west-2

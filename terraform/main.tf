@@ -22,15 +22,19 @@ resource "aws_lambda_function" "rss_aggregator" {
   filename         = "deployment_package.zip"
   function_name    = "rss_aggregator"
   role             = aws_iam_role.rss_aggregator_lambda_exec.arn
-  handler          = "lambda_function.lambda_handler"
+  handler          = "run.sh"
   source_code_hash = filebase64sha256("deployment_package.zip")
   runtime          = "python3.14"
-  timeout          = 15
+  timeout          = 30
+  layers           = ["arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerX86:25"]
+
   environment {
     variables = {
-      FEEDS_FILE      = var.feeds_file
-      MAX_ITEMS       = var.max_items
-      MAX_CONNECTIONS = var.max_connections
+      AWS_LAMBDA_EXEC_WRAPPER = "/opt/bootstrap"
+      PORT                    = "8080"
+      FEEDS_FILE              = var.feeds_file
+      MAX_ITEMS               = var.max_items
+      MAX_CONNECTIONS         = var.max_connections
     }
   }
 }

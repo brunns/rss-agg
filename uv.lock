@@ -33,15 +33,6 @@ wheels = [
 ]
 
 [[package]]
-name = "aws-lambda-wsgi"
-version = "0.0.6"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fb/c7/c2b1ebe38b48adb0c156b2e335efa6405b33cee3aa65e918f0d6008aeb77/aws_lambda_wsgi-0.0.6.tar.gz", hash = "sha256:54ac15c5586f72b1429253bdcb487b7214a348713fd0034de7d45e849224e893", size = 2938, upload-time = "2019-04-29T18:19:24.474Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/64/6beb002f48f3215dcd8e521b0afe13531e8cfb0e55d4d4ffbf992c232df6/aws_lambda_wsgi-0.0.6-py3-none-any.whl", hash = "sha256:28669d8168a46b49a77ba127711f4db05ccd35379bbcbcc28ef515b9c8ce0c67", size = 3832, upload-time = "2019-04-29T18:19:19.714Z" },
-]
-
-[[package]]
 name = "beautifulsoup4"
 version = "4.14.3"
 source = { registry = "https://pypi.org/simple" }
@@ -249,6 +240,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/53/e4/203a76fa2ef46cdb0a618295cc115220cbb874229d4d8721068335eb87f0/furl-2.1.4.tar.gz", hash = "sha256:877657501266c929269739fb5f5980534a41abd6bbabcb367c136d1d3b2a6015", size = 57526, upload-time = "2025-03-09T05:36:21.175Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/61/8c/dce3b1b7593858eba995b2dfdb833f872c7f863e3da92aab7128a6b11af4/furl-2.1.4-py2.py3-none-any.whl", hash = "sha256:da34d0b34e53ffe2d2e6851a7085a05d96922b5b578620a37377ff1dbeeb11c8", size = 27550, upload-time = "2025-03-09T05:36:19.928Z" },
+]
+
+[[package]]
+name = "gunicorn"
+version = "25.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9e/83/e8327358129ca4dffd4fa6b6004aa5085dc80e913dec9b253401d6bd23ad/gunicorn-25.0.1.tar.gz", hash = "sha256:573e053aa950246e307ea908bd7ddce1870d41a40aec0c935938c586f0b9b946", size = 9693127, upload-time = "2026-02-02T13:34:05.767Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e0/dc/f1da097b7e0de5cd7552c10667305879093125cd62ff7372ad07d184ed8f/gunicorn-25.0.1-py3-none-any.whl", hash = "sha256:23cbe968c6ae3c8efc3d118c8353fa0763efc2102d89d0d3cea696cede7ff6b1", size = 169961, upload-time = "2026-02-02T13:34:02.744Z" },
 ]
 
 [[package]]
@@ -654,9 +657,9 @@ name = "rss-agg"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "aws-lambda-wsgi" },
     { name = "defusedxml" },
     { name = "flask", extra = ["async"] },
+    { name = "gunicorn" },
     { name = "httpx" },
     { name = "python-json-logger" },
     { name = "wireup" },
@@ -683,9 +686,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "aws-lambda-wsgi", specifier = ">=0.0.6" },
     { name = "defusedxml", specifier = ">=0.7.1" },
     { name = "flask", extras = ["async"], specifier = ">=3.1.2" },
+    { name = "gunicorn", specifier = ">=25.0.1" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "python-json-logger", specifier = ">=4.0.0" },
     { name = "wireup", specifier = ">=2.6.0" },
