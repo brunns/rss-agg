@@ -35,7 +35,7 @@ jobs:
       - run: xc build
       - run: terraform init
         working-directory: ./terraform
-      - name: "terraform apply"
+      - name: "Run terraform apply"
         id: apply
         run: |
           terraform apply -auto-approve
