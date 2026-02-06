@@ -116,40 +116,50 @@ Check feed is running and returning XML
 Inputs: API_URL
 
 ```shell
+# silences the trace output
 set +x
 
 echo "Testing API at: $API_URL"
 
-trap "rm -f response.xml curl_meta.txt" EXIT
+trap "rm -f response.xml" EXIT
 
 ATTEMPTS=6
 TIMEOUT=5
 SUCCESS=false
-for i in $(seq 1 $ATTEMPTS); do
-    curl -sL -o response.xml -w "%{http_code}|||%{time_total}" "$API_URL" > curl_meta.txt
-    
-    META=$(cat curl_meta.txt)
-    HTTP_STATUS=$(echo "$META" | awk -F'\\|\\|\\|' '{print $1}')
-    RESPONSE_TIME=$(echo "$META" | awk -F'\\|\\|\\|' '{print $2}')
-    rm -f curl_meta.txt
 
+for i in $(seq 1 $ATTEMPTS); do
+    HTTP_STATUS=$(curl -sL -o response.xml -w "%{http_code}" "$API_URL")
+    
     if [ "$HTTP_STATUS" -eq 200 ]; then
-        if xmllint --noout response.xml 2>/dev/null; then
-            echo "Success: API returned valid XML. Response Time: ${RESPONSE_TIME}s"
-            SUCCESS=true
-            break
+        if command -v xmllint >/dev/null 2>&1; then
+            if xmllint --noout response.xml >/dev/null 2>&1; then
+                echo "Success: API returned valid XML."
+                SUCCESS=true
+                break
+            else
+                echo "Error: Body is not valid XML."
+                head -n 5 response.xml
+                exit 1
+            fi
         else
-            echo "Error: API returned 200 but body is NOT valid XML."
-            cat response.xml
-            exit 1
+            if grep -q "</rss>" response.xml; then
+                echo "Success: Found closing RSS tag (xmllint not found)."
+                SUCCESS=true
+                break
+            else
+                echo "Error: Response does not look like RSS."
+                exit 1
+            fi
         fi
     fi
     
-    echo "Attempt $i: API returned $HTTP_STATUS, retrying in ${TIMEOUT}s..."
+    echo "⚠Attempt $i: API returned $HTTP_STATUS, retrying in ${TIMEOUT}s..."
     sleep $TIMEOUT
 done
 
-if [ "$SUCCESS" = "false" ]; then
+if [ "$SUCCESS" = "true" ]; then
+    exit 0
+else
     echo "Error: API failed to respond with 200 after $ATTEMPTS attempts."
     exit 1
 fi
