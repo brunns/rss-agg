@@ -36,12 +36,16 @@ jobs:
       - run: terraform init
         working-directory: ./terraform
       - name: "terraform apply"
+        id: apply
         run: |
           terraform apply -auto-approve
-          echo "api_url=$(terraform output -raw api_url)" >> $API_URL
+          echo "api_url=$(terraform output -raw api_url)" >> "$GITHUB_OUTPUT"
         working-directory: ./terraform
         env:
           TF_VAR_lambda_payload_filename: "../terraform/deployment_package.zip"
           TF_VAR_feeds_file: "feeds.txt"
           TF_VAR_max_items: "50"
           TF_VAR_max_connections: "32"
+      - run: xc healthcheck
+        env:
+          API_URL: ${{ steps.apply.outputs.api_url }}

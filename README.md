@@ -116,34 +116,43 @@ Check feed is running and returning XML
 Inputs: API_URL
 
 ```shell
+set +x
+
 echo "Testing API at: $API_URL"
 
-trap "rm -f response.xml" EXIT
+trap "rm -f response.xml curl_meta.txt" EXIT
 
-for i in {1..6}; do
-    HTTP_RESPONSE=$(curl -s -w "HTTP_STATUS:%{http_code}" "$API_URL")
-    HTTP_STATUS=$(echo "$HTTP_RESPONSE" | tr -d '\n' | sed -e 's/.*HTTP_STATUS://')
-    BODY=$(echo "$HTTP_RESPONSE" | sed -e 's/HTTP_STATUS:.*//')
+ATTEMPTS=6
+TIMEOUT=5
+SUCCESS=false
+for i in $(seq 1 $ATTEMPTS); do
+    curl -sL -o response.xml -w "%{http_code}|||%{time_total}" "$API_URL" > curl_meta.txt
     
+    META=$(cat curl_meta.txt)
+    HTTP_STATUS=$(echo "$META" | awk -F'\\|\\|\\|' '{print $1}')
+    RESPONSE_TIME=$(echo "$META" | awk -F'\\|\\|\\|' '{print $2}')
+    rm -f curl_meta.txt
+
     if [ "$HTTP_STATUS" -eq 200 ]; then
-      echo "$BODY" > response.xml
-      
-      if xmllint --noout response.xml; then
-        echo "Success: API returned valid XML"
-        exit 0
-      else
-        echo "Error: API returned 200 but the body is NOT valid XML"
-        cat response.xml
-        exit 1
-      fi
+        if xmllint --noout response.xml 2>/dev/null; then
+            echo "Success: API returned valid XML. Response Time: ${RESPONSE_TIME}s"
+            SUCCESS=true
+            break
+        else
+            echo "Error: API returned 200 but body is NOT valid XML."
+            cat response.xml
+            exit 1
+        fi
     fi
     
-    echo "Attempt $i: API returned $HTTP_STATUS, retrying in 5s..."
-    sleep 5
+    echo "Attempt $i: API returned $HTTP_STATUS, retrying in ${TIMEOUT}s..."
+    sleep $TIMEOUT
 done
 
-echo "Error: API failed to respond with 200 after 6 attempts"
-exit 1
+if [ "$SUCCESS" = "false" ]; then
+    echo "Error: API failed to respond with 200 after $ATTEMPTS attempts."
+    exit 1
+fi
 ```
 
 ### create-s3-bucket
