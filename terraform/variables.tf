@@ -13,9 +13,14 @@ variable "max_connections" {
   default = "16"
 }
 
-variable "timeout" {
+variable "fetch_timeout" {
+  type    = string
+  default = "3"
+}
+
+variable "lambda_timeout" {
   type    = number
-  default = 5
+  default = 15
 }
 
 variable "memory_size" {

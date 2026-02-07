@@ -15,12 +15,17 @@ logger = logging.getLogger(__name__)
 
 @injectable
 class Fetcher:
-    def __init__(self, max_connections: Annotated[int, Inject(config="max_connections")]) -> None:
+    def __init__(
+        self,
+        timeout: Annotated[int, Inject(config="timeout")],
+        max_connections: Annotated[int, Inject(config="max_connections")],
+    ) -> None:
+        self.timeout = timeout
         self.max_connections = max_connections
 
     async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
         async with httpx.AsyncClient(
-            follow_redirects=True, limits=httpx.Limits(max_connections=self.max_connections)
+            follow_redirects=True, limits=httpx.Limits(max_connections=self.max_connections), timeout=self.timeout
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             responses: Collection[str] = await asyncio.gather(*tasks)

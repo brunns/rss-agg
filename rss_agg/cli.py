@@ -40,6 +40,7 @@ def build_config(args: argparse.Namespace) -> dict[str, Any]:
         "feeds_file": args.feeds_file,
         "base_url": args.base_url,
         "max_items": args.max_items,
+        "timeout": args.timeout,
         "max_connections": args.max_connections,
         "feed_title": "@brunns's theguardian.com",
         "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
@@ -81,6 +82,12 @@ def create_parser() -> argparse.ArgumentParser:
         type=int,
         default=16,
         help="Maximum concurrent HTTP connections. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--timeout",
+        type=int,
+        default=3,
+        help="Timeout for feed fetching. Default: %(default)s",
     )
 
     parser.add_argument(

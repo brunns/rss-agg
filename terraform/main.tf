@@ -27,7 +27,7 @@ resource "aws_lambda_function" "rss_aggregator" {
   source_code_hash = filebase64sha256("deployment_package.zip")
   runtime          = "python3.14"
   memory_size      = var.memory_size
-  timeout          = var.timeout
+  timeout          = var.lambda_timeout
   layers           = ["arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerX86:25"]
 
   environment {
@@ -38,6 +38,7 @@ resource "aws_lambda_function" "rss_aggregator" {
       FEEDS_FILE                 = var.feeds_file
       MAX_ITEMS                  = var.max_items
       MAX_CONNECTIONS            = var.max_connections
+      TIMEOUT                    = var.fetch_timeout
     }
   }
 }
