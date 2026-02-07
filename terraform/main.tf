@@ -19,13 +19,15 @@ resource "random_string" "suffix" {
 }
 
 resource "aws_lambda_function" "rss_aggregator" {
+  description      = "Aggregate, de-duplicate and republish RSS feeds"
   filename         = "deployment_package.zip"
   function_name    = "rss_aggregator"
   role             = aws_iam_role.rss_aggregator_lambda_exec.arn
   handler          = "run.sh"
   source_code_hash = filebase64sha256("deployment_package.zip")
   runtime          = "python3.14"
-  timeout          = 30
+  memory_size      = var.memory_size
+  timeout          = var.timeout
   layers           = ["arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerX86:25"]
 
   environment {
