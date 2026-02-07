@@ -15,7 +15,7 @@ variable "max_connections" {
 
 variable "timeout" {
   type    = number
-  default = 30
+  default = 5
 }
 
 variable "memory_size" {
