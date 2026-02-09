@@ -56,7 +56,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def create_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Display status of GitHub Actions.")
+    parser = argparse.ArgumentParser(description="Aggregate, de-duplicate and republish RSS feeds.")
 
     parser.add_argument(
         "--base-url",

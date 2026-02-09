@@ -50,4 +50,4 @@ def test_cli_help():
     # Then
     assert not result.returncode
     assert not result.stderr
-    assert_that(result.stdout, contains_string("Display status of GitHub Actions."))
+    assert_that(result.stdout, contains_string("Aggregate, de-duplicate and republish RSS feeds."))
