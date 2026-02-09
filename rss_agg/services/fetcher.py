@@ -20,8 +20,10 @@ class Fetcher:
         timeout: Annotated[int, Inject(config="timeout")],
         max_connections: Annotated[int, Inject(config="max_connections")],
     ) -> None:
-        self.timeout = timeout
-        self.max_connections = max_connections
+        self.timeout = httpx.Timeout(timeout)
+        self.limits = httpx.Limits(
+            max_connections=max_connections, max_keepalive_connections=max_connections, keepalive_expiry=5
+        )
         self.headers = {
             "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
             "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
@@ -29,12 +31,7 @@ class Fetcher:
 
     async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
         async with httpx.AsyncClient(
-            follow_redirects=True,
-            limits=httpx.Limits(
-                max_connections=self.max_connections, max_keepalive_connections=self.max_connections, keepalive_expiry=5
-            ),
-            timeout=httpx.Timeout(self.timeout),
-            http2=True,
+            follow_redirects=True, limits=self.limits, timeout=self.timeout, http2=True
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             responses: Collection[str] = await asyncio.gather(*tasks)
