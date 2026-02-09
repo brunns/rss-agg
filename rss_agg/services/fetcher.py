@@ -22,20 +22,28 @@ class Fetcher:
     ) -> None:
         self.timeout = timeout
         self.max_connections = max_connections
+        self.headers = {
+            "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
+            "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
+        }
 
     async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
         async with httpx.AsyncClient(
-            follow_redirects=True, limits=httpx.Limits(max_connections=self.max_connections), timeout=self.timeout
+            follow_redirects=True,
+            limits=httpx.Limits(
+                max_connections=self.max_connections, max_keepalive_connections=self.max_connections, keepalive_expiry=5
+            ),
+            timeout=httpx.Timeout(self.timeout),
+            http2=True,
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             responses: Collection[str] = await asyncio.gather(*tasks)
         return responses
 
-    @staticmethod
-    async def fetch(client: httpx.AsyncClient, url: URL) -> str:
+    async def fetch(self, client: httpx.AsyncClient, url: URL) -> str:
         try:
             logger.info("getting from %s", url)
-            response = await client.get(str(url))
+            response = await client.get(str(url), headers=self.headers)
             response.raise_for_status()
         except Exception as e:
             logger.exception("Unexpected", exc_info=e)
