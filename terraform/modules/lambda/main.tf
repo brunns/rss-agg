@@ -27,11 +27,16 @@ resource "aws_lambda_function" "this" {
   runtime       = "python3.14"
   memory_size   = var.memory_size
   timeout       = var.lambda_timeout
+  publish       = true
   source_code_hash = filebase64sha256(var.deployment_zip)
 
   layers = [
     "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerX86:25"
   ]
+
+  snap_start {
+    apply_on = "PublishedVersions"
+  }
 
   environment {
     variables = {
@@ -44,6 +49,13 @@ resource "aws_lambda_function" "this" {
       TIMEOUT                    = var.fetch_timeout
     }
   }
+}
+
+resource "aws_lambda_alias" "live" {
+  name             = "live"
+  description      = "Alias pointing to the latest published version"
+  function_name    = aws_lambda_function.this.function_name
+  function_version = aws_lambda_function.this.version
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {
