@@ -1,0 +1,142 @@
+# CLAUDE.md
+2
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+RSS aggregator that fetches, de-duplicates, and republishes RSS feeds from theguardian.com. Deployed as an AWS Lambda function behind API Gateway, using Python 3.14.
+
+## Build and Development Commands
+
+This project uses [xc](https://xcfile.dev/) for task running. All commands are defined in `README.md`.
+
+### Essential commands:
+- `xc test` - Run all tests (unit + integration)
+- `xc unit` - Run unit tests with coverage (requires 100% coverage)
+- `xc integration` - Run integration tests (requires Colima/Docker)
+- `xc lint` - Lint code (ruff + pyright)
+- `xc format` - Format code with ruff
+- `xc cli` - Run CLI locally (outputs RSS to stdout)
+- `xc web` - Run web server locally on port 8080
+- `xc build` - Build Lambda deployment package
+- `xc plan` - Plan Terraform changes (runs build first)
+
+### Running a single test:
+```sh
+uv run pytest tests/unit/test_specific.py::test_name -vv
+```
+
+### Running a single integration test:
+```sh
+uv run pytest tests/integration/test_specific.py::test_name -s
+```
+
+## Architecture
+
+### Application Flow
+
+The application has two entry points:
+
+1. **CLI mode** (`cli.py`): Fetches feeds and outputs RSS to stdout
+2. **Web mode** (`web.py`): Flask app serving RSS via HTTP (used in Lambda)
+
+Both modes follow the same flow:
+1. Read feed paths from `feeds.txt`
+2. Construct full URLs by combining `base_url` (theguardian.com) + path + "/rss"
+3. Fetch all feeds concurrently via `Fetcher` (using httpx with HTTP/2)
+4. Parse feeds with `RSSParser` (using defusedxml)
+5. De-duplicate items by GUID
+6. Sort by date and limit to `max_items`
+7. Generate new RSS feed with `RSSGenerator`
+
+### Dependency Injection
+
+Uses [wireup](https://github.com/maldoinc/wireup) for dependency injection:
+- Services are marked with `@injectable` decorator
+- Configuration values injected with `Annotated[Type, Inject(config="key")]`
+- Container created from environment variables (web) or CLI args (cli)
+- Container held in `WireupFlask.container` for web mode
+
+### Key Services
+
+All services in `rss_agg/services/`:
+
+- **RSSService**: Orchestrates the full flow (reads file, calls parser, calls generator)
+- **Fetcher**: HTTP client for concurrent feed fetching (httpx with HTTP/2, retries, connection pooling)
+- **RSSParser**: Parses RSS feeds and de-duplicates by GUID
+- **RSSGenerator**: Generates new RSS feed from de-duplicated items
+
+### Configuration
+
+Web mode reads from environment variables:
+- `FEEDS_FILE` (default: feeds.txt)
+- `MAX_ITEMS` (default: 50)
+- `MAX_CONNECTIONS` (default: 16)
+- `TIMEOUT` (default: 3)
+
+CLI mode uses argparse flags (see `cli.py --help`).
+
+## Lambda Deployment
+
+### Architecture
+- Lambda function uses Python 3.14 runtime
+- Uses AWS Lambda Web Adapter layer to run Flask app in Lambda
+- Handler is `run.sh` which starts gunicorn
+- API Gateway provides public HTTP endpoint
+- State stored in S3 backend for Terraform
+- SnapStart enabled on published versions via "live" alias
+
+### Deployment Process
+
+**Always deploy via GitHub Actions CD workflow**, not locally:
+
+1. Commit and push your changes to GitHub
+2. Trigger the workflow:
+   - Via GitHub UI: Go to Actions → Deploy → Run workflow
+   - Via CLI: `gh workflow run cd.yml`
+3. The workflow will:
+   - Run tests and linting
+   - Build deployment package (`xc build`)
+   - Run `terraform init` and `terraform apply -auto-approve`
+   - Run healthcheck to verify deployment
+
+**Terraform modules** in `terraform/modules/`:
+- `lambda/`: Lambda function (with SnapStart), IAM role, CloudWatch logs, "live" alias
+- `api_gateway/`: API Gateway REST API with Lambda integration
+
+### Environment Variables in Lambda
+Lambda function receives configuration via environment variables (set in `terraform/modules/lambda/main.tf`):
+- `FEEDS_FILE`, `MAX_ITEMS`, `MAX_CONNECTIONS`, `TIMEOUT`
+- `AWS_LAMBDA_EXEC_WRAPPER`, `AWS_LWA_PORT`, `AWS_LWA_ENABLE_COMPRESSION` (for Lambda Web Adapter)
+
+## Tool Preferences
+
+- **JSON parsing**: Use `jq` instead of `python -c` for parsing JSON output
+- **Task runner**: Use `xc` to run tasks where possible.
+- **Python tool & package management**: Use `uv` and `uvx` where appropriate.
+- **Command-line tools**: Prefer standard Unix tools when available
+
+## Code Style
+
+- Ruff with strict settings (`select = ["ALL"]`)
+- Max line length: 120
+- Max cyclomatic complexity: 5
+- Pyright for type checking
+- Tests excluded from some linting rules (see `pyproject.toml`)
+- Coverage omits `cli.py` and `web.py` (entry points)
+
+## Testing
+
+- **Unit tests**: `tests/unit/` - Pure Python, no I/O, requires 100% coverage
+- **Integration tests**: `tests/integration/` - Use Docker/Colima for external services
+- Test frameworks: pytest, pytest-asyncio, pyhamcrest, mockito (not unittest.mock), respx
+- Use `pyfakefs` for filesystem mocking
+
+## Dependencies
+
+- **Flask**: Async support required (`flask[async]`)
+- **httpx**: HTTP client with HTTP/2 support (`httpx[http2]`)
+- **defusedxml**: Safe XML parsing (prevents XML bombs)
+- **wireup**: Dependency injection
+- **yarl**: URL handling
+- **gunicorn**: WSGI server for Lambda
