@@ -94,6 +94,10 @@ cp -r rss_agg build/
 cp run.sh build/
 cp feeds.txt build/
 chmod +x build/run.sh
+find build -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+find build -type f -name "*.pyc" -delete
+find build -type d -name "tests" -exec rm -rf {} + 2>/dev/null || true
+find build -name "*.dist-info" -type d -exec sh -c 'cd "$1" && ls | grep -v "METADATA\|WHEEL\|top_level.txt" | xargs rm -rf' _ {} \; 2>/dev/null || true
 cd build
 zip -r ../terraform/deployment_package.zip .
 cd ..
@@ -111,13 +115,21 @@ terraform plan
 cd ..
 ```
 
+### deploy
+
+Run deployment workflow
+
+```sh
+gh workflow run cd.yml
+```
+
 ### healthcheck
 
 Check feed is running and returning XML
 
 Inputs: API_URL
 
-```shell
+```sh
 # silences the trace output
 set +x
 

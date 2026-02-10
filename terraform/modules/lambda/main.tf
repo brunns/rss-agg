@@ -25,13 +25,14 @@ resource "aws_lambda_function" "this" {
   role          = aws_iam_role.lambda_exec.arn
   handler       = "run.sh"
   runtime       = "python3.14"
+  architectures = ["arm64"]
   memory_size   = var.memory_size
   timeout       = var.lambda_timeout
   publish       = true
   source_code_hash = filebase64sha256(var.deployment_zip)
 
   layers = [
-    "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerX86:25"
+    "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerArm64:25"
   ]
 
   snap_start {
