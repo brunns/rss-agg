@@ -20,7 +20,7 @@ variable "fetch_timeout" {
 
 variable "lambda_timeout" {
   type    = number
-  default = 10
+  default = 15
 }
 
 variable "memory_size" {

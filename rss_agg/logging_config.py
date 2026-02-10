@@ -1,12 +1,14 @@
 import logging
 import sys
+import time
 import warnings
+from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
 from pythonjsonlogger.json import JsonFormatter
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Generator, Sequence
 
 LOG_LEVELS = [logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG]
 
@@ -34,3 +36,27 @@ def init_logging(
 
     for package in silence_packages:
         logging.getLogger(package).setLevel(max([level, logging.WARNING]))
+
+
+@contextmanager
+def log_duration(logger: logging.Logger, message: str, **extra: str) -> Generator[None]:
+    """Context manager to log the duration of a block of code.
+
+    Args:
+        logger: Logger instance to use
+        message: Log message to output
+        **extra: Additional fields to include in the log entry
+
+    Example:
+        with log_duration(logger, "request", path="/api/data"):
+            # Do work here
+            pass
+    """
+
+    start_time = time.perf_counter()
+    logger.info("%s started", message, extra={**extra})
+    try:
+        yield
+    finally:
+        duration_ms = (time.perf_counter() - start_time) * 1000
+        logger.info("%s finished", message, extra={**extra, "duration_ms": f"{duration_ms:.2f}"})
