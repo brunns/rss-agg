@@ -179,9 +179,39 @@ else
 fi
 ```
 
+### logs
+
+Query CloudWatch logs for recent Lambda activity
+
+```sh
+aws logs tail /aws/lambda/rss_aggregator --since 10m --format short
+```
+
+### logs-query
+
+Run a CloudWatch Logs Insights query for structured log analysis
+
+```sh
+QUERY_ID=$(aws logs start-query \
+  --log-group-name /aws/lambda/rss_aggregator \
+  --start-time $(date -u -v-10M +%s 2>/dev/null || date -u -d '10 minutes ago' +%s) \
+  --end-time $(date -u +%s) \
+  --query-string 'fields @timestamp, message, url
+| filter message = "fetching feed"
+| sort @timestamp desc
+| limit 20' \
+  --output text --query 'queryId')
+
+echo "Query ID: $QUERY_ID"
+echo "Waiting for query to complete..."
+sleep 3
+
+aws logs get-query-results --query-id "$QUERY_ID" --output json | jq -r '.results[] | map(select(.field != "@ptr") | "\(.field): \(.value)") | join(" | ")'
+```
+
 ### create-s3-bucket
 
-One-off commands to set up the [AWS S3](https://aws.amazon.com/s3/) bucket that terraform will use to store 
+One-off commands to set up the [AWS S3](https://aws.amazon.com/s3/) bucket that terraform will use to store
 infrastructure state. Run `aws configure` first to authenticate if necessary.
 
 ```sh
