@@ -2,6 +2,7 @@ import os
 
 import scripttest
 from brunns.matchers.rss import is_rss_feed
+from brunns.matchers.scripttest import is_proc_result
 from hamcrest import assert_that, contains_string, has_length
 from mbtest.imposters import Imposter, Predicate, Response, Stub
 
@@ -18,9 +19,10 @@ def test_cli_output(mock_server, large_rss_string, sausages_feeds_file):
         )
 
     # Then
-    assert not result.returncode
-    assert not result.stderr
-    assert_that(result.stdout, is_rss_feed().with_entries(has_length(50)))
+    assert_that(
+        result,
+        is_proc_result().with_returncode(0).with_stderr("").with_stdout(is_rss_feed().with_entries(has_length(50))),
+    )
 
 
 def test_cli_max_items(mock_server, large_rss_string, sausages_feeds_file):
@@ -35,9 +37,10 @@ def test_cli_max_items(mock_server, large_rss_string, sausages_feeds_file):
         )
 
     # Then
-    assert not result.returncode
-    assert not result.stderr
-    assert_that(result.stdout, is_rss_feed().with_entries(has_length(10)))
+    assert_that(
+        result,
+        is_proc_result().with_returncode(0).with_stderr("").with_stdout(is_rss_feed().with_entries(has_length(10))),
+    )
 
 
 def test_cli_help():
@@ -48,6 +51,10 @@ def test_cli_help():
     result = env.run("uv", "run", "cli", "-h", cwd=os.getcwd())
 
     # Then
-    assert not result.returncode
-    assert not result.stderr
-    assert_that(result.stdout, contains_string("Aggregate, de-duplicate and republish RSS feeds."))
+    assert_that(
+        result,
+        is_proc_result()
+        .with_returncode(0)
+        .with_stderr("")
+        .with_stdout(contains_string("Aggregate, de-duplicate and republish RSS feeds.")),
+    )
