@@ -2,23 +2,17 @@
 import argparse
 import asyncio
 import logging
-import sys
-import warnings
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import wireup
-from pythonjsonlogger.json import JsonFormatter
 from yarl import URL
 
 import rss_agg.services
-
-if TYPE_CHECKING:
-    from collections.abc import Sequence
+from rss_agg.logging_config import init_logging
 
 VERSION = "0.1.0"
 
-LOG_LEVELS = [logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG]
 logger = logging.getLogger(__name__)
 
 
@@ -101,24 +95,6 @@ def create_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("-V", "--version", action="version", version=VERSION)
     return parser
-
-
-def init_logging(
-    verbosity: int,
-    handler: logging.Handler | None = None,
-    silence_packages: Sequence[str] = (),
-) -> None:
-    handler = handler or logging.StreamHandler(stream=sys.stdout)
-    level = LOG_LEVELS[min(verbosity, len(LOG_LEVELS) - 1)]
-    msg_format = "%(message)s"
-    if level <= logging.DEBUG:
-        warnings.filterwarnings("ignore")
-        msg_format = "%(asctime)s %(levelname)-8s %(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s"
-    handler.setFormatter(JsonFormatter(msg_format))
-    logging.basicConfig(level=level, format=msg_format, handlers=[handler])
-
-    for package in silence_packages:
-        logging.getLogger(package).setLevel(max([level, logging.WARNING]))
 
 
 if __name__ == "__main__":

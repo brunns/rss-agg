@@ -7,6 +7,7 @@ from flask import Flask
 from yarl import URL
 
 import rss_agg.services
+from rss_agg.logging_config import init_logging
 from rss_agg.routes import rss_bp
 
 if TYPE_CHECKING:
@@ -18,6 +19,12 @@ class WireupFlask(Flask):
 
 
 def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask, wireup.SyncContainer]:
+    # Initialize logging for Lambda/web mode
+    log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
+    log_level_map = {"ERROR": 0, "WARNING": 1, "INFO": 2, "DEBUG": 3}
+    verbosity = log_level_map.get(log_level, 2)  # Default to INFO
+    init_logging(verbosity, silence_packages=["urllib3", "httpcore"])
+
     app = WireupFlask(__name__)
 
     config = build_config()

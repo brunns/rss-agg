@@ -27,3 +27,8 @@ variable "memory_size" {
   type    = number
   default = 512
 }
+
+variable "log_level" {
+  type    = string
+  default = "INFO"
+}

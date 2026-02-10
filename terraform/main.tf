@@ -29,6 +29,7 @@ module "lambda" {
   max_connections = var.max_connections
   fetch_timeout   = var.fetch_timeout
   deployment_zip  = "deployment_package.zip"
+  log_level       = var.log_level
 }
 
 module "api_gateway" {

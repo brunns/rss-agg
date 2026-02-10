@@ -29,3 +29,7 @@ variable "fetch_timeout" {
 variable "deployment_zip" {
   type = string
 }
+
+variable "log_level" {
+  type = string
+}

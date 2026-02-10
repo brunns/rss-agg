@@ -39,14 +39,14 @@ class Fetcher:
     @staticmethod
     async def fetch(client: AsyncClient, url: URL) -> str:
         try:
-            logger.info("getting from %s", url)
+            logger.info("fetching feed", extra={"url": str(url)})
             response = await client.get(str(url))
             response.raise_for_status()
         except Exception as e:
-            logger.exception("Unexpected", exc_info=e)
+            logger.exception("fetch failed", extra={"url": str(url), "error": str(e)}, exc_info=e)
             raise
         else:
             if response.text:
                 return response.text
-            logger.warning("empty response from %s", url)
+            logger.warning("empty response", extra={"url": str(url)})
             return ""
