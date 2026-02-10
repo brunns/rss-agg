@@ -39,7 +39,7 @@ def init_logging(
 
 
 @contextmanager
-def log_duration(log_func: Callable, message: str, log_start: bool = False, **extra: str) -> Generator[None]:
+def log_duration(log_func: Callable, message: str, log_start: bool = False, **extra: str | int) -> Generator[None]:
     """Context manager to log the duration of a block of code.
 
     Args:
