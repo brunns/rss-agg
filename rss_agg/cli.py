@@ -36,6 +36,9 @@ def build_config(args: argparse.Namespace) -> dict[str, Any]:
         "max_items": args.max_items,
         "timeout": args.timeout,
         "max_connections": args.max_connections,
+        "max_keepalive_connections": args.max_keepalive_connections,
+        "keepalive_expiry": args.keepalive_expiry,
+        "retries": args.retries,
         "feed_title": "@brunns's theguardian.com",
         "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
         "feed_link": URL("https://brunn.ing"),
@@ -76,6 +79,24 @@ def create_parser() -> argparse.ArgumentParser:
         type=int,
         default=16,
         help="Maximum concurrent HTTP connections. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--max-keepalive-connections",
+        type=int,
+        default=16,
+        help="Maximum keep-alive connections. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--keepalive-expiry",
+        type=int,
+        default=5,
+        help="Keep-alive expiry. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--retries",
+        type=int,
+        default=3,
+        help="Maximum HTTP retries. Default: %(default)s",
     )
     parser.add_argument(
         "--timeout",

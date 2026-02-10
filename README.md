@@ -91,7 +91,7 @@ Build lambda image
 uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
 uv pip install -r requirements.txt --target build --python 3.14
 cp -r rss_agg build/
-cp run.sh build/
+cp terraform/run.sh build/
 cp feeds.txt build/
 chmod +x build/run.sh
 find build -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true

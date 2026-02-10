@@ -21,14 +21,21 @@ class Fetcher:
         self,
         timeout: Annotated[int, Inject(config="timeout")],
         max_connections: Annotated[int, Inject(config="max_connections")],
+        max_keepalive_connections: Annotated[int, Inject(config="max_keepalive_connections")],
+        keepalive_expiry: Annotated[int, Inject(config="keepalive_expiry")],
+        retries: Annotated[int, Inject(config="retries")],
     ) -> None:
         self.headers = {
             "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
             "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
         }
         self.timeout = Timeout(timeout)
-        limits = Limits(max_connections=max_connections, max_keepalive_connections=max_connections, keepalive_expiry=5)
-        self.transport = AsyncHTTPTransport(http2=True, retries=3, limits=limits)
+        limits = Limits(
+            max_connections=max_connections,
+            max_keepalive_connections=max_keepalive_connections,
+            keepalive_expiry=keepalive_expiry,
+        )
+        self.transport = AsyncHTTPTransport(http2=True, retries=retries, limits=limits)
 
     async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
         async with AsyncClient(
