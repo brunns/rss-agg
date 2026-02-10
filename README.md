@@ -130,51 +130,14 @@ Check feed is running and returning XML
 Inputs: API_URL
 
 ```sh
-# silences the trace output
 set +x
-
 echo "Testing API at: $API_URL"
 
-trap "rm -f response.xml" EXIT
-
-ATTEMPTS=6
-TIMEOUT=5
-SUCCESS=false
-
-for i in $(seq 1 $ATTEMPTS); do
-    HTTP_STATUS=$(curl -sL -o response.xml -w "%{http_code}" "$API_URL")
-    
-    if [ "$HTTP_STATUS" -eq 200 ]; then
-        if command -v xmllint >/dev/null 2>&1; then
-            if xmllint --noout response.xml >/dev/null 2>&1; then
-                echo "Success: API returned valid XML."
-                SUCCESS=true
-                break
-            else
-                echo "Error: Body is not valid XML."
-                head -n 5 response.xml
-                exit 1
-            fi
-        else
-            if grep -q "</rss>" response.xml; then
-                echo "Success: Found closing RSS tag (xmllint not found)."
-                SUCCESS=true
-                break
-            else
-                echo "Error: Response does not look like RSS."
-                exit 1
-            fi
-        fi
-    fi
-    
-    echo "⚠Attempt $i: API returned $HTTP_STATUS, retrying in ${TIMEOUT}s..."
-    sleep $TIMEOUT
-done
-
-if [ "$SUCCESS" = "true" ]; then
-    exit 0
+# curl will retry up to 5 times with 5 second delays, fail on non-200 status
+if curl -fsSL --retry 5 --retry-delay 5 "$API_URL" | xmllint --noout - 2>/dev/null; then
+    echo "✓ API returned valid XML"
 else
-    echo "Error: API failed to respond with 200 after $ATTEMPTS attempts."
+    echo "✗ API check failed (ensure xmllint is installed: brew install libxml2)"
     exit 1
 fi
 ```
