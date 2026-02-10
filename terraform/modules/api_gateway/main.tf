@@ -81,9 +81,11 @@ resource "aws_api_gateway_deployment" "this" {
     redeployment = sha1(jsonencode([
       aws_api_gateway_method.root.id,
       aws_api_gateway_integration.root.id,
+      aws_api_gateway_integration.root.uri,
       aws_api_gateway_resource.proxy.id,
       aws_api_gateway_method.proxy.id,
       aws_api_gateway_integration.proxy.id,
+      aws_api_gateway_integration.proxy.uri,
     ]))
   }
 
