@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, cast
 from flask import Blueprint, Response, current_app, request
 from yarl import URL
 
-from rss_agg.logging_config import log_duration
+from rss_agg.logging_utils import log_duration
 from rss_agg.services import RSSService
 
 if TYPE_CHECKING:
@@ -16,7 +16,7 @@ rss_bp = Blueprint("rss", __name__)
 
 @rss_bp.route("/")
 async def get_data() -> Response:
-    with log_duration(logger, "request", path=request.path):
+    with log_duration(logger.info, "request", path=request.path):
         container = cast("WireupFlask", current_app).container
         rss_service = container.get(RSSService)
         rss = await rss_service.read_and_generate_rss(self_url=URL(request.base_url))

@@ -9,7 +9,7 @@ import wireup
 from yarl import URL
 
 import rss_agg.services
-from rss_agg.logging_config import init_logging
+from rss_agg.logging_utils import init_logging
 
 VERSION = "0.1.0"
 

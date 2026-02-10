@@ -7,7 +7,7 @@ from flask import Flask
 from yarl import URL
 
 import rss_agg.services
-from rss_agg.logging_config import init_logging
+from rss_agg.logging_utils import init_logging
 from rss_agg.routes import rss_bp
 
 if TYPE_CHECKING:

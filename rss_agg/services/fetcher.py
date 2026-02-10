@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Annotated
 from httpx import AsyncClient, AsyncHTTPTransport, Limits, Timeout
 from wireup import Inject, injectable
 
-from rss_agg.logging_config import log_duration
+from rss_agg.logging_utils import log_duration
 
 if TYPE_CHECKING:
     from collections.abc import Collection
@@ -41,7 +41,7 @@ class Fetcher:
     @staticmethod
     async def fetch(client: AsyncClient, url: URL) -> str:
         try:
-            with log_duration(logger, "fetching feed", url=str(url)):
+            with log_duration(logger.info, "fetching feed", url=str(url)):
                 response = await client.get(str(url))
                 response.raise_for_status()
         except Exception as e:

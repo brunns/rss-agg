@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING
 from pythonjsonlogger.json import JsonFormatter
 
 if TYPE_CHECKING:
-    from collections.abc import Generator, Sequence
+    from collections.abc import Callable, Generator, Sequence
 
 LOG_LEVELS = [logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG]
 
@@ -39,24 +39,25 @@ def init_logging(
 
 
 @contextmanager
-def log_duration(logger: logging.Logger, message: str, **extra: str) -> Generator[None]:
+def log_duration(log_func: Callable, message: str, log_start: bool = False, **extra: str) -> Generator[None]:
     """Context manager to log the duration of a block of code.
 
     Args:
-        logger: Logger instance to use
+        log_func: Logging function to use (e.g., logger.info, logger.debug)
         message: Log message to output
+        log_start: Log at the start, or only at the end?
         **extra: Additional fields to include in the log entry
 
     Example:
-        with log_duration(logger, "request", path="/api/data"):
+        with log_duration(logger.info, "request", path="/api/data"):
             # Do work here
             pass
     """
-
     start_time = time.perf_counter()
-    logger.info("%s started", message, extra={**extra})
+    if log_start:
+        log_func("%s started", message, extra={**extra})
     try:
         yield
     finally:
         duration_ms = (time.perf_counter() - start_time) * 1000
-        logger.info("%s finished", message, extra={**extra, "duration_ms": f"{duration_ms:.2f}"})
+        log_func("%s finished", message, extra={**extra, "duration_ms": f"{duration_ms:.2f}"})
