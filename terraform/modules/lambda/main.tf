@@ -47,6 +47,9 @@ resource "aws_lambda_function" "this" {
       FEEDS_FILE                 = var.feeds_file
       MAX_ITEMS                  = var.max_items
       MAX_CONNECTIONS            = var.max_connections
+      MAX_KEEPALIVE_CONNECTIONS  = var.max_keepalive_connections
+      KEEPALIVE_EXPIRY           = var.keepalive_expiry
+      RETRIES                    = var.retries
       TIMEOUT                    = var.fetch_timeout
       LOG_LEVEL                  = var.log_level
     }

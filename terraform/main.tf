@@ -21,15 +21,18 @@ resource "random_string" "suffix" {
 module "lambda" {
   source = "./modules/lambda"
 
-  name_suffix     = random_string.suffix.result
-  memory_size     = var.memory_size
-  lambda_timeout  = var.lambda_timeout
-  feeds_file      = var.feeds_file
-  max_items       = var.max_items
-  max_connections = var.max_connections
-  fetch_timeout   = var.fetch_timeout
-  deployment_zip  = "deployment_package.zip"
-  log_level       = var.log_level
+  name_suffix                = random_string.suffix.result
+  memory_size                = var.memory_size
+  lambda_timeout             = var.lambda_timeout
+  feeds_file                 = var.feeds_file
+  max_items                  = var.max_items
+  max_connections            = var.max_connections
+  max_keepalive_connections  = var.max_keepalive_connections
+  keepalive_expiry           = var.keepalive_expiry
+  retries                    = var.retries
+  fetch_timeout              = var.fetch_timeout
+  deployment_zip             = "deployment_package.zip"
+  log_level                  = var.log_level
 }
 
 module "api_gateway" {
