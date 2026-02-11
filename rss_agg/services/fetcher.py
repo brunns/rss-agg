@@ -30,16 +30,17 @@ class Fetcher:
             "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
         }
         self.timeout = Timeout(timeout)
-        limits = Limits(
+        self.limits = Limits(
             max_connections=max_connections,
             max_keepalive_connections=max_keepalive_connections,
             keepalive_expiry=keepalive_expiry,
         )
-        self.transport = AsyncHTTPTransport(http2=True, retries=retries, limits=limits)
+        self.retries = retries
 
     async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
+        transport = AsyncHTTPTransport(http2=True, retries=self.retries, limits=self.limits)
         async with AsyncClient(
-            headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=self.transport
+            headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=transport
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             responses: Collection[str] = await asyncio.gather(*tasks)
