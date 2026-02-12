@@ -1,4 +1,5 @@
 books
+commentisfree
 environment/climate-crisis
 food
 games
@@ -30,7 +31,8 @@ uk/london
 uk/rail-transport
 uk/technology
 uk/tv-and-radio
-us-news
+us-news/us-politics
+us/commentisfree
 world/feminism
 world/israel
 world/palestinian-territories
