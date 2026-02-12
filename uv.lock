@@ -642,15 +642,15 @@ wheels = [
 
 [[package]]
 name = "pytest-mockito"
-version = "0.0.5"
+version = "0.0.6.post1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mockito" },
     { name = "pytest" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/04/5d/f8d62f8c835b2483be9e8b199a5c768c964aa57c8633c8cc0ee5a5dde7a9/pytest_mockito-0.0.5.tar.gz", hash = "sha256:7855e171a19fe335b354253965715b2e748875d0a6674b7790089a80d1d66c7b", size = 3519, upload-time = "2025-11-17T14:48:42.506Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d2/13/56507ae9b513d4bac9ac5e412e7ff66d34827fc5c23e44fccde37a5c82ef/pytest_mockito-0.0.6.post1.tar.gz", hash = "sha256:67e26a69942de4c50001268c779700f8d722384d20385313a88e81b6d23fb71c", size = 3552, upload-time = "2026-02-10T09:36:18.784Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/da/f70894d7b8207775001908cc0af888762fa3762af51a68aca8b65ca24852/pytest_mockito-0.0.5-py3-none-any.whl", hash = "sha256:e00f13d89309e33031beef700f2e969946302a48110dc3a218bcf645c4961b5e", size = 3851, upload-time = "2025-11-17T14:48:41.562Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/9a/3bb38852013dbb5f03191f35f75823a38cc9e01d2a087c5dfe735dacae94/pytest_mockito-0.0.6.post1-py3-none-any.whl", hash = "sha256:b8384e1ac3e92828475fb6d24d6888e97acef52d9a77328d1333d48e9174ddbf", size = 3939, upload-time = "2026-02-10T09:36:17.552Z" },
 ]
 
 [[package]]
