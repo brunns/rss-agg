@@ -10,6 +10,7 @@ dependencies = [
     "gunicorn>=25.0.1",
     "httpx[http2]>=0.28.1",
     "python-json-logger>=4.0.0",
+    "uvicorn>=0.34.0",
     "wireup>=2.6.0",
     "yarl>=1.22.0",
 ]
