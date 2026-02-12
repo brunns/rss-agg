@@ -38,7 +38,7 @@ uv run cli -vv
 Run web server
 
 ```sh
-uv run gunicorn -b 0.0.0.0:8080 rss_agg.web:app
+uv run gunicorn -b 0.0.0.0:8080 -k uvicorn.workers.UvicornWorker rss_agg.asgi:asgi_app
 ```
 
 ### test
