@@ -38,7 +38,7 @@ uv run cli -vv
 Run web server
 
 ```sh
-uv run gunicorn -b 0.0.0.0:8080 -k uvicorn.workers.UvicornWorker rss_agg.asgi:asgi_app
+./run.sh
 ```
 
 ### test
@@ -91,7 +91,7 @@ Build lambda image
 uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
 uv pip install -r requirements.txt --target build --python 3.14
 cp -r rss_agg build/
-cp terraform/run.sh build/
+cp run.sh build/
 cp feeds.txt build/
 chmod +x build/run.sh
 find build -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
