@@ -40,7 +40,7 @@ variable "lambda_timeout" {
 
 variable "memory_size" {
   type    = number
-  default = 256
+  default = 512
 }
 
 variable "log_level" {
