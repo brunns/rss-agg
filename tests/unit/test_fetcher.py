@@ -34,7 +34,7 @@ async def test_passes_exceptions_thru(respx_mock):
 
 
 @pytest.mark.asyncio
-async def test_handles_empth_text(respx_mock):
+async def test_handles_empty_text(respx_mock):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
     respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.OK, text=None))

@@ -43,7 +43,7 @@ Run web server
 
 ### test
 
-Run tests
+Run all tests
 
 Requires: unit, integration
 
