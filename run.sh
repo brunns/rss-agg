@@ -12,6 +12,7 @@ if command -v uv >/dev/null 2>&1; then
     --log-level info \
     --access-logfile - \
     --error-logfile - \
+    --no-control-socket \
     rss_agg.asgi:asgi_app
 else
   exec python3 -m gunicorn \
@@ -21,5 +22,6 @@ else
     --log-level info \
     --access-logfile - \
     --error-logfile - \
+    --no-control-socket \
     rss_agg.asgi:asgi_app
 fi
