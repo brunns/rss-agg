@@ -25,12 +25,12 @@ class RSSParser:
     async def read_rss_feeds(self, feed_urls: list[URL]) -> list[ET.Element]:
         items: dict[str, ET.Element] = OrderedDict()
         responses = await self.fetcher.fetch_all(feed_urls)
-        with log_duration(logger.info, "deduping", response_count=len(responses)):
+        with log_duration(logger.debug, "deduping", response_count=len(responses)):
             for response in responses:
                 if response:
                     feed: ET.Element = fromstring(response)
                     for item in feed.findall(".//item"):
                         if (guid := item.findtext("guid")) and guid not in items:
                             items[guid] = item
-        logger.info("deduped-items", extra={"count": len(items)})
+        logger.debug("deduped-items", extra={"count": len(items)})
         return list(items.values())

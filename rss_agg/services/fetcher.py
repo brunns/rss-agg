@@ -49,7 +49,7 @@ class Fetcher:
     @staticmethod
     async def fetch(client: AsyncClient, url: URL) -> str:
         try:
-            with log_duration(logger.info, "fetching feed", url=str(url)):
+            with log_duration(logger.debug, "fetching feed", url=str(url)):
                 response = await client.get(str(url))
                 response.raise_for_status()
         except Exception as e:
