@@ -124,6 +124,17 @@ terraform plan
 cd ..
 ```
 
+### push
+
+Push to origin, and monitor CI run 
+
+```sh
+git push
+sleep 5
+RUN_ID=$(gh run list --workflow=ci.yml --limit=1 --json databaseId --jq '.[0].databaseId')
+gh run watch "$RUN_ID" --exit-status
+```
+
 ### deploy
 
 Run deployment workflow
