@@ -7,12 +7,13 @@ from httpx import Timeout as HttpxTimeout
 from wireup import Inject, injectable
 
 from rss_agg.logging_utils import log_duration
-from rss_agg.types import (  # noqa: TC001
+from rss_agg.types import (
     FeedUrl,
     KeepaliveExpiry,
     MaxConnections,
     MaxKeepaliveConnections,
     Retries,
+    RssContent,
     Timeout,
 )
 
@@ -44,17 +45,17 @@ class Fetcher:
         )
         self.retries = retries
 
-    async def fetch_all(self, feed_urls: list[FeedUrl]) -> Collection[str]:
+    async def fetch_all(self, feed_urls: list[FeedUrl]) -> Collection[RssContent]:
         transport = AsyncHTTPTransport(http2=True, retries=self.retries, limits=self.limits)
         async with AsyncClient(
             headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=transport
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
-            results: list[str | BaseException] = await asyncio.gather(*tasks, return_exceptions=True)
+            results: list[RssContent | BaseException] = await asyncio.gather(*tasks, return_exceptions=True)
         return [r for r in results if not isinstance(r, BaseException)]
 
     @staticmethod
-    async def fetch(client: AsyncClient, url: FeedUrl) -> str:
+    async def fetch(client: AsyncClient, url: FeedUrl) -> RssContent:
         try:
             with log_duration(logger.debug, "fetching feed", url=str(url)):
                 response = await client.get(str(url))
@@ -64,6 +65,6 @@ class Fetcher:
             raise
         else:
             if response.text:
-                return response.text
+                return RssContent(response.text)
             logger.warning("empty response", extra={"url": str(url)})
-            return ""
+            return RssContent("")
