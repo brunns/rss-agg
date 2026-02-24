@@ -9,6 +9,19 @@ from yarl import URL
 import rss_agg.services
 from rss_agg.logging_utils import init_logging
 from rss_agg.routes import rss_bp
+from rss_agg.types import (
+    BaseUrl,
+    FeedDescription,
+    FeedLink,
+    FeedsFile,
+    FeedTitle,
+    KeepaliveExpiry,
+    MaxConnections,
+    MaxItems,
+    MaxKeepaliveConnections,
+    Retries,
+    Timeout,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -36,15 +49,15 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
 
 def build_config() -> dict[str, Any]:
     return {
-        "feeds_file": Path(os.environ.get("FEEDS_FILE", "feeds.txt")),
-        "base_url": URL("https://www.theguardian.com"),
-        "max_items": int(os.environ.get("MAX_ITEMS", "50")),
-        "max_connections": int(os.environ.get("MAX_CONNECTIONS", "16")),
-        "max_keepalive_connections": int(os.environ.get("MAX_KEEPALIVE_CONNECTIONS", "16")),
-        "keepalive_expiry": int(os.environ.get("KEEPALIVE_EXPIRY", "5")),
-        "retries": int(os.environ.get("RETRIES", "3")),
-        "timeout": int(os.environ.get("TIMEOUT", "3")),
-        "feed_title": "@brunns's theguardian.com",
-        "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
-        "feed_link": URL("https://brunn.ing"),
+        "feeds_file": FeedsFile(Path(os.environ.get("FEEDS_FILE", "feeds.txt"))),
+        "base_url": BaseUrl(URL("https://www.theguardian.com")),
+        "max_items": MaxItems(int(os.environ.get("MAX_ITEMS", "50"))),
+        "max_connections": MaxConnections(int(os.environ.get("MAX_CONNECTIONS", "16"))),
+        "max_keepalive_connections": MaxKeepaliveConnections(int(os.environ.get("MAX_KEEPALIVE_CONNECTIONS", "16"))),
+        "keepalive_expiry": KeepaliveExpiry(int(os.environ.get("KEEPALIVE_EXPIRY", "5"))),
+        "retries": Retries(int(os.environ.get("RETRIES", "3"))),
+        "timeout": Timeout(int(os.environ.get("TIMEOUT", "3"))),
+        "feed_title": FeedTitle("@brunns's theguardian.com"),
+        "feed_description": FeedDescription("@brunns's curated, de-duplicated theguardian.com RSS feed"),
+        "feed_link": FeedLink(URL("https://brunn.ing")),
     }

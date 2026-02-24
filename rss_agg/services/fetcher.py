@@ -2,15 +2,22 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING, Annotated
 
-from httpx import AsyncClient, AsyncHTTPTransport, Limits, Timeout
+from httpx import AsyncClient, AsyncHTTPTransport, Limits
+from httpx import Timeout as HttpxTimeout
 from wireup import Inject, injectable
 
 from rss_agg.logging_utils import log_duration
+from rss_agg.types import (  # noqa: TC001
+    FeedUrl,
+    KeepaliveExpiry,
+    MaxConnections,
+    MaxKeepaliveConnections,
+    Retries,
+    Timeout,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Collection
-
-    from yarl import URL
 
 logger = logging.getLogger(__name__)
 
@@ -19,17 +26,17 @@ logger = logging.getLogger(__name__)
 class Fetcher:
     def __init__(
         self,
-        timeout: Annotated[int, Inject(config="timeout")],
-        max_connections: Annotated[int, Inject(config="max_connections")],
-        max_keepalive_connections: Annotated[int, Inject(config="max_keepalive_connections")],
-        keepalive_expiry: Annotated[int, Inject(config="keepalive_expiry")],
-        retries: Annotated[int, Inject(config="retries")],
+        timeout: Annotated[Timeout, Inject(config="timeout")],
+        max_connections: Annotated[MaxConnections, Inject(config="max_connections")],
+        max_keepalive_connections: Annotated[MaxKeepaliveConnections, Inject(config="max_keepalive_connections")],
+        keepalive_expiry: Annotated[KeepaliveExpiry, Inject(config="keepalive_expiry")],
+        retries: Annotated[Retries, Inject(config="retries")],
     ) -> None:
         self.headers = {
             "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
             "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
         }
-        self.timeout = Timeout(timeout)
+        self.timeout = HttpxTimeout(timeout)
         self.limits = Limits(
             max_connections=max_connections,
             max_keepalive_connections=max_keepalive_connections,
@@ -37,7 +44,7 @@ class Fetcher:
         )
         self.retries = retries
 
-    async def fetch_all(self, feed_urls: list[URL]) -> Collection[str]:
+    async def fetch_all(self, feed_urls: list[FeedUrl]) -> Collection[str]:
         transport = AsyncHTTPTransport(http2=True, retries=self.retries, limits=self.limits)
         async with AsyncClient(
             headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=transport
@@ -47,7 +54,7 @@ class Fetcher:
         return responses
 
     @staticmethod
-    async def fetch(client: AsyncClient, url: URL) -> str:
+    async def fetch(client: AsyncClient, url: FeedUrl) -> str:
         try:
             with log_duration(logger.debug, "fetching feed", url=str(url)):
                 response = await client.get(str(url))

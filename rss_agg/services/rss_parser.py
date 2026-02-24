@@ -10,7 +10,7 @@ from rss_agg.logging_utils import log_duration
 if TYPE_CHECKING:
     from xml.etree import ElementTree as ET
 
-    from yarl import URL
+    from rss_agg.types import FeedUrl
 
 from rss_agg.services import Fetcher  # noqa: TC001
 
@@ -22,7 +22,7 @@ class RSSParser:
     def __init__(self, fetcher: Fetcher) -> None:
         self.fetcher = fetcher
 
-    async def read_rss_feeds(self, feed_urls: list[URL]) -> list[ET.Element]:
+    async def read_rss_feeds(self, feed_urls: list[FeedUrl]) -> list[ET.Element]:
         items: dict[str, ET.Element] = OrderedDict()
         responses = await self.fetcher.fetch_all(feed_urls)
         with log_duration(logger.debug, "deduping", response_count=len(responses)):

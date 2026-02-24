@@ -10,6 +10,19 @@ from yarl import URL
 
 import rss_agg.services
 from rss_agg.logging_utils import init_logging
+from rss_agg.types import (
+    BaseUrl,
+    FeedDescription,
+    FeedLink,
+    FeedsFile,
+    FeedTitle,
+    KeepaliveExpiry,
+    MaxConnections,
+    MaxItems,
+    MaxKeepaliveConnections,
+    Retries,
+    Timeout,
+)
 
 VERSION = "0.1.0"
 
@@ -31,17 +44,17 @@ def main() -> None:
 
 def build_config(args: argparse.Namespace) -> dict[str, Any]:
     return {
-        "feeds_file": args.feeds_file,
-        "base_url": args.base_url,
-        "max_items": args.max_items,
-        "timeout": args.timeout,
-        "max_connections": args.max_connections,
-        "max_keepalive_connections": args.max_keepalive_connections,
-        "keepalive_expiry": args.keepalive_expiry,
-        "retries": args.retries,
-        "feed_title": "@brunns's theguardian.com",
-        "feed_description": "@brunns's curated, de-duplicated theguardian.com RSS feed",
-        "feed_link": URL("https://brunn.ing"),
+        "feeds_file": FeedsFile(args.feeds_file),
+        "base_url": BaseUrl(args.base_url),
+        "max_items": MaxItems(args.max_items),
+        "timeout": Timeout(args.timeout),
+        "max_connections": MaxConnections(args.max_connections),
+        "max_keepalive_connections": MaxKeepaliveConnections(args.max_keepalive_connections),
+        "keepalive_expiry": KeepaliveExpiry(args.keepalive_expiry),
+        "retries": Retries(args.retries),
+        "feed_title": FeedTitle("@brunns's theguardian.com"),
+        "feed_description": FeedDescription("@brunns's curated, de-duplicated theguardian.com RSS feed"),
+        "feed_link": FeedLink(URL("https://brunn.ing")),
     }
 
 
