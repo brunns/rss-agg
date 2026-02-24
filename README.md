@@ -131,7 +131,8 @@ Run deployment workflow
 ```sh
 gh workflow run cd.yml
 sleep 5
-gh run watch
+RUN_ID=$(gh run list --workflow=cd.yml --limit=1 --json databaseId --jq '.[0].databaseId')
+gh run watch "$RUN_ID" --exit-status
 ```
 
 ### healthcheck
