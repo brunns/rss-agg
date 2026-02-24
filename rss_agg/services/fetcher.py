@@ -50,8 +50,8 @@ class Fetcher:
             headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=transport
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
-            responses: Collection[str] = await asyncio.gather(*tasks)
-        return responses
+            results: list[str | BaseException] = await asyncio.gather(*tasks, return_exceptions=True)
+        return [r for r in results if not isinstance(r, BaseException)]
 
     @staticmethod
     async def fetch(client: AsyncClient, url: FeedUrl) -> str:
