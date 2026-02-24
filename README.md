@@ -16,10 +16,13 @@ AI generated docs: [![zread](https://img.shields.io/badge/Ask_Zread-_.svg?style=
 
 Includes deployment to [AWS Lambda](https://aws.amazon.com/lambda/).
 
-Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), and [terraform](https://developer.hashicorp.com/terraform):
+Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [colima](//github.com/abiosoft/colima/)[^4], 
+[terraform](https://developer.hashicorp.com/terraform) and [libxml2](http://xmlsoft.org/):
+
+[^4]: On a Mac - I'm not sure what you might use on other platforms.
 
 ```sh
-brew install uv xc colima terraform
+brew install uv xc colima terraform libxml2
 ```
 
 ## Tasks
