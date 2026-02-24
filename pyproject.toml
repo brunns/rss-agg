@@ -61,7 +61,7 @@ ignore = ["COM812", "ISC001", "D", "PGH003", "FBT001", "FBT002"]
 max-complexity = 5
 
 [tool.coverage.run]
-omit = ["rss_agg/cli.py", "rss_agg/web.py", "rss_agg/asgi.py", "rss_agg/logging_config.py"]
+omit = ["rss_agg/cli.py", "rss_agg/web.py", "rss_agg/logging_config.py"]
 
 [tool.pyright]
 include = ["rss_agg/"]

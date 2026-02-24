@@ -17,7 +17,7 @@ This project uses [xc](https://xcfile.dev/) for task running. All commands are d
 - `xc lint` - Lint code (ruff + pyright)
 - `xc format` - Format code with ruff
 - `xc cli` - Run CLI locally (outputs RSS to stdout)
-- `xc web` - Run web server locally on port 8080
+- `xc web` - Run web server locally on port 8080 (**always terminate after use** — gunicorn workers show as `python3.x` processes, use `lsof -i :8080` to find and kill any that remain)
 - `xc build` - Build Lambda deployment package
 - `xc plan` - Plan Terraform changes (runs build first)
 
