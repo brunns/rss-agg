@@ -1,9 +1,10 @@
 #!/bin/bash
-# Set gunicorn timeout to Lambda timeout minus buffer (15s - 1s = 14s)
-# This prevents gunicorn from timing out workers when Lambda times out first
+# Use --timeout 0 to disable gunicorn's worker timeout entirely.
+# Lambda's OS clock advances during freeze/thaw cycles, so any fixed timeout
+# will kill workers on warm requests (they appear "silent" for the freeze duration).
+# Lambda's own 15-second function timeout is the safety net.
 # Use sync workers: Flask handles async views via asgiref.sync.async_to_sync,
-# giving each request a fresh event loop. Avoids worker timeouts caused by
-# uvicorn's persistent event loop breaking on Lambda freeze/thaw cycles.
+# giving each request a fresh event loop.
 
 # Use uv run if available (local dev), otherwise use python3 directly (Lambda)
 if command -v uv >/dev/null 2>&1; then
@@ -14,7 +15,7 @@ fi
 
 exec $GUNICORN \
   -b 0.0.0.0:8080 \
-  --timeout 14 \
+  --timeout 0 \
   --log-level info \
   --access-logfile - \
   --error-logfile - \
