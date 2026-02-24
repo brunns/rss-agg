@@ -4,7 +4,7 @@ Aggregate, de-duplicate and republish RSS feeds.
 
 The problem I'm solving here is this; if I subscribe to the main [Guardian](https://www.theguardian.com/) 
 [RSS](https://en.wikipedia.org/wiki/RSS) feed, I see a great many articles I'm not interested in[^1]. But if instead I 
-subscribe to the feeds for individual tags, while I don't see the things I'm interested in, I do see a great many 
+subscribe to the feeds for individual tags, while I don't see the things I'm not interested in, I do see a great many 
 duplicates - articles with multiple tags show up in multiple feeds. This little app allows me to have the best of both 
 worlds - I can see only[^2] the articles I'm interested in my reader[^3], and only once.
 
