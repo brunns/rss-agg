@@ -19,7 +19,7 @@ async def test_rss_service_orchestration(when):
     ]
 
     mock_feeds_service = mock(FeedsService)
-    when(mock_feeds_service).get_feeds().thenReturn(async_value(expected_urls))
+    when(mock_feeds_service).get_feeds().thenReturn(expected_urls)
 
     mock_items = [ET.Element("item"), ET.Element("item")]
     mock_parser = mock(RSSParser)
@@ -44,7 +44,7 @@ async def test_rss_service_handles_empty_feeds(when):
     self_url = URL("https://myfeed.com")
 
     mock_feeds_service = mock(FeedsService)
-    when(mock_feeds_service).get_feeds().thenReturn(async_value([]))
+    when(mock_feeds_service).get_feeds().thenReturn([])
 
     mock_parser = mock(RSSParser)
     when(mock_parser).read_rss_feeds([]).thenReturn(async_value([]))

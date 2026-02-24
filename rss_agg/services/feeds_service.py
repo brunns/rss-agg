@@ -15,6 +15,6 @@ class FeedsService:
         self.feeds_file = feeds_file
         self.base_url = base_url
 
-    async def get_feeds(self) -> list[FeedUrl]:
+    def get_feeds(self) -> list[FeedUrl]:
         with self.feeds_file.open() as f:
             return [FeedUrl(self.base_url / path.strip() / "rss") for path in f]

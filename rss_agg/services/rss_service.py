@@ -27,6 +27,6 @@ class RSSService:
         self.max_items = max_items
 
     async def read_and_generate_rss(self, self_url: URL) -> str:
-        feed_urls = await self.feeds_service.get_feeds()
+        feed_urls = self.feeds_service.get_feeds()
         items = await self.parser.read_rss_feeds(feed_urls)
         return self.generator.generate_new_rss_feed(items, self_url=self_url, limit=self.max_items)
