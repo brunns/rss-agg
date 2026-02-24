@@ -23,7 +23,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
     log_level_map = {"ERROR": 0, "WARNING": 1, "INFO": 2, "DEBUG": 3}
     verbosity = log_level_map.get(log_level, 2)  # Default to INFO
-    init_logging(verbosity, silence_packages=["urllib3", "httpcore"])
+    init_logging(verbosity, silence_packages=["urllib3", "httpcore", "httpx", "hpack"])
 
     app = WireupFlask(__name__)
 

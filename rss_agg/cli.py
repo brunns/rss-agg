@@ -47,7 +47,7 @@ def build_config(args: argparse.Namespace) -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     args = create_parser().parse_args()
-    init_logging(args.verbosity, silence_packages=["urllib3", "httpcore"])
+    init_logging(args.verbosity, silence_packages=["urllib3", "httpcore", "httpx", "hpack"])
 
     return args
 
