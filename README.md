@@ -130,6 +130,8 @@ Run deployment workflow
 
 ```sh
 gh workflow run cd.yml
+sleep 5
+gh run watch
 ```
 
 ### healthcheck
