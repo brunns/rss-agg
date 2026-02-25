@@ -45,7 +45,7 @@ resource "aws_lambda_function" "this" {
       AWS_LWA_PORT                 = "8080"
       AWS_LWA_ENABLE_COMPRESSION   = "true"
       AWS_LAMBDA_LOG_FORMAT        = "JSON"
-      AWS_LWA_READINESS_CHECK_PATH = "/health"
+      AWS_LWA_READINESS_CHECK_PATH = "/"
       FEEDS_FILE                   = var.feeds_file
       MAX_ITEMS                    = var.max_items
       MAX_CONNECTIONS              = var.max_connections
