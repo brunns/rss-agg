@@ -5,3 +5,10 @@ services:
     ports:
       - "2525:2525"
       - "4545:4545"
+  garage:
+    image: "dxflrs/garage:v2.2.0"
+    ports:
+      - "3900:3900"
+      - "3903:3903"
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
