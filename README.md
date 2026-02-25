@@ -17,20 +17,33 @@ worlds - I can see only[^2] the articles I'm interested in my reader[^3], and on
 The application is a [Flask](https://flask.palletsprojects.com/) async web app deployed as an 
 [AWS Lambda](https://aws.amazon.com/lambda/) function via the 
 [Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter). 
-[web.py](src/rss_agg/web.py), the entry point, is a good place to start looking at the code.
+
+Good places to start investigating the code are:
+
+* [web.py](src/rss_agg/web.py), the application entry point.
+* [routes.py](src/rss_agg/routes.py), the Flask route definitions.
 
 On each request, [RSSService](src/rss_agg/services/rss_service.py) orchestrates the full pipeline:
-a [FeedsService](src/rss_agg/services/feeds_services/base_feeds_service.py) reads a list of feed paths (one of
-[FileFeedsService](src/rss_agg/services/feeds_services/file_feeds_service.py) which reads from from [feeds.txt](feeds.txt),
-or [S3FeedsService](src/rss_agg/services/feeds_services/s3_feeds_service.py) which reads from an
-[S3](https://aws.amazon.com/pm/serv-s3/) object) and constructs full
-Guardian RSS URLs; [Fetcher](src/rss_agg/services/fetcher.py) retrieves all feeds concurrently using [httpx](https://www.python-httpx.org/) with
-HTTP/2 and connection pooling; [RSSParser](src/rss_agg/services/rss_parser.py) parses the responses with
-[defusedxml](https://github.com/tiran/defusedxml) and de-duplicates items by GUID; and
-[RSSGenerator](src/rss_agg/services/rss_generator.py) sorts by date, applies a configurable item limit, and emits a fresh
-RSS feed. Services are wired together with [wireup](https://maldoinc.github.io/wireup/) for dependency injection, with 
-configuration sourced from environment variables. [API Gateway](https://aws.amazon.com/api-gateway/) provides the 
-public HTTP endpoint, backed by [Terraform](https://developer.hashicorp.com/terraform)-managed infrastructure-as-code located in [terraform](terraform/).
+
+* A [FeedsService](src/rss_agg/services/feeds_services/base_feeds_service.py) implementation reads a list of feed paths 
+  and constructs full Guardian RSS URLs.
+    * [FileFeedsService](src/rss_agg/services/feeds_services/file_feeds_service.py) reads from from 
+      [feeds.txt](feeds.txt), OR
+    * [S3FeedsService](src/rss_agg/services/feeds_services/s3_feeds_service.py) reads from an 
+      [S3](https://aws.amazon.com/pm/serv-s3/) object using [boto3](https://docs.aws.amazon.com/boto3/latest/).
+* [Fetcher](src/rss_agg/services/fetcher.py) retrieves all feeds concurrently using 
+  [httpx](https://www.python-httpx.org/) with HTTP/2 and connection pooling.
+* [RSSParser](src/rss_agg/services/rss_parser.py) parses the responses with 
+  [defusedxml](https://github.com/tiran/defusedxml) and de-duplicates items by GUID.
+* [RSSGenerator](src/rss_agg/services/rss_generator.py) sorts by date, applies a configurable item limit, and emits a 
+  fresh RSS feed.
+
+Services are wired together with [wireup](https://maldoinc.github.io/wireup/) for 
+[dependency injection](https://martinfowler.com/articles/injection.html), with configuration sourced from environment 
+variables as per [the twelve-factor app](https://12factor.net/). 
+[AWS API Gateway](https://aws.amazon.com/api-gateway/) provides the public HTTP endpoint, backed by 
+[Terraform](https://developer.hashicorp.com/terraform)-managed 
+[infrastructure-as-code](https://infrastructure-as-code.com/) located in [terraform/](terraform/).
 
 Some fun AI generated docs: [![zread](https://img.shields.io/badge/Ask_Zread-_.svg?style=flat&color=00b0aa&labelColor=000000&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuOTYxNTYgMS42MDAxSDIuMjQxNTZDMS44ODgxIDEuNjAwMSAxLjYwMTU2IDEuODg2NjQgMS42MDE1NiAyLjI0MDFWNC45NjAxQzEuNjAxNTYgNS4zMTM1NiAxLjg4ODEgNS42MDAxIDIuMjQxNTYgNS42MDAxSDQuOTYxNTZDNS4zMTUwMiA1LjYwMDEgNS42MDE1NiA1LjMxMzU2IDUuNjAxNTYgNC45NjAxVjIuMjQwMUM1LjYwMTU2IDEuODg2NjQgNS4zMTUwMiAxLjYwMDEgNC45NjE1NiAxLjYwMDFaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00Ljk2MTU2IDEwLjM5OTlIMi4yNDE1NkMxLjg4ODEgMTAuMzk5OSAxLjYwMTU2IDEwLjY4NjQgMS42MDE1NiAxMS4wMzk5VjEzLjc1OTlDMS42MDE1NiAxNC4xMTM0IDEuODg4MSAxNC4zOTk5IDIuMjQxNTYgMTQuMzk5OUg0Ljk2MTU2QzUuMzE1MDIgMTQuMzk5OSA1LjYwMTU2IDE0LjExMzQgNS42MDE1NiAxMy43NTk5VjExLjAzOTlDNS42MDE1NiAxMC42ODY0IDUuMzE1MDIgMTAuMzk5OSA0Ljk2MTU2IDEwLjM5OTlaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik0xMy43NTg0IDEuNjAwMUgxMS4wMzg0QzEwLjY4NSAxLjYwMDEgMTAuMzk4NCAxLjg4NjY0IDEwLjM5ODQgMi4yNDAxVjQuOTYwMUMxMC4zOTg0IDUuMzEzNTYgMTAuNjg1IDUuNjAwMSAxMS4wMzg0IDUuNjAwMUgxMy43NTg0QzE0LjExMTkgNS42MDAxIDE0LjM5ODQgNS4zMTM1NiAxNC4zOTg0IDQuOTYwMVYyLjI0MDFDMTQuMzk4NCAxLjg4NjY0IDE0LjExMTkgMS42MDAxIDEzLjc1ODQgMS42MDAxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNNCAxMkwxMiA0TDQgMTJaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00IDEyTDEyIDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K&logoColor=ffffff)](https://zread.ai/brunns/rss-agg)
 
