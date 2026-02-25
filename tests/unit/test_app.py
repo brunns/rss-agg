@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from brunns.matchers.werkzeug import is_werkzeug_response as is_response
 from flask import Flask
 from hamcrest import assert_that, equal_to, instance_of
@@ -38,6 +39,12 @@ def test_health_endpoint(client):
 
     # Then
     assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_text(equal_to("OK")))
+
+
+def test_create_app_with_unknown_feeds_service_raises():
+    # When / Then
+    with pytest.raises(ValueError, match="Unknown feeds_service"):
+        create_app({"feeds_service": "UnknownFeedsService"})
 
 
 def test_create_app_with_s3_feeds_service():

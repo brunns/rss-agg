@@ -1,3 +1,4 @@
+import logging
 import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
@@ -15,6 +16,8 @@ from rss_agg.services.feeds_services import FILE_INJECTABLES, S3_INJECTABLES
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+logger = logging.getLogger(__name__)
+
 
 def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask, wireup.AsyncContainer]:
     config_override = config_override or {}
@@ -27,7 +30,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
 
     app = Flask(__name__)
 
-    config = {**(build_config()), **config_override}
+    config = {**build_config(), **config_override}
     injectables = build_injectables(config)
     container = wireup.create_async_container(injectables=injectables, config=config)
 
@@ -38,7 +41,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     return app, container
 
 
-def build_config() -> dict[str, Any]:
+def build_config() -> Mapping[str, Any]:
     return {
         "feeds_service": os.environ.get("FEEDS_SERVICE", "FileFeedsService"),
         "feeds_file": domain.FeedsFile(Path(os.environ.get("FEEDS_FILE", "feeds.txt"))),
@@ -63,12 +66,17 @@ def build_config() -> dict[str, Any]:
     }
 
 
-def build_injectables(config: dict[Any, Any]) -> list[Any]:
+def build_injectables(config: Mapping[str, Any]) -> list[Any]:
     """We need to inject only the FileService services for the feeds_service setting."""
     injectables = list(BASE_INJECTABLES)
     feeds_service: domain.FeedsServiceName | None = config.get("feeds_service")
-    if feeds_service == "FileFeedsService":
-        injectables += FILE_INJECTABLES
-    elif feeds_service == "S3FeedsService":
-        injectables += S3_INJECTABLES
+    match feeds_service:
+        case "FileFeedsService":
+            injectables += FILE_INJECTABLES
+        case "S3FeedsService":
+            injectables += S3_INJECTABLES
+        case _:
+            logger.critical("Unknown feeds_service", extra={"feeds_service": feeds_service})
+            msg = f"Unknown feeds_service {feeds_service}"
+            raise ValueError(msg)
     return injectables
