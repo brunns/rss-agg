@@ -7,7 +7,7 @@ from xml.etree import ElementTree as ET
 from wireup import Inject, injectable
 from yarl import URL  # noqa: TC002
 
-from rss_agg.types import FeedDescription, FeedLink, FeedTitle  # noqa: TC001
+from rss_agg import domain  # noqa: TC001
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +19,9 @@ class RSSGenerator:
 
     def __init__(
         self,
-        feed_title: Annotated[FeedTitle, Inject(config="feed_title")],
-        feed_description: Annotated[FeedDescription, Inject(config="feed_description")],
-        feed_link: Annotated[FeedLink, Inject(config="feed_link")],
+        feed_title: Annotated[domain.FeedTitle, Inject(config="feed_title")],
+        feed_description: Annotated[domain.FeedDescription, Inject(config="feed_description")],
+        feed_link: Annotated[domain.FeedLink, Inject(config="feed_link")],
     ) -> None:
         self.feed_title = feed_title
         self.feed_description = feed_description

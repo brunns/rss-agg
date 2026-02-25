@@ -6,24 +6,11 @@ import wireup
 from flask import Flask
 from yarl import URL
 
+from rss_agg import domain
 from rss_agg.logging_utils import init_logging
 from rss_agg.routes import rss_blueprint
 from rss_agg.services import BASE_INJECTABLES
 from rss_agg.services.feeds_services import FILE_INJECTABLES, S3_INJECTABLES
-from rss_agg.types import (
-    BaseUrl,
-    FeedDescription,
-    FeedLink,
-    FeedsFile,
-    FeedsServiceName,
-    FeedTitle,
-    KeepaliveExpiry,
-    MaxConnections,
-    MaxItems,
-    MaxKeepaliveConnections,
-    Retries,
-    Timeout,
-)
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -54,24 +41,26 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
 def build_config() -> dict[str, Any]:
     return {
         "feeds_service": os.environ.get("FEEDS_SERVICE", "FileFeedsService"),
-        "feeds_file": FeedsFile(Path(os.environ.get("FEEDS_FILE", "feeds.txt"))),
-        "base_url": BaseUrl(URL("https://www.theguardian.com")),
-        "max_items": MaxItems(int(os.environ.get("MAX_ITEMS", "50"))),
-        "max_connections": MaxConnections(int(os.environ.get("MAX_CONNECTIONS", "16"))),
-        "max_keepalive_connections": MaxKeepaliveConnections(int(os.environ.get("MAX_KEEPALIVE_CONNECTIONS", "16"))),
-        "keepalive_expiry": KeepaliveExpiry(int(os.environ.get("KEEPALIVE_EXPIRY", "5"))),
-        "retries": Retries(int(os.environ.get("RETRIES", "3"))),
-        "timeout": Timeout(int(os.environ.get("TIMEOUT", "3"))),
-        "feed_title": FeedTitle("@brunns's theguardian.com"),
-        "feed_description": FeedDescription("@brunns's curated, de-duplicated theguardian.com RSS feed"),
-        "feed_link": FeedLink(URL("https://brunn.ing")),
+        "feeds_file": domain.FeedsFile(Path(os.environ.get("FEEDS_FILE", "feeds.txt"))),
+        "base_url": domain.BaseUrl(URL("https://www.theguardian.com")),
+        "max_items": domain.MaxItems(int(os.environ.get("MAX_ITEMS", "50"))),
+        "max_connections": domain.MaxConnections(int(os.environ.get("MAX_CONNECTIONS", "16"))),
+        "max_keepalive_connections": domain.MaxKeepaliveConnections(
+            int(os.environ.get("MAX_KEEPALIVE_CONNECTIONS", "16"))
+        ),
+        "keepalive_expiry": domain.KeepaliveExpiry(int(os.environ.get("KEEPALIVE_EXPIRY", "5"))),
+        "retries": domain.Retries(int(os.environ.get("RETRIES", "3"))),
+        "timeout": domain.Timeout(int(os.environ.get("TIMEOUT", "3"))),
+        "feed_title": domain.FeedTitle("@brunns's theguardian.com"),
+        "feed_description": domain.FeedDescription("@brunns's curated, de-duplicated theguardian.com RSS feed"),
+        "feed_link": domain.FeedLink(URL("https://brunn.ing")),
     }
 
 
 def build_injectables(config: dict[Any, Any]) -> list[Any]:
     """We need to inject only the FileService services for the feeds_service setting."""
     injectables = list(BASE_INJECTABLES)
-    feeds_service: FeedsServiceName | None = config.get("feeds_service")
+    feeds_service: domain.FeedsServiceName | None = config.get("feeds_service")
     if feeds_service == "FileFeedsService":
         injectables += FILE_INJECTABLES
     elif feeds_service == "S3FeedsService":

@@ -3,8 +3,8 @@ from pathlib import Path
 from hamcrest import assert_that, contains_exactly, empty
 from yarl import URL
 
+from rss_agg.domain import BaseUrl, FeedsFile, FeedUrl
 from rss_agg.services.feeds_services import FileFeedsService
-from rss_agg.types import BaseUrl, FeedsFile, FeedUrl
 
 
 def test_feeds_service_returns_urls(fs):

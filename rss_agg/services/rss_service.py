@@ -4,10 +4,10 @@ from typing import Annotated
 from wireup import Inject, injectable
 from yarl import URL  # noqa: TC002
 
+from rss_agg import domain  # noqa: TC001
 from rss_agg.services.feeds_services import FeedsService  # noqa: TC001
 from rss_agg.services.rss_generator import RSSGenerator  # noqa: TC001
 from rss_agg.services.rss_parser import RSSParser  # noqa: TC001
-from rss_agg.types import MaxItems  # noqa: TC001
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +19,7 @@ class RSSService:
         feeds_service: FeedsService,
         parser: RSSParser,
         generator: RSSGenerator,
-        max_items: Annotated[MaxItems, Inject(config="max_items")],
+        max_items: Annotated[domain.MaxItems, Inject(config="max_items")],
     ) -> None:
         self.feeds_service = feeds_service
         self.parser = parser
