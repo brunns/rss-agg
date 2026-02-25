@@ -9,9 +9,9 @@ from mbtest.imposters import Imposter, Predicate, Response, Stub
 from rss_agg.flask_app_factory import create_app
 
 
-def test_get_rss_from_over_the_wire_feed(mountebank_client):
+def test_get_rss_from_over_the_wire_feed(client_with_fake_upstream):
     # When
-    response = mountebank_client.get("/")
+    response = client_with_fake_upstream.get("/")
 
     # Then
     assert_that(
@@ -24,7 +24,7 @@ def test_get_rss_from_over_the_wire_feed(mountebank_client):
 
 
 @pytest.fixture
-def mountebank_client(mock_server, rss_string, sausages_feeds_file):
+def client_with_fake_upstream(mock_server, rss_string, sausages_feeds_file):
     imposter = Imposter(Stub(Predicate(path="/sausages/rss"), Response(body=rss_string)), port=4545)
 
     with mock_server(imposter):

@@ -28,3 +28,11 @@ def test_get_data_route_logic(client, container, when):
         .and_text(equal_to(expected_rss))
         .and_mimetype("application/rss+xml"),
     )
+
+
+def test_health_endpoint(client):
+    # When
+    response = client.get("/health")
+
+    # Then
+    assert_that(response, is_response().with_status_code(HTTPStatus.OK).and_text(equal_to("OK")))

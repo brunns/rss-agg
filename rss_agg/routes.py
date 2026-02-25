@@ -1,4 +1,5 @@
 import logging
+from http import HTTPStatus
 
 from flask import Blueprint, Response, request
 from wireup import Injected  # noqa: TC002
@@ -15,5 +16,9 @@ rss_bp = Blueprint("rss", __name__)
 async def get_rss(rss_service: Injected[RSSService]) -> Response:
     with log_duration(logger.info, "request", path=request.path):
         rss = await rss_service.read_and_generate_rss(self_url=URL(request.base_url))
+    return Response(rss, mimetype="application/rss+xml", status=HTTPStatus.OK)
 
-    return Response(rss, mimetype="application/rss+xml")
+
+@rss_bp.route("/health")
+def health() -> Response:
+    return Response("OK", status=HTTPStatus.OK)
