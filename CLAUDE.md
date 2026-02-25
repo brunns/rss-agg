@@ -21,6 +21,9 @@ This project uses [xc](https://xcfile.dev/) for task running. All commands are d
 - `xc build` - Build Lambda deployment package
 - `xc plan` - Plan Terraform changes (runs build first)
 
+### Before committing:
+Always run `xc pc` before any commit. This runs the full test suite and linter.
+
 ### Running a single test:
 ```sh
 uv run pytest tests/unit/test_specific.py::test_name -vv
@@ -59,7 +62,7 @@ Uses [wireup](https://github.com/maldoinc/wireup) for dependency injection:
 
 ### Key Services
 
-All services in `rss_agg/services/`:
+All services in `src/rss_agg/services/`:
 
 - **RSSService**: Orchestrates the full flow (reads file, calls parser, calls generator)
 - **Fetcher**: HTTP client for concurrent feed fetching (httpx with HTTP/2, retries, connection pooling)
@@ -112,7 +115,7 @@ Lambda function receives configuration via environment variables (set in `terraf
 ## Tool Preferences
 
 - **JSON parsing**: Use `jq` instead of `python -c` for parsing JSON output
-- **Task runner**: Use `xc` to run tasks where possible.
+- **Task runner**: Always use `xc` tasks rather than running the underlying commands directly.
 - **Python tool & package management**: Use `uv` and `uvx` where appropriate.
 - **Command-line tools**: Prefer standard Unix tools when available
 

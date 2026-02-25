@@ -17,17 +17,17 @@ worlds - I can see only[^2] the articles I'm interested in my reader[^3], and on
 The application is a [Flask](https://flask.palletsprojects.com/) async web app deployed as an 
 [AWS Lambda](https://aws.amazon.com/lambda/) function via the 
 [Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter). 
-[web.py](rss_agg/web.py), the entry point, is a good place to start looking at the code. 
+[web.py](src/rss_agg/web.py), the entry point, is a good place to start looking at the code.
 
-On each request, [RSSService](rss_agg/services/rss_service.py) orchestrates the full pipeline: 
-a [FeedsService](rss_agg/services/feeds_services/base_feeds_service.py) reads a list of feed paths (one of 
-[FileFeedsService](rss_agg/services/feeds_services/file_feeds_service.py) which reads from from [feeds.txt](feeds.txt), 
-or [S3FeedsService](rss_agg/services/feeds_services/s3_feeds_service.py) which reads from an 
-[S3](https://aws.amazon.com/pm/serv-s3/) object) and constructs full 
-Guardian RSS URLs; [Fetcher](rss_agg/services/fetcher.py) retrieves all feeds concurrently using [httpx](https://www.python-httpx.org/) with
-HTTP/2 and connection pooling; [RSSParser](rss_agg/services/rss_parser.py) parses the responses with 
-[defusedxml](https://github.com/tiran/defusedxml) and de-duplicates items by GUID; and 
-[RSSGenerator](rss_agg/services/rss_generator.py) sorts by date, applies a configurable item limit, and emits a fresh 
+On each request, [RSSService](src/rss_agg/services/rss_service.py) orchestrates the full pipeline:
+a [FeedsService](src/rss_agg/services/feeds_services/base_feeds_service.py) reads a list of feed paths (one of
+[FileFeedsService](src/rss_agg/services/feeds_services/file_feeds_service.py) which reads from from [feeds.txt](feeds.txt),
+or [S3FeedsService](src/rss_agg/services/feeds_services/s3_feeds_service.py) which reads from an
+[S3](https://aws.amazon.com/pm/serv-s3/) object) and constructs full
+Guardian RSS URLs; [Fetcher](src/rss_agg/services/fetcher.py) retrieves all feeds concurrently using [httpx](https://www.python-httpx.org/) with
+HTTP/2 and connection pooling; [RSSParser](src/rss_agg/services/rss_parser.py) parses the responses with
+[defusedxml](https://github.com/tiran/defusedxml) and de-duplicates items by GUID; and
+[RSSGenerator](src/rss_agg/services/rss_generator.py) sorts by date, applies a configurable item limit, and emits a fresh
 RSS feed. Services are wired together with [wireup](https://maldoinc.github.io/wireup/) for dependency injection, with 
 configuration sourced from environment variables. [API Gateway](https://aws.amazon.com/api-gateway/) provides the 
 public HTTP endpoint, backed by [Terraform](https://developer.hashicorp.com/terraform)-managed infrastructure-as-code located in [terraform](terraform/).
@@ -87,7 +87,7 @@ Requires: unit, integration
 Unit tests
 
 ```sh
-uv run pytest tests/unit/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov rss_agg
+uv run pytest tests/unit/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov src/rss_agg
 ```
 
 ### integration
@@ -123,9 +123,10 @@ uv run pyright
 Build lambda image
 
 ```sh
+rm -rf build/ terraform/deployment_package.zip
 uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
 uv pip install -r requirements.txt --target build --python 3.14
-cp -r rss_agg build/
+cp -r src/rss_agg build/
 cp run.sh build/
 cp feeds.txt build/
 chmod +x build/run.sh
