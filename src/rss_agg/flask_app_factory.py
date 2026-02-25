@@ -54,6 +54,12 @@ def build_config() -> dict[str, Any]:
         "feed_title": domain.FeedTitle("@brunns's theguardian.com"),
         "feed_description": domain.FeedDescription("@brunns's curated, de-duplicated theguardian.com RSS feed"),
         "feed_link": domain.FeedLink(URL("https://brunn.ing")),
+        "aws_default_region": domain.AwsRegion(os.environ.get("AWS_DEFAULT_REGION", "eu-test-2")),
+        "aws_access_key_id": domain.AwsAccessKey(os.environ.get("AWS_ACCESS_KEY_ID", "")),
+        "aws_secret_access_key": domain.AwsSecretAccessKey(os.environ.get("AWS_SECRET_ACCESS_KEY", "")),
+        "s3_endpoint": domain.S3Endpoint(URL(v)) if (v := os.environ.get("S3_ENDPOINT")) else None,
+        "feeds_bucket_name": domain.BucketName(os.environ.get("FEEDS_BUCKET_NAME", "brunns-rss-agg-feeds")),
+        "feeds_object_name": domain.ObjectName(os.environ.get("FEEDS_OBJECT_NAME", "feeds.txt")),
     }
 
 
