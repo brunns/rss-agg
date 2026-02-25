@@ -84,7 +84,7 @@ CLI mode uses argparse flags (see `cli.py --help`).
 - Handler is `run.sh` which starts gunicorn
 - API Gateway provides public HTTP endpoint
 - State stored in S3 backend for Terraform
-- SnapStart enabled on published versions via "live" alias
+- SnapStart is configured but currently disabled (`apply_on = "None"` in `terraform/modules/lambda/main.tf`)
 
 ### Deployment Process
 
@@ -101,7 +101,7 @@ CLI mode uses argparse flags (see `cli.py --help`).
    - Run healthcheck to verify deployment
 
 **Terraform modules** in `terraform/modules/`:
-- `lambda/`: Lambda function (with SnapStart), IAM role, CloudWatch logs, "live" alias
+- `lambda/`: Lambda function, IAM role, CloudWatch logs, "live" alias
 - `api_gateway/`: API Gateway REST API with Lambda integration
 
 ### Environment Variables in Lambda
