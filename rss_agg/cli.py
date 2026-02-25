@@ -8,8 +8,8 @@ from typing import Any
 import wireup
 from yarl import URL
 
-import rss_agg.services
 from rss_agg.logging_utils import init_logging
+from rss_agg.services import BASE_INJECTABLES, FILE_INJECTABLES, RSSService
 from rss_agg.types import (
     BaseUrl,
     FeedDescription,
@@ -34,9 +34,9 @@ def main() -> None:
     logger.debug("args", extra=vars(args))
 
     config = build_config(args)
-    container = wireup.create_sync_container(injectables=[rss_agg.services], config={**config})
+    container = wireup.create_sync_container(injectables=list(BASE_INJECTABLES) + FILE_INJECTABLES, config={**config})
 
-    rss_service = container.get(rss_agg.services.RSSService)
+    rss_service = container.get(RSSService)
 
     rss = asyncio.run(rss_service.read_and_generate_rss(self_url=URL("https://example.com")))
     print(rss)  # noqa: T201
@@ -44,6 +44,7 @@ def main() -> None:
 
 def build_config(args: argparse.Namespace) -> dict[str, Any]:
     return {
+        "feeds_service": "FileFeedsService",
         "feeds_file": FeedsFile(args.feeds_file),
         "base_url": BaseUrl(args.base_url),
         "max_items": MaxItems(args.max_items),

@@ -10,6 +10,10 @@ variable "lambda_timeout" {
   type = number
 }
 
+variable "feeds_service" {
+  type = string
+}
+
 variable "feeds_file" {
   type = string
 }

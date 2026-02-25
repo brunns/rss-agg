@@ -24,6 +24,7 @@ module "lambda" {
   name_suffix                = random_string.suffix.result
   memory_size                = var.memory_size
   lambda_timeout             = var.lambda_timeout
+  feeds_service              = var.feeds_service
   feeds_file                 = var.feeds_file
   max_items                  = var.max_items
   max_connections            = var.max_connections

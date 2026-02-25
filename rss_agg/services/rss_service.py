@@ -4,7 +4,7 @@ from typing import Annotated
 from wireup import Inject, injectable
 from yarl import URL  # noqa: TC002
 
-from rss_agg.services.feeds_service import FeedsService  # noqa: TC001
+from rss_agg.services.feeds_services import FeedsService  # noqa: TC001
 from rss_agg.services.rss_generator import RSSGenerator  # noqa: TC001
 from rss_agg.services.rss_parser import RSSParser  # noqa: TC001
 from rss_agg.types import MaxItems  # noqa: TC001

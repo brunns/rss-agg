@@ -20,7 +20,10 @@ The application is a [Flask](https://flask.palletsprojects.com/) async web app d
 [web.py](rss_agg/web.py), the entry point, is a good place to start looking at the code. 
 
 On each request, [RSSService](rss_agg/services/rss_service.py) orchestrates the full pipeline: 
-[FeedsService](rss_agg/services/feeds_service.py) reads a list of feed paths from [feeds.txt](feeds.txt) and constructs full 
+a [FeedsService](rss_agg/services/feeds_services/base_feeds_service.py) reads a list of feed paths (one of 
+[FileFeedsService](rss_agg/services/feeds_services/file_feeds_service.py) which reads from from [feeds.txt](feeds.txt), 
+or [S3FeedsService](rss_agg/services/feeds_services/s3_feeds_service.py) which reads from an 
+[S3](https://aws.amazon.com/pm/serv-s3/) object) and constructs full 
 Guardian RSS URLs; [Fetcher](rss_agg/services/fetcher.py) retrieves all feeds concurrently using [httpx](https://www.python-httpx.org/) with
 HTTP/2 and connection pooling; [RSSParser](rss_agg/services/rss_parser.py) parses the responses with 
 [defusedxml](https://github.com/tiran/defusedxml) and de-duplicates items by GUID; and 

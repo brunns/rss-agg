@@ -1,3 +1,8 @@
+variable "feeds_service" {
+  type    = string
+  default = "FileFeedsService"
+}
+
 variable "feeds_file" {
   type    = string
   default = "feeds.txt"
