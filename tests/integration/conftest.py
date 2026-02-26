@@ -11,6 +11,8 @@ from yarl import URL
 if TYPE_CHECKING:
     from collections.abc import Generator
 
+    from pytest_docker import Services
+
 GARAGE_ADMIN_TOKEN = "test-admin-token"
 GARAGE_REGION = "garage"
 GARAGE_BUCKET = "test-feeds"
@@ -18,7 +20,7 @@ GARAGE_KEY_NAME = "test-key"
 
 
 @pytest.fixture(scope="session")
-def mountebank_instance(docker_ip, docker_services) -> URL:
+def mountebank_instance(docker_ip: str, docker_services: Services) -> URL:
     port = docker_services.port_for("mountebank", 2525)
     url = URL(f"http://{docker_ip}:{port}")
     docker_services.wait_until_responsive(timeout=30.0, pause=0.1, check=lambda: is_responsive(url))
@@ -31,7 +33,7 @@ def mock_server(mountebank_instance: URL) -> MountebankServer:
 
 
 @pytest.fixture(scope="session")
-def garage_instance(docker_ip, docker_services) -> URL:
+def garage_instance(docker_ip, docker_services: Services) -> URL:
     admin_port = docker_services.port_for("garage", 3903)
     admin_url = URL(f"http://{docker_ip}:{admin_port}")
     check_url = admin_url / "v2" / "GetClusterStatus"
@@ -40,7 +42,7 @@ def garage_instance(docker_ip, docker_services) -> URL:
 
 
 @pytest.fixture(scope="session")
-def s3_config(garage_instance: URL, docker_ip: str, docker_services) -> dict[str, Any]:
+def s3_config(garage_instance: URL, docker_ip: str, docker_services: Services) -> dict[str, Any]:
     headers = {"Authorization": f"Bearer {GARAGE_ADMIN_TOKEN}"}
 
     with httpx.Client() as client:

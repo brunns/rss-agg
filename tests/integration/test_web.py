@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import boto3
 import pytest
@@ -10,8 +10,13 @@ from mbtest.imposters import Imposter, Predicate, Response, Stub
 
 from rss_agg.flask_app_factory import create_app
 
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
-def test_get_rss_from_over_the_wire_feed(client_with_fake_upstream):
+    from flask.testing import FlaskClient
+
+
+def test_get_rss_from_over_the_wire_feed(client_with_fake_upstream: FlaskClient):
     # When
     response = client_with_fake_upstream.get("/")
 
@@ -25,7 +30,7 @@ def test_get_rss_from_over_the_wire_feed(client_with_fake_upstream):
     )
 
 
-def test_get_rss_from_s3_feeds_file(client_with_fake_upstream_and_s3_feeds):
+def test_get_rss_from_s3_feeds_file(client_with_fake_upstream_and_s3_feeds: FlaskClient):
     # When
     response = client_with_fake_upstream_and_s3_feeds.get("/")
 
@@ -40,7 +45,7 @@ def test_get_rss_from_s3_feeds_file(client_with_fake_upstream_and_s3_feeds):
 
 
 @pytest.fixture
-def client_with_fake_upstream(mock_server, rss_string, sausages_feeds_file):
+def client_with_fake_upstream(mock_server, rss_string, sausages_feeds_file) -> Generator[FlaskClient]:
     imposter = Imposter(Stub(Predicate(path="/sausages/rss"), Response(body=rss_string)), port=4545)
 
     with mock_server(imposter):
@@ -49,7 +54,9 @@ def client_with_fake_upstream(mock_server, rss_string, sausages_feeds_file):
 
 
 @pytest.fixture
-def client_with_fake_upstream_and_s3_feeds(mock_server, rss_string, s3_config: dict[str, Any]):
+def client_with_fake_upstream_and_s3_feeds(
+    mock_server, rss_string, s3_config: dict[str, Any]
+) -> Generator[FlaskClient]:
     s3 = boto3.client(
         "s3",
         endpoint_url=str(s3_config["s3_endpoint"]),

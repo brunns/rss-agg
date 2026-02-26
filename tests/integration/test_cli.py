@@ -1,4 +1,5 @@
 import os
+from typing import TYPE_CHECKING
 
 import scripttest
 from brunns.matchers.rss import is_rss_feed
@@ -6,8 +7,13 @@ from brunns.matchers.scripttest import is_proc_result
 from hamcrest import assert_that, contains_string, has_length
 from mbtest.imposters import Imposter, Predicate, Response, Stub
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
-def test_cli_output(mock_server, large_rss_string, sausages_feeds_file):
+    from mbtest.server import MountebankServer
+
+
+def test_cli_output(mock_server: MountebankServer, large_rss_string: str, sausages_feeds_file: Path):
     # Given
     env = scripttest.TestFileEnvironment()
     imposter = Imposter(Stub(Predicate(path="/sausages/rss"), Response(body=large_rss_string)), port=4545)
@@ -25,7 +31,7 @@ def test_cli_output(mock_server, large_rss_string, sausages_feeds_file):
     )
 
 
-def test_cli_max_items(mock_server, large_rss_string, sausages_feeds_file):
+def test_cli_max_items(mock_server: MountebankServer, large_rss_string: str, sausages_feeds_file: Path):
     # Given
     env = scripttest.TestFileEnvironment()
     imposter = Imposter(Stub(Predicate(path="/sausages/rss"), Response(body=large_rss_string)), port=4545)
