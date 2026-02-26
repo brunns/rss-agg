@@ -12,10 +12,29 @@ worlds - I can see only[^2] the articles I'm interested in my reader[^3], and on
 [^2]: Or mostly only - the sub-editors do seem to do some questionable tagging sometimes.
 [^3]: Currently [Feedly](https://feedly.com/).
 
+## Prerequisites
+
+Local development requires:
+
+* [uv](https://docs.astral.sh/uv/) for all things Python
+* [xc](https://xcfile.dev/) as a task runner
+* [gh](https://cli.github.com/) for controlling GitHub actions
+* [colima](https://github.com/abiosoft/colima/)[^4] for running the docker images we need for our integration tests
+* [terraform](https://developer.hashicorp.com/terraform) for deployment
+* [libxml2](http://xmlsoft.org/) for testing our RSS output
+
+[^4]: On a Mac - I'm not sure what you might use on other platforms.
+
+On a Mac, you can install all these with [homebrew](https://brew.sh/).
+
+```sh
+brew install uv xc gh colima terraform libxml2
+```
+
 ## Design
 
 The application is a [Flask](https://flask.palletsprojects.com/) async web app deployed as an 
-[AWS Lambda](https://aws.amazon.com/lambda/) function via the 
+[AWS Lambda](https://aws.amazon.com/lambda/) function running within the 
 [Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter). 
 
 Good places to start investigating the code are:
@@ -73,18 +92,6 @@ The following are additionally required when `FEEDS_SERVICE=S3FeedsService`:
 | `AWS_ACCESS_KEY_ID` | AWS access key ID for S3 access | boto3 default |
 | `AWS_SECRET_ACCESS_KEY` | AWS secret access key for S3 access | boto3 default |
 | `S3_ENDPOINT` | Custom S3-compatible endpoint URL, e.g. for local testing | AWS S3 |
-
-## Prerequisites
-
-Local development requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [gh](https://cli.github.com/), 
-[colima](https://github.com/abiosoft/colima/)[^4], [terraform](https://developer.hashicorp.com/terraform) and 
-[libxml2](http://xmlsoft.org/):
-
-[^4]: On a Mac - I'm not sure what you might use on other platforms.
-
-```sh
-brew install uv xc gh colima terraform libxml2
-```
 
 ## Tasks
 
