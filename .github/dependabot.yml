@@ -4,6 +4,8 @@ updates:
 
   - package-ecosystem: "uv"
     directory: "/"
+    allow:
+      - dependency-type: "all"
     schedule:
       interval: "weekly"
     labels:
