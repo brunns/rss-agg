@@ -170,8 +170,11 @@ uv run pyright
 
 Build lambda image
 
+Inputs: IMAGE_NAME
+Environment: IMAGE_NAME=deployment_package.zip
+
 ```sh
-rm -rf build/ terraform/deployment_package.zip
+rm -rf build/ terraform/"$IMAGE_NAME"
 uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
 uv pip install -r requirements.txt --target build --python 3.14
 cp -r src/rss_agg build/
@@ -179,7 +182,7 @@ cp run.sh build/
 cp feeds.txt build/
 chmod +x build/run.sh
 cd build
-zip -r ../terraform/deployment_package.zip .
+zip -r ../terraform/"$IMAGE_NAME" .
 cd ..
 ```
 
@@ -224,6 +227,7 @@ gh run watch "$RUN_ID" --exit-status
 Check feed is running and returning XML
 
 Inputs: API_URL
+Environment: API_URL=http://0.0.0.0:8080
 
 ```sh
 set +x
@@ -242,8 +246,11 @@ fi
 
 Query CloudWatch logs for recent Lambda activity
 
+Inputs: DURATION
+Environment: DURATION=1h
+
 ```sh
-aws logs tail /aws/lambda/rss_aggregator --since 3h --format short
+aws logs tail /aws/lambda/rss_aggregator --since "$DURATION" --format short
 ```
 
 ### create-s3-bucket
@@ -254,6 +261,19 @@ infrastructure state. Run `aws configure` first to authenticate if necessary.
 ```sh
 aws s3 mb s3://brunns-rss-agg-terraform-state --region eu-west-2
 aws s3api put-bucket-versioning --bucket brunns-rss-agg-terraform-state --versioning-configuration Status=Enabled
+```
+
+### upload-feeds
+
+Upload feeds.txt (by default) to the S3 feeds bucket
+
+Inputs: FEEDS_FILE, BUCKET, OBJECT
+Environment: FEEDS_FILE=feeds.txt
+Environment: BUCKET=brunns-rss-agg-feeds
+Environment: OBJECT=feeds.txt
+
+```sh
+aws s3 cp "$FEEDS_FILE" s3://"$BUCKET"/"$OBJECT"
 ```
 
 ### terraform-init
