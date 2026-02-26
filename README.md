@@ -19,7 +19,7 @@ Local development requires:
 * [uv](https://docs.astral.sh/uv/) for all things Python
 * [xc](https://xcfile.dev/) as a task runner
 * [gh](https://cli.github.com/) for controlling GitHub actions
-* [colima](https://github.com/abiosoft/colima/)[^4] for running the docker images we need for our integration tests
+* [colima](https://colima.run/)[^4] for running the docker images we need for our integration tests
 * [terraform](https://developer.hashicorp.com/terraform) for deployment
 * [libxml2](http://xmlsoft.org/) for testing our RSS output
 
