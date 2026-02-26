@@ -43,6 +43,20 @@ def garage_instance(docker_ip, docker_services: Services) -> URL:
 
 @pytest.fixture(scope="session")
 def s3_config(garage_instance: URL, docker_ip: str, docker_services: Services) -> dict[str, Any]:
+    """Bootstrap a Garage (self-hosted S3-compatible store) instance for integration testing.
+
+    Garage requires explicit cluster initialisation before it can store objects, so this fixture
+    drives the admin API through the required setup steps:
+
+    1. Fetch the node ID from the cluster status.
+    2. Assign the node a storage role (zone + capacity) via UpdateClusterLayout.
+    3. Commit the layout with ApplyClusterLayout.
+    4. Create a test bucket and an access key pair.
+    5. Grant the key read/write access to the bucket.
+
+    Returns a dict of S3 credentials and config (region, access key, secret, endpoint URL,
+    bucket name) suitable for constructing an S3 client pointed at the test bucket.
+    """
     headers = {"Authorization": f"Bearer {GARAGE_ADMIN_TOKEN}"}
 
     with httpx.Client() as client:
@@ -53,7 +67,7 @@ def s3_config(garage_instance: URL, docker_ip: str, docker_services: Services) -
         client.post(
             str(garage_instance / "v2" / "UpdateClusterLayout"),
             headers=headers,
-            json={"roles": [{"id": node_id, "zone": "dc1", "capacity": 1_000_000_000, "tags": []}]},
+            json={"roles": [{"id": node_id, "zone": "dc1", "capacity": 1_000_000, "tags": []}]},
         ).raise_for_status()
 
         client.post(
