@@ -49,7 +49,7 @@ On each request, [RSSService](src/rss_agg/services/rss_service.py) orchestrates 
     * [FileFeedsService](src/rss_agg/services/feeds_services/file_feeds_service.py) reads from from 
       [feeds.txt](feeds.txt), OR
     * [S3FeedsService](src/rss_agg/services/feeds_services/s3_feeds_service.py) reads from an 
-      [S3](https://aws.amazon.com/pm/serv-s3/) object using [boto3](https://docs.aws.amazon.com/boto3/latest/).
+      [S3](https://aws.amazon.com/s3/) object using [boto3](https://docs.aws.amazon.com/boto3/latest/).
 * [Fetcher](src/rss_agg/services/fetcher.py) retrieves all feeds concurrently using 
   [httpx](https://www.python-httpx.org/) with HTTP/2 and connection pooling.
 * [RSSParser](src/rss_agg/services/rss_parser.py) parses the responses with 
@@ -102,6 +102,7 @@ These tasks can be run using [xc](https://xcfile.dev/).
 Precommit tasks
 
 Requires: test, lint
+RunDeps: async
 
 ```python
 #!/usr/bin/env python
@@ -129,6 +130,7 @@ Run web server
 Run all tests
 
 Requires: unit, integration
+RunDeps: async
 
 ### unit
 
@@ -191,6 +193,7 @@ cd ..
 Plan infrastructure changes
 
 Requires: build, terraform-init
+RunDeps: async
 
 ```sh
 cd terraform
