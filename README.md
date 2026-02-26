@@ -76,13 +76,14 @@ The following are additionally required when `FEEDS_SERVICE=S3FeedsService`:
 
 ## Prerequisites
 
-Requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [colima](//github.com/abiosoft/colima/)[^4], 
-[terraform](https://developer.hashicorp.com/terraform) and [libxml2](http://xmlsoft.org/):
+Local development requires [uv](https://docs.astral.sh/uv/), [xc](https://xcfile.dev/), [gh](https://cli.github.com/), 
+[colima](https://github.com/abiosoft/colima/)[^4], [terraform](https://developer.hashicorp.com/terraform) and 
+[libxml2](http://xmlsoft.org/):
 
 [^4]: On a Mac - I'm not sure what you might use on other platforms.
 
 ```sh
-brew install uv xc colima terraform libxml2
+brew install uv xc gh colima terraform libxml2
 ```
 
 ## Tasks
