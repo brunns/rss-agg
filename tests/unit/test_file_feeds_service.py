@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from hamcrest import assert_that, contains_exactly, empty
 from yarl import URL
@@ -6,8 +7,11 @@ from yarl import URL
 from rss_agg.domain import BaseUrl, FeedsFile, FeedUrl
 from rss_agg.services.feeds_services import FileFeedsService
 
+if TYPE_CHECKING:
+    from pyfakefs.fake_filesystem import FakeFilesystem
 
-def test_feeds_service_returns_urls(fs):
+
+def test_feeds_service_returns_urls(fs: FakeFilesystem):
     # Given
     feeds_file = Path("/tmp/feeds.txt")
     fs.create_file(str(feeds_file), contents="uk\nworld\n")
@@ -26,7 +30,7 @@ def test_feeds_service_returns_urls(fs):
     )
 
 
-def test_feeds_service_handles_empty_file(fs):
+def test_feeds_service_handles_empty_file(fs: FakeFilesystem):
     # Given
     feeds_file = Path("/tmp/empty.txt")
     fs.create_file(str(feeds_file), contents="")

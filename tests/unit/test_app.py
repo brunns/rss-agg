@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import TYPE_CHECKING
 
 import pytest
 from brunns.matchers.werkzeug import is_werkzeug_response as is_response
@@ -11,8 +12,15 @@ from rss_agg.flask_app_factory import create_app
 from rss_agg.services import RSSService
 from tests.utils import async_value
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any
 
-def test_get_data_route_logic(client, container, when):
+    from flask.testing import FlaskClient
+    from wireup import AsyncContainer
+
+
+def test_get_data_route_logic(client: FlaskClient, container: AsyncContainer, when: Callable[..., Any]):
     # Given
     mock_service = mock(RSSService)
     expected_rss = "<rss>fake feed</rss>"
@@ -33,7 +41,7 @@ def test_get_data_route_logic(client, container, when):
     )
 
 
-def test_health_endpoint(client):
+def test_health_endpoint(client: FlaskClient):
     # When
     response = client.get("/health")
 

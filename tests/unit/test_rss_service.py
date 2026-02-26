@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING, Any
 from xml.etree import ElementTree as ET
 
 import pytest
@@ -8,9 +9,12 @@ from yarl import URL
 from rss_agg.services import FeedsService, RSSGenerator, RSSParser, RSSService
 from tests.utils import async_value
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 @pytest.mark.asyncio
-async def test_rss_service_orchestration(when):
+async def test_rss_service_orchestration(when: Callable[..., Any]):
     # Given
     self_url = URL("https://myfeed.com")
     expected_urls = [
@@ -39,7 +43,7 @@ async def test_rss_service_orchestration(when):
 
 
 @pytest.mark.asyncio
-async def test_rss_service_handles_empty_feeds(when):
+async def test_rss_service_handles_empty_feeds(when: Callable[..., Any]):
     # Given
     self_url = URL("https://myfeed.com")
 

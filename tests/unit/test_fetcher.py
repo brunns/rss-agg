@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import TYPE_CHECKING
 
 import httpx
 import pytest
@@ -7,9 +8,12 @@ from yarl import URL
 
 from rss_agg.services import Fetcher
 
+if TYPE_CHECKING:
+    from respx import MockRouter
+
 
 @pytest.mark.asyncio
-async def test_fetch_all_data_from_urls(respx_mock):
+async def test_fetch_all_data_from_urls(respx_mock: MockRouter):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
     respx_mock.get("http://example.com/1").mock(return_value=httpx.Response(HTTPStatus.OK, text="1"))
@@ -23,7 +27,7 @@ async def test_fetch_all_data_from_urls(respx_mock):
 
 
 @pytest.mark.asyncio
-async def test_skips_failed_feeds(respx_mock):
+async def test_skips_failed_feeds(respx_mock: MockRouter):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
     respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.INTERNAL_SERVER_ERROR))
@@ -36,7 +40,7 @@ async def test_skips_failed_feeds(respx_mock):
 
 
 @pytest.mark.asyncio
-async def test_partial_failure_returns_successful_feeds(respx_mock):
+async def test_partial_failure_returns_successful_feeds(respx_mock: MockRouter):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
     respx_mock.get("http://example.com/1").mock(return_value=httpx.Response(HTTPStatus.OK, text="1"))
@@ -50,7 +54,7 @@ async def test_partial_failure_returns_successful_feeds(respx_mock):
 
 
 @pytest.mark.asyncio
-async def test_handles_empty_text(respx_mock):
+async def test_handles_empty_text(respx_mock: MockRouter):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
     respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.OK, text=None))

@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING, Any
 from xml.etree import ElementTree as ET
 
 import pytest
@@ -9,9 +10,12 @@ from yarl import URL
 from rss_agg.services import Fetcher, RSSParser
 from tests.utils import async_value
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
 
 @pytest.mark.asyncio
-async def test_parses_rss(rss_string, when):
+async def test_parses_rss(rss_string: str, when: Callable[..., Any]):
     # Given
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn(async_value([rss_string]))
@@ -26,7 +30,7 @@ async def test_parses_rss(rss_string, when):
 
 
 @pytest.mark.asyncio
-async def test_deduplicates_on_guid(rss_string_with_duplicate_guids, when):
+async def test_deduplicates_on_guid(rss_string_with_duplicate_guids: str, when: Callable[..., Any]):
     # Given
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn(async_value([rss_string_with_duplicate_guids]))

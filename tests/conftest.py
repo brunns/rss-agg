@@ -7,6 +7,10 @@ from rss_agg.flask_app_factory import create_app
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
+    from flask import Flask
+    from flask.testing import FlaskClient
+    from wireup import AsyncContainer
 DC_NS = "http://purl.org/dc/elements/1.1/"
 
 
@@ -68,18 +72,18 @@ def rss_string_with_duplicate_guids() -> str:
 
 
 @pytest.fixture
-def app_and_container():
+def app_and_container() -> tuple[Flask, AsyncContainer]:
     app, container = create_app({"TESTING": True, "max_items": 10})
     return app, container
 
 
 @pytest.fixture
-def client(app_and_container):
+def client(app_and_container: tuple[Flask, AsyncContainer]) -> FlaskClient:
     app, _ = app_and_container
     return app.test_client()
 
 
 @pytest.fixture
-def container(app_and_container):
+def container(app_and_container: tuple[Flask, AsyncContainer]) -> AsyncContainer:
     _, container = app_and_container
     return container
