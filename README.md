@@ -189,7 +189,9 @@ cd ..
 
 ### push
 
-Push to origin, and monitor CI run 
+Push to origin, and monitor CI workflow 
+
+Requires: pc
 
 ```sh
 git push
