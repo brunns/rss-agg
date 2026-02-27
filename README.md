@@ -34,7 +34,7 @@ Local development requires:
 On a Mac, you can install most of these with [homebrew](https://brew.sh/) and [asdf](https://asdf-vm.com/).
 
 ```sh
-brew install uv xc gh awscli asdf colima libxml2  # And follow and additional instructions brew gives you
+brew install uv xc gh awscli asdf colima libxml2  # And follow any additional setup instructions brew gives you
 asdf plugin add terraform
 asdf plugin add nodejs
 asdf install

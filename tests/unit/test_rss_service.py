@@ -31,9 +31,9 @@ async def test_rss_service_orchestration(when: Callable[..., Any]):
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
-    when(mock_generator).generate_new_rss_feed(mock_items, self_url=self_url, limit=50).thenReturn(expected_xml)
+    when(mock_generator).generate_new_rss_feed(mock_items, self_url=self_url).thenReturn(expected_xml)
 
-    service = RSSService(mock_feeds_service, mock_parser, mock_generator, 50)
+    service = RSSService(mock_feeds_service, mock_parser, mock_generator)
 
     # When
     actual = await service.read_and_generate_rss(self_url)
@@ -55,9 +55,9 @@ async def test_rss_service_handles_empty_feeds(when: Callable[..., Any]):
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
-    when(mock_generator).generate_new_rss_feed([], self_url=self_url, limit=50).thenReturn(expected_xml)
+    when(mock_generator).generate_new_rss_feed([], self_url=self_url).thenReturn(expected_xml)
 
-    service = RSSService(mock_feeds_service, mock_parser, mock_generator, 50)
+    service = RSSService(mock_feeds_service, mock_parser, mock_generator)
 
     # When
     actual = await service.read_and_generate_rss(self_url)

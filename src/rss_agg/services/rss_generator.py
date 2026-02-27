@@ -22,12 +22,14 @@ class RSSGenerator:
         feed_title: Annotated[domain.FeedTitle, Inject(config="feed_title")],
         feed_description: Annotated[domain.FeedDescription, Inject(config="feed_description")],
         feed_link: Annotated[domain.FeedLink, Inject(config="feed_link")],
+        max_items: Annotated[domain.MaxItems, Inject(config="max_items")],
     ) -> None:
         self.feed_title = feed_title
         self.feed_description = feed_description
         self.feed_link = feed_link
+        self.max_items = max_items
 
-    def generate_new_rss_feed(self, items: list[ET.Element], self_url: URL, limit: int = 50) -> str:
+    def generate_new_rss_feed(self, items: list[ET.Element], self_url: URL) -> str:
         ET.register_namespace("atom", RSSGenerator.ATOM_NS)
 
         root = ET.Element("rss", version="2.0")
@@ -42,7 +44,7 @@ class RSSGenerator:
         atom_link.set("type", "application/rss+xml")
 
         newest_first = sorted(items, key=self._get_date, reverse=True)
-        limited_items = newest_first[:limit]
+        limited_items = newest_first[: self.max_items]
 
         if limited_items:
             latest_date = self._get_date(limited_items[0])
