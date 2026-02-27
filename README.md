@@ -207,10 +207,13 @@ Push to origin, and monitor CI workflow
 
 Requires: pc
 
+Inputs: WORKFLOW
+Environment: WORKFLOW=ci.yml
+
 ```sh
 git push
 sleep 5
-RUN_ID=$(gh run list --workflow=ci.yml --limit=1 --json databaseId --jq '.[0].databaseId')
+RUN_ID=$(gh run list --workflow="$WORKFLOW" --limit=1 --json databaseId --jq '.[0].databaseId')
 gh run watch "$RUN_ID" --exit-status
 ```
 
@@ -218,10 +221,13 @@ gh run watch "$RUN_ID" --exit-status
 
 Run deployment workflow
 
+Inputs: WORKFLOW
+Environment: WORKFLOW=cd.yml
+
 ```sh
-gh workflow run cd.yml
+gh workflow run "$WORKFLOW"
 sleep 5
-RUN_ID=$(gh run list --workflow=cd.yml --limit=1 --json databaseId --jq '.[0].databaseId')
+RUN_ID=$(gh run list --workflow="$WORKFLOW" --limit=1 --json databaseId --jq '.[0].databaseId')
 gh run watch "$RUN_ID" --exit-status
 ```
 
