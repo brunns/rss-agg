@@ -1,5 +1,9 @@
 # RSS aggregator
 
+[![xc compatible](https://xcfile.dev/badge.svg)](https://xcfile.dev)
+[![test](https://github.com/brunns/rss-agg/actions/workflows/ci.yml/badge.svg)](https://github.com/brunns/rss-agg/actions/workflows/ci.yaml)
+[![docs](https://github.com/brunns/rss-agg/actions/workflows/cd.yml/badge.svg)](https://github.com/brunns/rss-agg/actions/workflows/cd.yml)
+
 Aggregate, de-duplicate and republish RSS feeds.
 
 The problem I'm solving here is this; if I subscribe to the main [Guardian](https://www.theguardian.com/) 
