@@ -71,19 +71,19 @@ def rss_string_with_duplicate_guids() -> str:
     )
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def app_and_container() -> tuple[Flask, AsyncContainer]:
     app, container = create_app({"TESTING": True, "max_items": 10})
     return app, container
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def client(app_and_container: tuple[Flask, AsyncContainer]) -> FlaskClient:
     app, _ = app_and_container
     return app.test_client()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def container(app_and_container: tuple[Flask, AsyncContainer]) -> AsyncContainer:
     _, container = app_and_container
     return container
