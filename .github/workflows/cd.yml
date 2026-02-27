@@ -31,6 +31,17 @@ jobs:
           enable-cache: true
       - uses: asdf-vm/actions/install@v4
       - uses: joerdav/setup-xc@v1
+      - name: "Show software versions"
+        run: |
+          uv --version
+          xc --version
+          asdf --version
+          node --version
+          npm --version
+          terraform -version
+          docker --version
+          docker compose version
+
       - run: xc build
       - run: terraform init
         working-directory: ./terraform

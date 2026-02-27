@@ -17,6 +17,14 @@ jobs:
         with:
           enable-cache: true
       - uses: joerdav/setup-xc@v1
+      - name: "Show software versions"
+        run: |
+          uv --version
+          xc --version
+          node --version
+          npm --version
+          docker --version
+          docker compose version
 
       - run: xc test
       - run: xc lint
