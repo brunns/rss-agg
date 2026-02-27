@@ -20,15 +20,19 @@ Local development requires:
 * [xc](https://xcfile.dev/) as a task runner
 * [gh](https://cli.github.com/) for controlling GitHub actions
 * [colima](https://colima.run/)[^4] for running the docker images we need for our integration tests
-* [terraform](https://developer.hashicorp.com/terraform) for deployment
+* [terraform](https://developer.hashicorp.com/terraform) for deployment (version pinned in `.tool-versions`, installed via [asdf](https://asdf-vm.com/))
+* [Node.js](https://nodejs.org/) for [pyright](https://github.com/microsoft/pyright) (version pinned in `.tool-versions`, installed via asdf)
 * [libxml2](http://xmlsoft.org/) for testing our RSS output
 
 [^4]: On a Mac - I'm not sure what you might use on other platforms.
 
-On a Mac, you can install all these with [homebrew](https://brew.sh/).
+On a Mac, you can install most of these with [homebrew](https://brew.sh/).
 
 ```sh
-brew install uv xc gh colima terraform libxml2
+brew install uv xc gh colima libxml2 asdf
+asdf plugin add terraform
+asdf plugin add nodejs
+asdf install
 ```
 
 ## Design
