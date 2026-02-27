@@ -60,24 +60,7 @@ Uses [wireup](https://github.com/maldoinc/wireup) for dependency injection:
 - Container created from environment variables (web) or CLI args (cli)
 - Container held in `WireupFlask.container` for web mode
 
-### Key Services
-
-All services in `src/rss_agg/services/`:
-
-- **RSSService**: Orchestrates the full flow (reads file, calls parser, calls generator)
-- **Fetcher**: HTTP client for concurrent feed fetching (httpx with HTTP/2, retries, connection pooling)
-- **RSSParser**: Parses RSS feeds and de-duplicates by GUID
-- **RSSGenerator**: Generates new RSS feed from de-duplicated items
-
-### Configuration
-
-Web mode reads from environment variables:
-- `FEEDS_FILE` (default: feeds.txt)
-- `MAX_ITEMS` (default: 50)
-- `MAX_CONNECTIONS` (default: 16)
-- `TIMEOUT` (default: 3)
-
-CLI mode uses argparse flags (see `cli.py --help`).
+See `README.md` for the full service descriptions and configuration reference.
 
 ## Lambda Deployment
 
@@ -96,7 +79,7 @@ CLI mode uses argparse flags (see `cli.py --help`).
 1. Commit and push your changes to GitHub
 2. Trigger the workflow:
    - Via GitHub UI: Go to Actions → Deploy → Run workflow
-   - Via CLI: `gh workflow run cd.yml`
+   - Via CLI: `xc deploy`
 3. The workflow will:
    - Run tests and linting
    - Build deployment package (`xc build`)
@@ -106,15 +89,12 @@ CLI mode uses argparse flags (see `cli.py --help`).
 **Terraform modules** in `terraform/modules/`:
 - `lambda/`: Lambda function, IAM role, CloudWatch logs, "live" alias
 - `api_gateway/`: API Gateway REST API with Lambda integration
-
-### Environment Variables in Lambda
-Lambda function receives configuration via environment variables (set in `terraform/modules/lambda/main.tf`):
-- `FEEDS_FILE`, `MAX_ITEMS`, `MAX_CONNECTIONS`, `TIMEOUT`
-- `AWS_LAMBDA_EXEC_WRAPPER`, `AWS_LWA_PORT`, `AWS_LWA_ENABLE_COMPRESSION` (for Lambda Web Adapter)
+- `s3_feeds/`: S3 bucket for feeds list (versioned, private)
 
 ## Git Commits
 
 - Never add `Co-Authored-By` trailers to commit messages.
+- Always use `xc push` to push code (runs full test suite + linter before pushing and monitors CI).
 
 ## Tool Preferences
 
@@ -138,6 +118,7 @@ Lambda function receives configuration via environment variables (set in `terraf
 - **Integration tests**: `tests/integration/` - Use Docker/Colima for external services
 - Test frameworks: pytest, pytest-asyncio, pyhamcrest, mockito (not unittest.mock), respx
 - Use `pyfakefs` for filesystem mocking
+- Run tests using `xc` tasks
 
 ## Dependencies
 
@@ -147,3 +128,4 @@ Lambda function receives configuration via environment variables (set in `terraf
 - **wireup**: Dependency injection
 - **yarl**: URL handling
 - **gunicorn**: WSGI server for Lambda
+- **boto3**: AWS asset access
