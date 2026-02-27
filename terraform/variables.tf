@@ -8,6 +8,16 @@ variable "feeds_file" {
   default = "feeds.txt"
 }
 
+variable "feeds_bucket_name" {
+  type    = string
+  default = "brunns-rss-agg-feeds"
+}
+
+variable "feeds_object_name" {
+  type    = string
+  default = "feeds.txt"
+}
+
 variable "max_items" {
   type    = number
   default = 50

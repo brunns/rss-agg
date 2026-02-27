@@ -49,3 +49,17 @@ variable "deployment_zip" {
 variable "log_level" {
   type = string
 }
+
+variable "feeds_bucket_arn" {
+  type = string
+}
+
+variable "feeds_bucket_name" {
+  type    = string
+  default = "brunns-rss-agg-feeds"
+}
+
+variable "feeds_object_name" {
+  type    = string
+  default = "feeds.txt"
+}

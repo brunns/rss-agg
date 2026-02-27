@@ -18,6 +18,11 @@ resource "random_string" "suffix" {
   upper   = false
 }
 
+module "s3_feeds" {
+  source      = "./modules/s3_feeds"
+  bucket_name = var.feeds_bucket_name
+}
+
 module "lambda" {
   source = "./modules/lambda"
 
@@ -26,6 +31,9 @@ module "lambda" {
   lambda_timeout             = var.lambda_timeout
   feeds_service              = var.feeds_service
   feeds_file                 = var.feeds_file
+  feeds_bucket_arn           = module.s3_feeds.bucket_arn
+  feeds_bucket_name          = var.feeds_bucket_name
+  feeds_object_name          = var.feeds_object_name
   max_items                  = var.max_items
   max_connections            = var.max_connections
   max_keepalive_connections  = var.max_keepalive_connections

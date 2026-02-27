@@ -112,6 +112,10 @@ Lambda function receives configuration via environment variables (set in `terraf
 - `FEEDS_FILE`, `MAX_ITEMS`, `MAX_CONNECTIONS`, `TIMEOUT`
 - `AWS_LAMBDA_EXEC_WRAPPER`, `AWS_LWA_PORT`, `AWS_LWA_ENABLE_COMPRESSION` (for Lambda Web Adapter)
 
+## Git Commits
+
+- Never add `Co-Authored-By` trailers to commit messages.
+
 ## Tool Preferences
 
 - **JSON parsing**: Use `jq` instead of `python -c` for parsing JSON output

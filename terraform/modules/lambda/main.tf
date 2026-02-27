@@ -18,6 +18,26 @@ resource "aws_iam_role_policy_attachment" "basic" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_iam_policy" "s3_feeds_read" {
+  name = "rss_aggregator_s3_feeds_read_${var.name_suffix}"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["s3:GetObject"]
+        Effect   = "Allow"
+        Resource = "${var.feeds_bucket_arn}/*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "s3_feeds_read" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.s3_feeds_read.arn
+}
+
 resource "aws_lambda_function" "this" {
   description   = "Aggregate, de-duplicate and republish RSS feeds"
   filename      = var.deployment_zip
@@ -48,6 +68,8 @@ resource "aws_lambda_function" "this" {
       AWS_LWA_READINESS_CHECK_PATH = "/"
       FEEDS_SERVICE                = var.feeds_service
       FEEDS_FILE                   = var.feeds_file
+      FEEDS_BUCKET_NAME            = var.feeds_bucket_name
+      FEEDS_OBJECT_NAME            = var.feeds_object_name
       MAX_ITEMS                    = var.max_items
       MAX_CONNECTIONS              = var.max_connections
       MAX_KEEPALIVE_CONNECTIONS    = var.max_keepalive_connections
