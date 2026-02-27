@@ -173,6 +173,7 @@ uv run pyright
 Build lambda image
 
 Inputs: IMAGE_NAME
+
 Environment: IMAGE_NAME=deployment_package.zip
 
 ```sh
@@ -188,17 +189,28 @@ zip -r ../terraform/"$IMAGE_NAME" .
 cd ..
 ```
 
+### terraform-init
+
+Initialise terraform
+
+Directory: ./terraform
+
+```sh
+terraform init
+```
+
 ### plan
 
 Plan infrastructure changes
 
 Requires: build, terraform-init
+
 RunDeps: async
 
+Directory: ./terraform
+
 ```sh
-cd terraform
 terraform plan
-cd ..
 ```
 
 ### push
@@ -208,6 +220,7 @@ Push to origin, and monitor CI workflow
 Requires: pc
 
 Inputs: WORKFLOW
+
 Environment: WORKFLOW=ci.yml
 
 ```sh
@@ -222,6 +235,7 @@ gh run watch "$RUN_ID" --exit-status
 Run deployment workflow
 
 Inputs: WORKFLOW
+
 Environment: WORKFLOW=cd.yml
 
 ```sh
@@ -236,6 +250,7 @@ gh run watch "$RUN_ID" --exit-status
 Check feed is running and returning XML
 
 Inputs: API_URL
+
 Environment: API_URL=http://0.0.0.0:8080
 
 ```sh
@@ -256,6 +271,7 @@ fi
 Query CloudWatch logs for recent Lambda activity
 
 Inputs: DURATION
+
 Environment: DURATION=1h
 
 ```sh
@@ -277,22 +293,15 @@ aws s3api put-bucket-versioning --bucket brunns-rss-agg-terraform-state --versio
 Upload feeds.txt (by default) to the S3 feeds bucket
 
 Inputs: FEEDS_FILE, BUCKET, OBJECT
+
 Environment: FEEDS_FILE=feeds.txt
+
 Environment: BUCKET=brunns-rss-agg-feeds
+
 Environment: OBJECT=feeds.txt
 
 ```sh
 aws s3 cp "$FEEDS_FILE" s3://"$BUCKET"/"$OBJECT"
-```
-
-### terraform-init
-
-Initialise terraform
-
-```sh
-cd terraform
-terraform init
-cd ..
 ```
 
 ## Initial setup steps
