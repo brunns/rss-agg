@@ -54,6 +54,4 @@ jobs:
           TF_VAR_log_level: "INFO"
       - name: Install xmllint
         run: sudo apt-get update && sudo apt-get install -y libxml2-utils
-      - run: xc healthcheck
-        env:
-          API_URL: ${{ steps.apply.outputs.api_url }}
+      - run: xc healthcheck "${{ steps.apply.outputs.api_url }}"
