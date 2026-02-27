@@ -29,7 +29,7 @@ jobs:
       - uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
-      - uses: asdf-vm/actions/install@v3
+      - uses: asdf-vm/actions/install@v4
       - uses: joerdav/setup-xc@v1
       - run: xc build
       - run: terraform init
