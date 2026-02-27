@@ -523,6 +523,5 @@ terraform.rc
 
 .idea/
 requirements.txt
-terraform/.terraform.lock.hcl
 terraform/deployment_package.zip
 tests/integration/test-output/
