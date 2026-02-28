@@ -24,6 +24,7 @@ jobs:
       - uses: joerdav/setup-xc@v1
       - name: "software-versions"
         run: |
+          set -x
           uv --version
           xc --version
           asdf --version
