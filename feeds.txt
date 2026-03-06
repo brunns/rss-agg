@@ -10,6 +10,7 @@ politics
 profile/alexispetridis
 profile/andrewrawnsley
 profile/georgemonbiot
+profile/gracedent
 profile/johnnaughton
 profile/jonathanfreedland
 profile/lucymangan
