@@ -17,6 +17,8 @@ profile/lucymangan
 profile/marinahyde
 science
 society/alcohol
+society/benefits
+society/carers-allowance
 society/nhs
 society/women
 stage/comedy
@@ -34,6 +36,9 @@ uk/technology
 uk/tv-and-radio
 us-news/us-politics
 us/commentisfree
+world/estonia
 world/feminism
 world/israel
 world/palestinian-territories
+world/sudan
+world/ukraine
