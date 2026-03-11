@@ -1,6 +1,6 @@
 ---
 name: showboat
-description: Create executable demo documents to plan changes or explain completed work, using the showboat tool.
+description: Plan changes or explain completed work using the showboat tool to create executable demo documents.
 ---
 
 Use `uvx showboat` to build a markdown document that mixes commentary, executable code blocks, and captured output.
