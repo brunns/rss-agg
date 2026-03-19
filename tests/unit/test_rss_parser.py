@@ -8,7 +8,6 @@ from mockito.matchers import ANY
 from yarl import URL
 
 from rss_agg.services import Fetcher, RSSParser
-from tests.utils import async_value
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -18,7 +17,7 @@ if TYPE_CHECKING:
 async def test_parses_rss(rss_string: str, when: Callable[..., Any]):
     # Given
     mock_fetcher = mock(Fetcher)
-    when(mock_fetcher).fetch_all(ANY).thenReturn(async_value([rss_string]))
+    when(mock_fetcher).fetch_all(ANY).thenReturn([rss_string])
 
     parser = RSSParser(mock_fetcher)
 
@@ -33,7 +32,7 @@ async def test_parses_rss(rss_string: str, when: Callable[..., Any]):
 async def test_deduplicates_on_guid(rss_string_with_duplicate_guids: str, when: Callable[..., Any]):
     # Given
     mock_fetcher = mock(Fetcher)
-    when(mock_fetcher).fetch_all(ANY).thenReturn(async_value([rss_string_with_duplicate_guids]))
+    when(mock_fetcher).fetch_all(ANY).thenReturn([rss_string_with_duplicate_guids])
 
     parser = RSSParser(mock_fetcher)
 

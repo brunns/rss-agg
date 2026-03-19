@@ -10,7 +10,6 @@ from mockito.matchers import ANY
 
 from rss_agg.flask_app_factory import create_app
 from rss_agg.services import RSSService
-from tests.utils import async_value
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -25,7 +24,7 @@ def test_get_data_route_logic(client: FlaskClient, container: AsyncContainer, wh
     mock_service = mock(RSSService)
     expected_rss = "<rss>fake feed</rss>"
 
-    when(mock_service).read_and_generate_rss(self_url=ANY).thenReturn(async_value(expected_rss))
+    when(mock_service).read_and_generate_rss(self_url=ANY).thenReturn(expected_rss)
 
     # When
     with container.override.injectable(RSSService, new=mock_service):

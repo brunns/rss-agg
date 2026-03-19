@@ -452,11 +452,11 @@ wheels = [
 
 [[package]]
 name = "mockito"
-version = "1.5.5"
+version = "2.0.3"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/24/71/12c56464071524a7941744e8b8fb02c6614500d27475c2d643d2e780a4b0/mockito-1.5.5.tar.gz", hash = "sha256:49826e3901dc826d0204e93b16dce1c61dde9d3a94eadc9c209ab0e130283393", size = 60707, upload-time = "2025-11-17T11:28:41.21Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/4b/d342e6910379d04557fc1c32ea63d49d0c630d0dbeb81240482fbf13be87/mockito-2.0.3.tar.gz", hash = "sha256:8cb4981b56b0b96295c9581fff55e3d669ecdbcdc547762a4f10b46ae4032aea", size = 217711, upload-time = "2026-03-15T17:27:22.798Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ff/f0/fc3475ef7732d080c6a555e4ce12e606c699e82e220eb4bcafb9e801fc07/mockito-1.5.5-py3-none-any.whl", hash = "sha256:422a6ce2666e3c32d756547b98ee67e83a339f457e132476689643015845fc36", size = 30456, upload-time = "2025-11-17T11:28:40.371Z" },
+    { url = "https://files.pythonhosted.org/packages/9a/bf/138a95593c5fbaca78090e5c10259a682ec0c544974188a9defb726dd8b1/mockito-2.0.3-py3-none-any.whl", hash = "sha256:c6b104bda0b4808d4f6063b877e2c59dbaada940aad8eebd16463b5f5d423da2", size = 51944, upload-time = "2026-03-15T17:27:21.534Z" },
 ]
 
 [[package]]
@@ -787,7 +787,7 @@ requires-dist = [
 dev = [
     { name = "brunns-matchers", specifier = ">=2.10.0" },
     { name = "mbtest", specifier = ">=2.14.0" },
-    { name = "mockito", specifier = ">=1.5.5" },
+    { name = "mockito", specifier = ">=2.0.0" },
     { name = "pyfakefs", specifier = ">=6.0.0" },
     { name = "pyhamcrest", specifier = ">=2.1.0" },
     { name = "pyright", specifier = ">=1.1.408" },
