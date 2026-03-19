@@ -1,4 +1,4 @@
-name: Test job
+name: checks
 
 on:
   workflow_call:
@@ -24,3 +24,15 @@ jobs:
 
       - run: xc test
       - run: xc lint
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: "secret-scanning"
+        uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --results=verified,unknown
