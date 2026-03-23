@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import wireup
+import wireup.integration.flask
 from flask import Flask
 from yarl import URL
 
@@ -34,9 +35,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     config = {**build_config(), **config_override}
     injectables = build_injectables(config)
     container = wireup.create_async_container(config=config, injectables=injectables)
-
-    inject_view = wireup.inject_from_container(container)
-    app.view_functions |= {name: inject_view(view) for name, view in app.view_functions.items()}
+    wireup.integration.flask.setup(container, app)
 
     return app, container
 

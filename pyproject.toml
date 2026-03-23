@@ -11,9 +11,12 @@ dependencies = [
     "gunicorn>=25.0.1",
     "httpx[http2]>=0.28.1",
     "python-json-logger>=4.0.0",
-    "wireup>=2.6.0",
+    "wireup",
     "yarl>=1.22.0",
 ]
+
+[tool.uv.sources]
+wireup = { git = "https://github.com/brunns/wireup", branch = "flask-with-async-container" }
 
 [dependency-groups]
 dev = [
