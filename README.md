@@ -183,12 +183,40 @@ uv run ruff check . --fix-only
 
 ### lint
 
+Requires: lint-code, type-checking, scan-deps
+RunDeps: async
+
+### lint-code
+
 Lint code
 
 ```sh 
 uv run ruff format . --check
 uv run ruff check .
+```
+
+### type-checking
+
+Type checking
+
+```sh 
 uv run pyright
+```
+
+### scan-deps
+
+Check dependencies for known vulnerabilities
+
+```sh
+uvx uv-secure --ignore-unfixed uv.lock
+```
+
+### scan-gha
+
+Scan GitHub Actions for vulnerabilities
+
+```sh
+uvx zizmor -o .
 ```
 
 ### build
