@@ -183,7 +183,7 @@ uv run ruff check . --fix-only
 
 ### lint
 
-Requires: lint-code, type-checking, scan-deps
+Requires: lint-code, type-checking, scan-deps, scan-gha
 RunDeps: async
 
 ### lint-code
