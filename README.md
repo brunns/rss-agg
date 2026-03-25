@@ -125,6 +125,7 @@ These tasks can be run using [xc](https://xcfile.dev/).
 Precommit tasks
 
 Requires: test, lint
+
 RunDeps: async
 
 ```python
@@ -153,6 +154,7 @@ Run web server
 Run all tests
 
 Requires: unit, integration
+
 RunDeps: async
 
 ### unit
@@ -183,7 +185,10 @@ uv run ruff check . --fix-only
 
 ### lint
 
+Code quality & security checks
+
 Requires: lint-code, type-checking, scan-deps, scan-gha
+
 RunDeps: async
 
 ### lint-code
