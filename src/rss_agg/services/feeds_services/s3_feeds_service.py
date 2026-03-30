@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, override
 
 from boto3 import Session
 from botocore.client import BaseClient  # noqa: TC002
@@ -44,6 +44,7 @@ class S3FeedsService(FeedsService):
         self.bucket_name = bucket_name
         self.object_name = object_name
 
+    @override
     def get_feeds(self) -> list[domain.FeedUrl]:
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.object_name)
         content = response["Body"].read().decode()

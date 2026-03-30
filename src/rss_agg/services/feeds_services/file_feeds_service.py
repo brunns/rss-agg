@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, override
 
 from wireup import Inject, injectable
 
@@ -16,6 +16,7 @@ class FileFeedsService(FeedsService):
         self.feeds_file = feeds_file
         self.base_url = base_url
 
+    @override
     def get_feeds(self) -> list[domain.FeedUrl]:
         with self.feeds_file.open() as f:
             return [domain.FeedUrl(self.base_url / path.strip() / "rss") for path in f]

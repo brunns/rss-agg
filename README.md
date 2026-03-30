@@ -162,7 +162,7 @@ RunDeps: async
 Unit tests
 
 ```sh
-uv run pytest tests/unit/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov src/rss_agg
+uv run pytest tests/unit/ --durations=10 --cov-report term-missing --cov-fail-under 100 --cov src
 ```
 
 ### integration
