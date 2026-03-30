@@ -52,7 +52,7 @@ resource "aws_lambda_function" "this" {
   source_code_hash = filebase64sha256(var.deployment_zip)
 
   layers = [
-    "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerArm64:25"
+    "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerArm64:27"
   ]
 
   snap_start {
@@ -62,9 +62,9 @@ resource "aws_lambda_function" "this" {
   environment {
     variables = {
       AWS_LAMBDA_EXEC_WRAPPER      = "/opt/bootstrap"
+      AWS_LAMBDA_LOG_FORMAT        = "JSON"
       AWS_LWA_PORT                 = "8080"
       AWS_LWA_ENABLE_COMPRESSION   = "true"
-      AWS_LAMBDA_LOG_FORMAT        = "JSON"
       AWS_LWA_READINESS_CHECK_PATH = "/"
       FEEDS_SERVICE                = var.feeds_service
       FEEDS_FILE                   = var.feeds_file
