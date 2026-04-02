@@ -40,6 +40,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/rss_agg"]
 
+[tool.uv]
+exclude-newer = "7 days"
+
 [project.scripts]
 cli = "rss_agg.cli:main"
 
