@@ -124,7 +124,7 @@ These tasks can be run using [xc](https://xcfile.dev/).
 
 Precommit tasks
 
-Requires: test, lint
+Requires: test, lint, audit
 
 RunDeps: async
 
@@ -187,7 +187,7 @@ uv run ruff check . --fix-only
 
 Code quality & security checks
 
-Requires: lint-code, type-checking, scan-deps, scan-gha
+Requires: lint-code, type-checking
 
 RunDeps: async
 
@@ -208,15 +208,23 @@ Type checking
 uv run pyright
 ```
 
-### scan-deps
+### audit
 
-Check dependencies for known vulnerabilities
+Audit for known vulnerabilities
+
+Requires: audit-py, audit-gha
+
+RunDeps: async
+
+### audit-py
+
+Audit Python dependencies for known vulnerabilities
 
 ```sh
-uvx uv-secure --ignore-unfixed uv.lock
+uv audit
 ```
 
-### scan-gha
+### audit-gha
 
 Scan GitHub Actions for vulnerabilities
 
