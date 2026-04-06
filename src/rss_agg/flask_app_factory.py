@@ -1,10 +1,10 @@
 import logging
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 import wireup
-from flask import Flask
+from flask import Flask, typing
 from yarl import URL
 
 from rss_agg import domain
@@ -36,7 +36,9 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     container = wireup.create_async_container(config=config, injectables=injectables)
 
     inject_view = wireup.inject_from_container(container)
-    app.view_functions |= {name: inject_view(view) for name, view in app.view_functions.items()}
+    app.view_functions |= cast(
+        "dict[str, typing.RouteCallable]", {name: inject_view(view) for name, view in app.view_functions.items()}
+    )
 
     return app, container
 
