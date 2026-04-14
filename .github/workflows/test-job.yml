@@ -26,6 +26,7 @@ jobs:
 
       - run: xc test
       - run: xc lint
+      - run: xc audit
 
   secrets:
     runs-on: ubuntu-latest
