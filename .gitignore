@@ -519,6 +519,9 @@ terraform.rc
 
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,node,emacs,terraform,dotenv,macos
 
+# Env
+.envrc
+
 # Custom
 
 .idea/
