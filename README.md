@@ -38,19 +38,24 @@ Local development requires:
 
 * [uv](https://docs.astral.sh/uv/) for all things Python
 * [xc](https://xcfile.dev/) as a task runner
-* [gh](https://cli.github.com/) for controlling GitHub actions
-* [AWS CLI](https://aws.amazon.com/cli/) for controlling & querying AWS
 * [colima](https://colima.run/)[^4] for running the docker images we need for our integration tests
-* [terraform](https://developer.hashicorp.com/terraform) for deployment (version pinned in [`.tool-versions`](.tool-versions))
 * [Node.js](https://nodejs.org/) for [pyright](https://github.com/microsoft/pyright) (version pinned in [`.tool-versions`](.tool-versions))
+
+Some tasks may require additional tools:
+
+* [gh](https://cli.github.com/) for controlling GitHub actions
+* [1Password CLI](https://developer.1password.com/docs/cli/) for secure secret usage
+* [AWS CLI](https://aws.amazon.com/cli/) for controlling & querying AWS
+* [terraform](https://developer.hashicorp.com/terraform) for deployment (version pinned in [`.tool-versions`](.tool-versions))
 * [libxml2](http://xmlsoft.org/) for testing our RSS output
+* [fzf](https://github.com/junegunn/fzf) and [gum](https://github.com/charmbracelet/gum) for command line shenanigans.
 
 [^4]: On a Mac - I'm not sure what you might use on other platforms.
 
 On a Mac, you can install most of these with [homebrew](https://brew.sh/) and [asdf](https://asdf-vm.com/).
 
 ```sh
-brew install uv xc gh awscli asdf colima libxml2  # And follow any additional setup instructions brew gives you
+brew install uv xc gh 1password-cli awscli asdf colima libxml2 fzf gum # And follow any additional setup instructions brew gives you
 asdf plugin add terraform
 asdf plugin add nodejs
 asdf install
