@@ -48,7 +48,7 @@ class S3FeedsService(FeedsService):
     def get_feeds(self) -> list[domain.FeedUrl]:
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.object_name)
         content = response["Body"].read().decode()
-        return [domain.FeedUrl(self.base_url / path.strip() / "rss") for path in content.splitlines()]
+        return [domain.FeedUrl(self.base_url / path.strip() / "rss") for path in content.splitlines() if path.strip()]
 
 
 S3_INJECTABLES = [boto3_session_factory, s3_client_factory, S3FeedsService]

@@ -1,9 +1,10 @@
 from boto3 import Session
+from brunns.matchers.url import is_url
 from hamcrest import assert_that, contains_exactly, instance_of, same_instance
 from mockito import mock, when
 from yarl import URL
 
-from rss_agg.domain import AwsAccessKey, AwsRegion, AwsSecretAccessKey, BaseUrl, BucketName, FeedUrl, ObjectName
+from rss_agg.domain import AwsAccessKey, AwsRegion, AwsSecretAccessKey, BaseUrl, BucketName, ObjectName
 from rss_agg.services.feeds_services.s3_feeds_service import S3FeedsService, boto3_session_factory, s3_client_factory
 
 
@@ -27,8 +28,34 @@ def test_s3_feeds_service_returns_urls():
     assert_that(
         result,
         contains_exactly(
-            FeedUrl(URL("https://www.theguardian.com/uk/rss")),
-            FeedUrl(URL("https://www.theguardian.com/world/rss")),
+            is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
+            is_url().with_host("www.theguardian.com").and_path("/world/rss"),
+        ),
+    )
+
+
+def test_s3_feeds_service_skips_blank_lines():
+    # Given - S3 object content has blank lines between valid entries
+    body = mock()
+    when(body).read().thenReturn(b"uk\n\nworld\n\n")
+    s3_client = mock()
+    when(s3_client).get_object(Bucket="my-bucket", Key="feeds.txt").thenReturn({"Body": body})
+    service = S3FeedsService(
+        s3_client,
+        BucketName("my-bucket"),
+        ObjectName("feeds.txt"),
+        BaseUrl(URL("https://www.theguardian.com")),
+    )
+
+    # When
+    result = service.get_feeds()
+
+    # Then - blank lines produce no feed URLs
+    assert_that(
+        result,
+        contains_exactly(
+            is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
+            is_url().with_host("www.theguardian.com").and_path("/world/rss"),
         ),
     )
 

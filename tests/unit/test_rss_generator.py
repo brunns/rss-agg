@@ -109,3 +109,31 @@ def tests_limits_to_max_items():
         actual,
         is_rss_feed().with_entries(has_length(2)),
     )
+
+
+def test_handles_invalid_pubdate_string():
+    # Given - item with a pubDate that cannot be parsed
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1)
+    item = ET.Element("item")
+    ET.SubElement(item, "title").text = "Bad Date Article"
+    ET.SubElement(item, "pubDate").text = "not-a-date"
+
+    # When (should not raise despite unparseable pubDate)
+    actual = generator.generate_new_rss_feed([item], URL("https://example.com"))
+
+    # Then - item is still included; the generator handled the bad date gracefully
+    # (Use raw XML check to avoid the is_rss_entry matcher also trying to parse the bad date)
+    parsed = ET.fromstring(actual)
+    assert_that(parsed.findall(".//item"), has_length(1))
+    assert parsed.findtext(".//item/title") == "Bad Date Article"
+
+
+def test_generates_empty_feed():
+    # Given
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 10)
+
+    # When
+    actual = generator.generate_new_rss_feed([], URL("https://example.com"))
+
+    # Then
+    assert_that(actual, is_rss_feed().with_title("some title").with_entries(has_length(0)))
