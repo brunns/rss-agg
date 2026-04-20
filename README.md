@@ -105,7 +105,6 @@ Configuration is sourced from environment variables:
 | `MAX_ITEMS` | Maximum number of items in the output feed | `50` |
 | `MAX_CONNECTIONS` | Maximum number of concurrent HTTP connections | `16` |
 | `MAX_KEEPALIVE_CONNECTIONS` | Maximum number of keep-alive HTTP connections | `16` |
-| `KEEPALIVE_EXPIRY` | Keep-alive connection expiry in seconds | `5` |
 | `RETRIES` | Number of HTTP retry attempts per feed | `3` |
 | `TIMEOUT` | HTTP request timeout in seconds | `3` |
 | `LOG_LEVEL` | Log verbosity: `ERROR`, `WARNING`, `INFO`, or `DEBUG` | `INFO` |

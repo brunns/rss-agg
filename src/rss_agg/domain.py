@@ -14,7 +14,6 @@ FeedTitle = NewType("FeedTitle", str)
 FeedUrl = NewType("FeedUrl", URL)
 FeedsFile = NewType("FeedsFile", Path)
 FeedsServiceName = Literal["FileFeedsService", "S3FeedsService"]
-KeepaliveExpiry = NewType("KeepaliveExpiry", int)
 MaxConnections = NewType("MaxConnections", int)
 MaxItems = NewType("MaxItems", int)
 MaxKeepaliveConnections = NewType("MaxKeepaliveConnections", int)

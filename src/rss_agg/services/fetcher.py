@@ -2,8 +2,7 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING, Annotated
 
-from httpx import AsyncClient, AsyncHTTPTransport, Limits
-from httpx import Timeout as HttpxTimeout
+from niquests import AsyncSession
 from wireup import Inject, injectable
 
 from rss_agg import domain
@@ -24,32 +23,32 @@ class Fetcher:
         max_keepalive_connections: Annotated[
             domain.MaxKeepaliveConnections, Inject(config="max_keepalive_connections")
         ],
-        keepalive_expiry: Annotated[domain.KeepaliveExpiry, Inject(config="keepalive_expiry")],
         retries: Annotated[domain.Retries, Inject(config="retries")],
     ) -> None:
         self.headers = {
             "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
             "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
         }
-        self.timeout = HttpxTimeout(timeout)
-        self.limits = Limits(
-            max_connections=max_connections,
-            max_keepalive_connections=max_keepalive_connections,
-            keepalive_expiry=keepalive_expiry,
-        )
+        self.timeout = timeout
+        self.pool_maxsize = max_connections
+        self.pool_connections = max_keepalive_connections
         self.retries = retries
 
     async def fetch_all(self, feed_urls: list[domain.FeedUrl]) -> Collection[domain.RssContent]:
-        transport = AsyncHTTPTransport(http2=True, retries=self.retries, limits=self.limits)
-        async with AsyncClient(
-            headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=transport
+        async with AsyncSession(
+            headers=self.headers,
+            timeout=self.timeout,
+            retries=self.retries,
+            pool_maxsize=self.pool_maxsize,
+            pool_connections=self.pool_connections,
+            multiplexed=True,
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             results: list[domain.RssContent | BaseException] = await asyncio.gather(*tasks, return_exceptions=True)
         return [r for r in results if not isinstance(r, BaseException)]
 
     @staticmethod
-    async def fetch(client: AsyncClient, url: domain.FeedUrl) -> domain.RssContent:
+    async def fetch(client: AsyncSession, url: domain.FeedUrl) -> domain.RssContent:
         try:
             with log_duration(logger.debug, "fetching feed", url=str(url)):
                 response = await client.get(str(url))

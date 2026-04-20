@@ -56,7 +56,6 @@ jobs:
           TF_VAR_max_items: "50"
           TF_VAR_max_connections: "16"
           TF_VAR_max_keepalive_connections: "16"
-          TF_VAR_keepalive_expiry: "5"
           TF_VAR_retries: "3"
           TF_VAR_fetch_timeout: "3"
           TF_VAR_lambda_timeout: "15"

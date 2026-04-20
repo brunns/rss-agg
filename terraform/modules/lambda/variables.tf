@@ -30,10 +30,6 @@ variable "max_keepalive_connections" {
   type = number
 }
 
-variable "keepalive_expiry" {
-  type = number
-}
-
 variable "retries" {
   type = number
 }
