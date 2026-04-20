@@ -37,6 +37,7 @@ module "lambda" {
   max_items                  = var.max_items
   max_connections            = var.max_connections
   max_keepalive_connections  = var.max_keepalive_connections
+  keepalive_expiry           = var.keepalive_expiry
   retries                    = var.retries
   fetch_timeout              = var.fetch_timeout
   deployment_zip             = "deployment_package.zip"

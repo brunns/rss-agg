@@ -26,7 +26,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
     log_level_map = {"ERROR": 0, "WARNING": 1, "INFO": 2, "DEBUG": 3}
     verbosity = log_level_map.get(log_level, 2)  # Default to INFO
-    init_logging(verbosity, silence_packages=["urllib3"])
+    init_logging(verbosity, silence_packages=["urllib3", "httpcore", "httpx", "hpack"])
 
     app = Flask(__name__)
     app.register_blueprint(rss_blueprint)
@@ -53,6 +53,7 @@ def build_config() -> Mapping[str, Any]:
         "max_keepalive_connections": domain.MaxKeepaliveConnections(
             int(os.environ.get("MAX_KEEPALIVE_CONNECTIONS", "16"))
         ),
+        "keepalive_expiry": domain.KeepaliveExpiry(int(os.environ.get("KEEPALIVE_EXPIRY", "5"))),
         "retries": domain.Retries(int(os.environ.get("RETRIES", "3"))),
         "timeout": domain.Timeout(int(os.environ.get("TIMEOUT", "3"))),
         "feed_title": domain.FeedTitle("@brunns's theguardian.com"),

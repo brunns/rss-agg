@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from typing import TYPE_CHECKING
 
+import httpx
 import pytest
 from hamcrest import assert_that, contains_inanyorder, empty
 from yarl import URL
@@ -8,15 +9,15 @@ from yarl import URL
 from rss_agg.services import Fetcher
 
 if TYPE_CHECKING:
-    from niquests_mock import MockRouter
+    from respx import MockRouter
 
 
 @pytest.mark.asyncio
-async def test_fetch_all_data_from_urls(niquests_mock: MockRouter):
+async def test_fetch_all_data_from_urls(respx_mock: MockRouter):
     # Given
-    fetcher = Fetcher(3, 16, 16, 3)
-    niquests_mock.get("http://example.com/1").respond(status_code=HTTPStatus.OK, text="1")
-    niquests_mock.get("http://example.com/2").respond(status_code=HTTPStatus.OK, text="2")
+    fetcher = Fetcher(3, 16, 16, 5, 3)
+    respx_mock.get("http://example.com/1").mock(return_value=httpx.Response(HTTPStatus.OK, text="1"))
+    respx_mock.get("http://example.com/2").mock(return_value=httpx.Response(HTTPStatus.OK, text="2"))
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/1"), URL("http://example.com/2")])
@@ -26,10 +27,10 @@ async def test_fetch_all_data_from_urls(niquests_mock: MockRouter):
 
 
 @pytest.mark.asyncio
-async def test_skips_failed_feeds(niquests_mock: MockRouter):
+async def test_skips_failed_feeds(respx_mock: MockRouter):
     # Given
-    fetcher = Fetcher(3, 16, 16, 3)
-    niquests_mock.get("http://example.com/").respond(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+    fetcher = Fetcher(3, 16, 16, 5, 3)
+    respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.INTERNAL_SERVER_ERROR))
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/")])
@@ -39,11 +40,11 @@ async def test_skips_failed_feeds(niquests_mock: MockRouter):
 
 
 @pytest.mark.asyncio
-async def test_partial_failure_returns_successful_feeds(niquests_mock: MockRouter):
+async def test_partial_failure_returns_successful_feeds(respx_mock: MockRouter):
     # Given
-    fetcher = Fetcher(3, 16, 16, 3)
-    niquests_mock.get("http://example.com/1").respond(status_code=HTTPStatus.OK, text="1")
-    niquests_mock.get("http://example.com/2").respond(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
+    fetcher = Fetcher(3, 16, 16, 5, 3)
+    respx_mock.get("http://example.com/1").mock(return_value=httpx.Response(HTTPStatus.OK, text="1"))
+    respx_mock.get("http://example.com/2").mock(return_value=httpx.Response(HTTPStatus.INTERNAL_SERVER_ERROR))
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/1"), URL("http://example.com/2")])
@@ -53,10 +54,10 @@ async def test_partial_failure_returns_successful_feeds(niquests_mock: MockRoute
 
 
 @pytest.mark.asyncio
-async def test_handles_empty_text(niquests_mock: MockRouter):
+async def test_handles_empty_text(respx_mock: MockRouter):
     # Given
-    fetcher = Fetcher(3, 16, 16, 3)
-    niquests_mock.get("http://example.com/").respond(status_code=HTTPStatus.OK, text="")
+    fetcher = Fetcher(3, 16, 16, 5, 3)
+    respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.OK, text=None))
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/")])

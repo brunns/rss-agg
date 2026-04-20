@@ -33,6 +33,11 @@ variable "max_keepalive_connections" {
   default = 16
 }
 
+variable "keepalive_expiry" {
+  type    = number
+  default = 5
+}
+
 variable "retries" {
   type    = number
   default = 3

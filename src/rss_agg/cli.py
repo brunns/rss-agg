@@ -39,6 +39,7 @@ def build_config(args: argparse.Namespace) -> dict[str, Any]:
         "timeout": domain.Timeout(args.timeout),
         "max_connections": domain.MaxConnections(args.max_connections),
         "max_keepalive_connections": domain.MaxKeepaliveConnections(args.max_keepalive_connections),
+        "keepalive_expiry": domain.KeepaliveExpiry(args.keepalive_expiry),
         "retries": domain.Retries(args.retries),
         "feed_title": domain.FeedTitle("@brunns's theguardian.com"),
         "feed_description": domain.FeedDescription("@brunns's curated, de-duplicated theguardian.com RSS feed"),
@@ -48,7 +49,7 @@ def build_config(args: argparse.Namespace) -> dict[str, Any]:
 
 def parse_args() -> argparse.Namespace:
     args = create_parser().parse_args()
-    init_logging(args.verbosity, silence_packages=["urllib3"])
+    init_logging(args.verbosity, silence_packages=["urllib3", "httpcore", "httpx", "hpack"])
 
     return args
 
@@ -86,6 +87,12 @@ def create_parser() -> argparse.ArgumentParser:
         type=int,
         default=16,
         help="Maximum keep-alive connections. Default: %(default)s",
+    )
+    parser.add_argument(
+        "--keepalive-expiry",
+        type=int,
+        default=5,
+        help="Keep-alive expiry. Default: %(default)s",
     )
     parser.add_argument(
         "--retries",

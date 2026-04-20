@@ -2,8 +2,9 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import niquests
+import httpx
 import pytest
+from httpx import RequestError
 from mbtest.server import MountebankServer
 from yarl import URL
 
@@ -58,7 +59,7 @@ def s3_config(garage_instance: URL, docker_ip: str, docker_services: Services) -
     """
     headers = {"Authorization": f"Bearer {GARAGE_ADMIN_TOKEN}"}
 
-    with niquests.Session() as client:
+    with httpx.Client() as client:
         status_response = client.get(str(garage_instance / "v2" / "GetClusterStatus"), headers=headers)
         status_response.raise_for_status()
         node_id = status_response.json()["nodes"][0]["id"]
@@ -114,9 +115,9 @@ def s3_config(garage_instance: URL, docker_ip: str, docker_services: Services) -
 
 def is_responsive(url: URL) -> bool:
     try:
-        response = niquests.get(str(url))
+        response = httpx.get(str(url))
         response.raise_for_status()
-    except niquests.exceptions.ConnectionError:
+    except RequestError:
         return False
     else:
         return True
@@ -124,9 +125,9 @@ def is_responsive(url: URL) -> bool:
 
 def is_garage_responsive(url: URL) -> bool:
     try:
-        response = niquests.get(str(url), headers={"Authorization": f"Bearer {GARAGE_ADMIN_TOKEN}"})
+        response = httpx.get(str(url), headers={"Authorization": f"Bearer {GARAGE_ADMIN_TOKEN}"})
         response.raise_for_status()
-    except niquests.exceptions.ConnectionError, niquests.exceptions.HTTPError:
+    except httpx.RequestError, httpx.HTTPStatusError:
         return False
     else:
         return True
