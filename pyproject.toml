@@ -29,7 +29,7 @@ dev = [
     "pytest-docker>=3.2.5",
     "pytest-mockito>=0.0.6",
     "niquests-mock>=0.1",
-    "ruff>=0.15.9",
+    "ruff>=0.15.10",
     "scripttest>=2.0.post1",
 ]
 
