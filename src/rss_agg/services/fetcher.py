@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Annotated
+from typing import TYPE_CHECKING, Annotated, Final
 
 from httpx import AsyncClient, AsyncHTTPTransport, Limits
 from httpx import Timeout as HttpxTimeout
@@ -10,13 +10,18 @@ from rss_agg import domain
 from rss_agg.logging_utils import log_duration
 
 if TYPE_CHECKING:
-    from collections.abc import Collection
+    from collections.abc import Collection, Mapping
 
 logger = logging.getLogger(__name__)
 
 
 @injectable
 class Fetcher:
+    HEADERS: Final[Mapping[str, str]] = {
+        "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
+        "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
+    }
+
     def __init__(
         self,
         timeout: Annotated[domain.Timeout, Inject(config="timeout")],
@@ -27,10 +32,6 @@ class Fetcher:
         keepalive_expiry: Annotated[domain.KeepaliveExpiry, Inject(config="keepalive_expiry")],
         retries: Annotated[domain.Retries, Inject(config="retries")],
     ) -> None:
-        self.headers = {
-            "User-Agent": "rss-aggregator/1.0 (+https://github.com/brunns/rss-agg)",
-            "Accept": "application/rss+xml, application/xml, text/xml;q=0.9",
-        }
         self.timeout = HttpxTimeout(timeout)
         self.limits = Limits(
             max_connections=max_connections,
@@ -42,7 +43,7 @@ class Fetcher:
     async def fetch_all(self, feed_urls: list[domain.FeedUrl]) -> Collection[domain.RssContent]:
         transport = AsyncHTTPTransport(http2=True, retries=self.retries, limits=self.limits)
         async with AsyncClient(
-            headers=self.headers, timeout=self.timeout, follow_redirects=True, transport=transport
+            headers=self.HEADERS, timeout=self.timeout, follow_redirects=True, transport=transport
         ) as client:
             tasks = [self.fetch(client, feed_url) for feed_url in feed_urls]
             results: list[domain.RssContent | BaseException] = await asyncio.gather(*tasks, return_exceptions=True)
