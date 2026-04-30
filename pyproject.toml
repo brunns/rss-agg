@@ -18,7 +18,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "brunns-matchers[rss]>=3.0",
-    "mbtest>=2.15.1",
+    "mbtest>=2.16.0",
     "mockito>=2.0.4",
     "pyfakefs>=6.2.0",
     "pyhamcrest>=2.1.0",
