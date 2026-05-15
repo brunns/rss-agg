@@ -712,7 +712,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=26.0.0" },
     { name = "httpx", extras = ["http2"], specifier = ">=0.28.1" },
     { name = "python-json-logger", specifier = ">=4.0.0" },
-    { name = "wireup", specifier = ">=2.10.0" },
+    { name = "wireup", specifier = ">=2.11.0" },
     { name = "yarl", specifier = ">=1.22.0" },
 ]
 
@@ -827,14 +827,14 @@ wheels = [
 
 [[package]]
 name = "wireup"
-version = "2.10.0"
+version = "2.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ee/a0/2b4c04b030ba22bb5b75ffc2b8d077b7cb5635397160070551df2d05d3cf/wireup-2.10.0.tar.gz", hash = "sha256:0913de3002872b8e68848d9ea7ab7bc45c2c4bf5a63c6fc35e181df286082a2e", size = 791102, upload-time = "2026-04-29T21:21:18.512Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/93/1cc9a2e89c010055624f3426834425597865a90ae7deeb78479906d8bf6c/wireup-2.11.0.tar.gz", hash = "sha256:053f7dbc663e5343046675f3e736f4ebc7ea7881f704f5325398468bd67dcdc7", size = 1485510, upload-time = "2026-05-03T16:57:03.626Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2a/d4/83d79633b96f9784a1f0c1ffa728aaf05e9760dc781158c1f00292600081/wireup-2.10.0-py3-none-any.whl", hash = "sha256:252368a254010986ee89919087f9610c44f8fdf4753961bbb60d242dadbdfe5f", size = 58085, upload-time = "2026-04-29T21:21:19.977Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/2c/b4747201daab55bd269185d9400c99dac313be8e322f254f1ad98a4fe09a/wireup-2.11.0-py3-none-any.whl", hash = "sha256:d1ccba0907eee3b1ddefc46c9966e5ffc238d057bb7fba9667e1237e6ad3909f", size = 59409, upload-time = "2026-05-03T16:57:02.035Z" },
 ]
 
 [[package]]
