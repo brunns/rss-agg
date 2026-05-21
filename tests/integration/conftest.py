@@ -2,9 +2,9 @@ import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-import httpx
+import httpx2 as httpx
 import pytest
-from httpx import RequestError
+from httpx2 import RequestError
 from mbtest.server import MountebankServer
 from yarl import URL
 

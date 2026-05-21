@@ -26,7 +26,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     log_level = os.environ.get("LOG_LEVEL", "INFO").upper()
     log_level_map = {"ERROR": 0, "WARNING": 1, "INFO": 2, "DEBUG": 3}
     verbosity = log_level_map.get(log_level, 2)  # Default to INFO
-    init_logging(verbosity, silence_packages=["urllib3", "httpcore", "httpx", "hpack"])
+    init_logging(verbosity, silence_packages=["urllib3", "httpcore", "httpx2", "httpx", "hpack"])
 
     app = Flask(__name__)
     app.register_blueprint(rss_blueprint)

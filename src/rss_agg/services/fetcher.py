@@ -2,8 +2,8 @@ import asyncio
 import logging
 from typing import TYPE_CHECKING, Annotated, Final
 
-from httpx import AsyncClient, AsyncHTTPTransport, Limits
-from httpx import Timeout as HttpxTimeout
+from httpx2 import AsyncClient, AsyncHTTPTransport, Limits
+from httpx2 import Timeout as HttpxTimeout
 from wireup import Inject, injectable
 
 from rss_agg import domain

@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from typing import TYPE_CHECKING
 
-import httpx
 import pytest
 from hamcrest import assert_that, contains_inanyorder, empty
 from yarl import URL
@@ -9,16 +8,15 @@ from yarl import URL
 from rss_agg.services import Fetcher
 
 if TYPE_CHECKING:
-    from respx import MockRouter
+    from respx import Router
 
 
 @pytest.mark.asyncio
-async def test_fetch_all_data_from_urls(respx_mock: MockRouter):
+async def test_fetch_all_data_from_urls(httpx2_mock: Router):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
-    respx_mock.get("http://example.com/1").mock(return_value=httpx.Response(HTTPStatus.OK, text="1"))
-    respx_mock.get("http://example.com/2").mock(return_value=httpx.Response(HTTPStatus.OK, text="2"))
-
+    httpx2_mock.get("http://example.com/1").respond(HTTPStatus.OK, text="1")
+    httpx2_mock.get("http://example.com/2").respond(HTTPStatus.OK, text="2")
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/1"), URL("http://example.com/2")])
 
@@ -27,10 +25,10 @@ async def test_fetch_all_data_from_urls(respx_mock: MockRouter):
 
 
 @pytest.mark.asyncio
-async def test_skips_failed_feeds(respx_mock: MockRouter):
+async def test_skips_failed_feeds(httpx2_mock: Router):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
-    respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.INTERNAL_SERVER_ERROR))
+    httpx2_mock.get("http://example.com/").respond(HTTPStatus.INTERNAL_SERVER_ERROR)
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/")])
@@ -40,11 +38,11 @@ async def test_skips_failed_feeds(respx_mock: MockRouter):
 
 
 @pytest.mark.asyncio
-async def test_partial_failure_returns_successful_feeds(respx_mock: MockRouter):
+async def test_partial_failure_returns_successful_feeds(httpx2_mock: Router):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
-    respx_mock.get("http://example.com/1").mock(return_value=httpx.Response(HTTPStatus.OK, text="1"))
-    respx_mock.get("http://example.com/2").mock(return_value=httpx.Response(HTTPStatus.INTERNAL_SERVER_ERROR))
+    httpx2_mock.get("http://example.com/1").respond(HTTPStatus.OK, text="1")
+    httpx2_mock.get("http://example.com/2").respond(HTTPStatus.INTERNAL_SERVER_ERROR)
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/1"), URL("http://example.com/2")])
@@ -54,10 +52,10 @@ async def test_partial_failure_returns_successful_feeds(respx_mock: MockRouter):
 
 
 @pytest.mark.asyncio
-async def test_handles_empty_text(respx_mock: MockRouter):
+async def test_handles_empty_text(httpx2_mock: Router):
     # Given
     fetcher = Fetcher(3, 16, 16, 5, 3)
-    respx_mock.get("http://example.com/").mock(return_value=httpx.Response(HTTPStatus.OK, text=None))
+    httpx2_mock.get("http://example.com/").respond(HTTPStatus.OK, text=None)
 
     # When
     actual = await fetcher.fetch_all([URL("http://example.com/")])
