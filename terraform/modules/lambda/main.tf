@@ -52,7 +52,7 @@ resource "aws_lambda_function" "this" {
   source_code_hash = filebase64sha256(var.deployment_zip)
 
   layers = [
-    "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerArm64:27"
+    "arn:aws:lambda:eu-west-2:753240598075:layer:LambdaAdapterLayerArm64:28"
   ]
 
   snap_start {
