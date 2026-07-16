@@ -30,7 +30,7 @@ dev = [
     "pytest-mockito>=0.0.6",
     "pytest-httpx2>=1.0",
     "ruff>=0.15.20",
-    "scripttest>=2.0.post1",
+    "scripttest>=3.0",
 ]
 
 [build-system]
