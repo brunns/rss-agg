@@ -21,8 +21,16 @@ class FileFeedsService(FeedsService):
 
     @override
     def get_feeds(self) -> Iterable[domain.FeedUrl]:
+        feeds = []
         with self.feeds_file.open() as f:
-            return [domain.FeedUrl(self.base_url / path.strip() / "rss") for path in f if path.strip()]
+            for path in f:
+                if path.strip():
+                    match path[0]:
+                        case "#":
+                            continue
+                        case _:
+                            feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
+        return feeds
 
 
 FILE_INJECTABLES = [FileFeedsService]

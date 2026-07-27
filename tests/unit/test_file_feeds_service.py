@@ -47,7 +47,26 @@ def test_feeds_service_handles_empty_file(fs: FakeFilesystem):
 def test_feeds_service_skips_blank_lines(fs: FakeFilesystem):
     # Given
     feeds_file = Path("/tmp/empty.txt")
-    fs.create_file(str(feeds_file), contents="uk\n\nworld\n\n")
+    fs.create_file(str(feeds_file), contents="uk\n\nworld")
+    service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
+
+    # When
+    result = service.get_feeds()
+
+    # Then
+    assert_that(
+        result,
+        contains_exactly(
+            is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
+            is_url().with_host("www.theguardian.com").and_path("/world/rss"),
+        ),
+    )
+
+
+def test_feeds_service_ignores_commented_lines(fs: FakeFilesystem):
+    # Given
+    feeds_file = Path("/tmp/empty.txt")
+    fs.create_file(str(feeds_file), contents="uk\n\nworld\n\n#sausages\n\n# chips")
     service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
 
     # When

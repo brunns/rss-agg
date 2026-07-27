@@ -49,9 +49,18 @@ class S3FeedsService(FeedsService):
 
     @override
     def get_feeds(self) -> Iterable[domain.FeedUrl]:
+        feeds = []
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.object_name)
         content = response["Body"].read().decode()
-        return [domain.FeedUrl(self.base_url / path.strip() / "rss") for path in content.splitlines() if path.strip()]
+        for path in content.splitlines():
+            if path.strip():
+                match path[0]:
+                    case "#":
+                        continue
+                    case _:
+                        feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
+
+        return feeds
 
 
 S3_INJECTABLES = [boto3_session_factory, s3_client_factory, S3FeedsService]

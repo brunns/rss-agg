@@ -1,3 +1,4 @@
+# profile/andrewrawnsley
 books
 commentisfree
 education/kings-college-london
@@ -9,7 +10,6 @@ music
 news/series/pass-notes
 politics
 profile/alexispetridis
-profile/andrewrawnsley
 profile/georgemonbiot
 profile/gracedent
 profile/johnnaughton
