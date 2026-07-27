@@ -18,17 +18,20 @@ if TYPE_CHECKING:
 async def test_rss_service_orchestration(when: Callable[..., Any]):
     # Given
     self_url = URL("https://myfeed.com")
-    expected_urls = [
-        URL("https://www.theguardian.com/uk/rss"),
-        URL("https://www.theguardian.com/world/rss"),
-    ]
+    feeds_and_exclusions = FeedsAndExclusions(
+        [
+            URL("https://www.theguardian.com/uk/rss"),
+            URL("https://www.theguardian.com/world/rss"),
+        ],
+        [],
+    )
 
     mock_feeds_service = mock(FeedsService)
-    when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(FeedsAndExclusions(expected_urls, []))
+    when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(feeds_and_exclusions)
 
     mock_items = [ET.Element("item"), ET.Element("item")]
     mock_parser = mock(RSSParser)
-    when(mock_parser).read_rss_feeds(expected_urls).thenReturn(mock_items)
+    when(mock_parser).read_rss_feeds(feeds_and_exclusions).thenReturn(mock_items)
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)
@@ -47,12 +50,13 @@ async def test_rss_service_orchestration(when: Callable[..., Any]):
 async def test_rss_service_handles_empty_feeds(when: Callable[..., Any]):
     # Given
     self_url = URL("https://myfeed.com")
+    feeds_and_exclusions = FeedsAndExclusions([], [])
 
     mock_feeds_service = mock(FeedsService)
-    when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(FeedsAndExclusions([], []))
+    when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(feeds_and_exclusions)
 
     mock_parser = mock(RSSParser)
-    when(mock_parser).read_rss_feeds([]).thenReturn([])
+    when(mock_parser).read_rss_feeds(feeds_and_exclusions).thenReturn([])
 
     expected_xml = "<rss>dummy</rss>"
     mock_generator = mock(RSSGenerator)

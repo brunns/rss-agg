@@ -12,7 +12,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from xml.etree import ElementTree as ET
 
-    from rss_agg import domain
+    from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
+
 
 from rss_agg.services import Fetcher  # noqa: TC001
 
@@ -24,9 +25,9 @@ class RSSParser:
     def __init__(self, fetcher: Fetcher) -> None:
         self.fetcher = fetcher
 
-    async def read_rss_feeds(self, feed_urls: Iterable[domain.FeedUrl]) -> Iterable[ET.Element]:
+    async def read_rss_feeds(self, feeds_and_exclusions: FeedsAndExclusions) -> Iterable[ET.Element]:
         items: dict[str, ET.Element] = OrderedDict()
-        responses = await self.fetcher.fetch_all(feed_urls)
+        responses = await self.fetcher.fetch_all(feeds_and_exclusions.feeds)
         with log_duration(logger.debug, "deduping", response_count=len(responses)):
             for response in responses:
                 if response:
