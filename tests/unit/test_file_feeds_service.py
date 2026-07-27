@@ -80,3 +80,21 @@ def test_feeds_service_ignores_commented_lines(fs: FakeFilesystem):
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
         ),
     )
+
+
+def test_feeds_service_returns_excluded_tags(fs: FakeFilesystem):
+    # Given
+    feeds_file = Path("/tmp/empty.txt")
+    fs.create_file(str(feeds_file), contents="uk\n\nworld\n\n- football\n\n")
+    service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
+
+    # When
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
+
+    # Then
+    assert_that(
+        feeds_and_exclusions.exclusions,
+        contains_exactly(
+            is_url().with_host("www.theguardian.com").and_path("/football"),
+        ),
+    )

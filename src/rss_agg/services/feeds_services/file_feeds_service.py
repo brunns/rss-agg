@@ -25,6 +25,8 @@ class FileFeedsService(FeedsService):
                     match path[0]:
                         case "#":
                             continue
+                        case "-":
+                            exclusions.append(domain.FeedUrl(self.base_url / path[1:].strip()))
                         case _:
                             feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
         return FeedsAndExclusions(feeds, exclusions)

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class FeedsAndExclusions(NamedTuple):
     feeds: Iterable[domain.FeedUrl]
-    exclusions: Iterable[domain.ExcludeUrl]
+    exclusions: Iterable[domain.ExcludeTag]
 
 
 class FeedsService(ABC):

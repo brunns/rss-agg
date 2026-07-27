@@ -22,11 +22,11 @@ def test_s3_feeds_service_returns_urls():
     )
 
     # When
-    feeds, _exclusions = service.get_feeds_and_exclusions()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
     # Then
     assert_that(
-        feeds,
+        feeds_and_exclusions.feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
@@ -48,11 +48,11 @@ def test_s3_feeds_service_skips_blank_lines():
     )
 
     # When
-    feeds, _exclusions = service.get_feeds_and_exclusions()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
     # Then - blank lines produce no feed URLs
     assert_that(
-        feeds,
+        feeds_and_exclusions.feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
@@ -74,14 +74,39 @@ def test_s3_feeds_service_ignores_commented_lines():
     )
 
     # When
-    feeds, _exclusions = service.get_feeds_and_exclusions()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
-    # Then - blank lines produce no feed URLs
+    # Then
     assert_that(
-        feeds,
+        feeds_and_exclusions.feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
+        ),
+    )
+
+
+def test_feeds_service_returns_excluded_tags():
+    # Given - S3 object content has blank lines between valid entries
+    body = mock()
+    when(body).read().thenReturn(b"uk\n\nworld\n\n# sausages\n\n- football")
+    s3_client = mock()
+    when(s3_client).get_object(Bucket="my-bucket", Key="feeds.txt").thenReturn({"Body": body})
+    service = S3FeedsService(
+        s3_client,
+        BucketName("my-bucket"),
+        ObjectName("feeds.txt"),
+        BaseUrl(URL("https://www.theguardian.com")),
+    )
+
+    # When
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
+
+    # Then
+    assert_that(
+        feeds_and_exclusions.exclusions,
+        contains_exactly(
+            is_url().with_host("www.theguardian.com").and_path("/football"),
         ),
     )
 
