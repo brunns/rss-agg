@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 import tempfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any

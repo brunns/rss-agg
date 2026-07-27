@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from datetime import UTC, datetime
 from xml.etree import ElementTree as ET
 

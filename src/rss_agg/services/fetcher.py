@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 import asyncio
 import logging
 from typing import TYPE_CHECKING, Annotated, Final

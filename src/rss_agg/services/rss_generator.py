@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 import logging
 from datetime import UTC, datetime
 from email.utils import format_datetime, parsedate_to_datetime

@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from rss_agg.flask_app_factory import create_app
 
 app, container = create_app()

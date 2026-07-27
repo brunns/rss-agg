@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from boto3 import Session
 from brunns.matchers.url import is_url
 from hamcrest import assert_that, contains_exactly, instance_of, same_instance

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Copyright 2024-2026 Simon Brunning
 import argparse
 import asyncio
 import logging

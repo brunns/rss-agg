@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from rss_agg.services.feeds_services import FILE_INJECTABLES, FeedsService, FileFeedsService
 from rss_agg.services.fetcher import Fetcher
 from rss_agg.services.rss_generator import RSSGenerator

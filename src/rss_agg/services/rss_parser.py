@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 import logging
 from collections import OrderedDict
 from typing import TYPE_CHECKING

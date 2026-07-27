@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from typing import TYPE_CHECKING, Any
 from xml.etree import ElementTree as ET
 

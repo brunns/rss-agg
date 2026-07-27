@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 import logging
 import sys
 import time

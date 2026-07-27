@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from typing import Annotated, override
 
 from wireup import Inject, injectable

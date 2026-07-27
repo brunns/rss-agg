@@ -1,3 +1,4 @@
+# Copyright 2024-2026 Simon Brunning
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
