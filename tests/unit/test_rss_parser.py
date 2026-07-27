@@ -97,3 +97,20 @@ async def test_raises_on_invalid_xml(when: Callable[..., Any]):
     # When / Then - parse error propagates (not silently swallowed)
     with pytest.raises(ET.ParseError):
         await parser.read_rss_feeds(feeds_and_exclusions)
+
+
+@pytest.mark.asyncio
+async def test_ignores_items_with_category_matching_excluded(rss_string: str, when: Callable[..., Any]):
+    # Given
+    mock_fetcher = mock(Fetcher)
+    when(mock_fetcher).fetch_all(ANY).thenReturn([rss_string])
+    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [URL("https://example.com/article2")])
+
+    parser = RSSParser(mock_fetcher)
+
+    # When
+    actual = await parser.read_rss_feeds(feeds_and_exclusions)
+    links = [item.findtext("link") for item in actual]
+
+    # Then
+    assert_that(links, contains_inanyorder("https://example.com/article1", "https://example.com/article3"))

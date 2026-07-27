@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from defusedxml.ElementTree import fromstring
 from wireup import injectable
+from yarl import URL
 
 from rss_agg.logging_utils import log_duration
 
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from xml.etree import ElementTree as ET
 
+    from rss_agg.domain import ExcludeTag
     from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
 
 
@@ -26,14 +28,28 @@ class RSSParser:
         self.fetcher = fetcher
 
     async def read_rss_feeds(self, feeds_and_exclusions: FeedsAndExclusions) -> Iterable[ET.Element]:
+        exclusions = set(feeds_and_exclusions.exclusions)
         items: dict[str, ET.Element] = OrderedDict()
         responses = await self.fetcher.fetch_all(feeds_and_exclusions.feeds)
         with log_duration(logger.debug, "deduping", response_count=len(responses)):
             for response in responses:
-                if response:
-                    feed: ET.Element = fromstring(response)
-                    for item in feed.findall(".//item"):
-                        if (guid := item.findtext("guid")) and guid not in items:
-                            items[guid] = item
+                for guid, item in self._parse_feed_items(response, exclusions):
+                    if guid not in items:
+                        items[guid] = item
         logger.debug("deduped-items", extra={"count": len(items)})
         return list(items.values())
+
+    def _parse_feed_items(self, response: str, exclusions: set[ExcludeTag]) -> Iterable[tuple[str, ET.Element]]:
+        if not response:
+            return
+
+        feed: ET.Element = fromstring(response)
+        for item in feed.findall(".//item"):
+            guid = item.findtext("guid")
+            if guid and not self._is_excluded(item, exclusions):
+                yield guid, item
+
+    @staticmethod
+    def _is_excluded(item: ET.Element, exclusions: set[ExcludeTag]) -> bool:
+        categories = {URL(domain) for cat in item.findall("category") if (domain := cat.get("domain"))}
+        return bool(categories & exclusions)

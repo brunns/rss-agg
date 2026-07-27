@@ -45,6 +45,10 @@ def _generate_rss_xml(
             dc_date = ET.SubElement(item, f"{{{DC_NS}}}date")
             dc_date.text = f"2009-09-06T{time_str}+00:00"
 
+        cat_elem = ET.SubElement(item, "category")
+        cat_elem.text = f"Category for {i}"
+        cat_elem.set("domain", f"https://example.com/article{i}")
+
         channel.append(item)
 
     return ET.tostring(rss_root, encoding="unicode")
