@@ -22,11 +22,11 @@ def test_s3_feeds_service_returns_urls():
     )
 
     # When
-    result = service.get_feeds()
+    feeds, _exclusions = service.get_feeds_and_exclusions()
 
     # Then
     assert_that(
-        result,
+        feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
@@ -48,11 +48,11 @@ def test_s3_feeds_service_skips_blank_lines():
     )
 
     # When
-    result = service.get_feeds()
+    feeds, _exclusions = service.get_feeds_and_exclusions()
 
     # Then - blank lines produce no feed URLs
     assert_that(
-        result,
+        feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
@@ -74,11 +74,11 @@ def test_s3_feeds_service_ignores_commented_lines():
     )
 
     # When
-    result = service.get_feeds()
+    feeds, _exclusions = service.get_feeds_and_exclusions()
 
     # Then - blank lines produce no feed URLs
     assert_that(
-        result,
+        feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),

@@ -2,6 +2,7 @@
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg?logo=python)](https://www.python.org/)
 [![made-with-uv](https://img.shields.io/badge/Made%20with-uv-1f425f.svg?logo=uv)](https://docs.astral.sh/uv/)
+[![xc compatible](https://xcfile.dev/badge.svg)](https://xcfile.dev)
 [![Licence](https://img.shields.io/github/license/brunns/rss-agg.svg)](https://github.com/brunns/rss-agg/blob/master/LICENSE)
 [![ci](https://github.com/brunns/rss-agg/actions/workflows/ci.yml/badge.svg)](https://github.com/brunns/rss-agg/actions/workflows/ci.yml)
 [![deploy](https://github.com/brunns/rss-agg/actions/workflows/cd.yml/badge.svg)](https://github.com/brunns/rss-agg/actions/workflows/cd.yml)
@@ -17,7 +18,6 @@
 [![Top Language](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fbrunns%2Frss-agg%2Flanguage)](https://tokei.kojix2.net/github/brunns/rss-agg)
 [![Languages](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fbrunns%2Frss-agg%2Flanguages)](https://tokei.kojix2.net/github/brunns/rss-agg)
 [![Code to Comment](https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fbrunns%2Frss-agg%2Fratio)](https://tokei.kojix2.net/github/brunns/rss-agg)
-[![xc compatible](https://xcfile.dev/badge.svg)](https://xcfile.dev)
 [![zread](https://img.shields.io/badge/Ask_Zread-_.svg?style=flat&color=00b0aa&labelColor=000000&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuOTYxNTYgMS42MDAxSDIuMjQxNTZDMS44ODgxIDEuNjAwMSAxLjYwMTU2IDEuODg2NjQgMS42MDE1NiAyLjI0MDFWNC45NjAxQzEuNjAxNTYgNS4zMTM1NiAxLjg4ODEgNS42MDAxIDIuMjQxNTYgNS42MDAxSDQuOTYxNTZDNS4zMTUwMiA1LjYwMDEgNS42MDE1NiA1LjMxMzU2IDUuNjAxNTYgNC45NjAxVjIuMjQwMUM1LjYwMTU2IDEuODg2NjQgNS4zMTUwMiAxLjYwMDEgNC45NjE1NiAxLjYwMDFaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00Ljk2MTU2IDEwLjM5OTlIMi4yNDE1NkMxLjg4ODEgMTAuMzk5OSAxLjYwMTU2IDEwLjY4NjQgMS42MDE1NiAxMS4wMzk5VjEzLjc1OTlDMS42MDE1NiAxNC4xMTM0IDEuODg4MSAxNC4zOTk5IDIuMjQxNTYgMTQuMzk5OUg0Ljk2MTU2QzUuMzE1MDIgMTQuMzk5OSA1LjYwMTU2IDE0LjExMzQgNS42MDE1NiAxMy43NTk5VjExLjAzOTlDNS42MDE1NiAxMC42ODY0IDUuMzE1MDIgMTAuMzk5OSA0Ljk2MTU2IDEwLjM5OTlaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik0xMy43NTg0IDEuNjAwMUgxMS4wMzg0QzEwLjY4NSAxLjYwMDEgMTAuMzk4NCAxLjg4NjY0IDEwLjM5ODQgMi4yNDAxVjQuOTYwMUMxMC4zOTg0IDUuMzEzNTYgMTAuNjg1IDUuNjAwMSAxMS4wMzg0IDUuNjAwMUgxMy43NTg0QzE0LjExMTkgNS42MDAxIDE0LjM5ODQgNS4zMTM1NiAxNC4zOTg0IDQuOTYwMVYyLjI0MDFDMTQuMzk4NCAxLjg4NjY0IDE0LjExMTkgMS42MDAxIDEzLjc1ODQgMS42MDAxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNNCAxMkwxMiA0TDQgMTJaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00IDEyTDEyIDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K&logoColor=ffffff)](https://zread.ai/brunns/rss-agg)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/brunns/rss-agg)
 
@@ -81,6 +81,9 @@ On each request, [RSSService](src/rss_agg/services/rss_service.py) orchestrates 
       [feeds.txt](feeds.txt), OR
     * [S3FeedsService](src/rss_agg/services/feeds_services/s3_feeds_service.py) reads from an 
       [S3](https://aws.amazon.com/s3/) object using [boto3](https://docs.aws.amazon.com/boto3/latest/).
+    * Feeds may be commented out (by prefixing with a `#`)
+    * Feeds may be excluded (by prefixing with a `-`). Items on these feeds will be excluded, even if they are also on 
+      an included feed.
 * [Fetcher](src/rss_agg/services/fetcher.py) retrieves all feeds concurrently using 
   [httpx](https://www.python-httpx.org/) with HTTP/2 and connection pooling.
 * [RSSParser](src/rss_agg/services/rss_parser.py) parses the responses with 

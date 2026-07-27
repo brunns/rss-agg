@@ -12,6 +12,7 @@ FeedDescription = NewType("FeedDescription", str)
 FeedLink = NewType("FeedLink", URL)
 FeedTitle = NewType("FeedTitle", str)
 FeedUrl = NewType("FeedUrl", URL)
+ExcludeUrl = NewType("ExcludeUrl", URL)
 FeedsFile = NewType("FeedsFile", Path)
 FeedsServiceName = Literal["FileFeedsService", "S3FeedsService"]
 KeepaliveExpiry = NewType("KeepaliveExpiry", int)

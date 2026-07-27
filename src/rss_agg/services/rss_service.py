@@ -23,6 +23,6 @@ class RSSService:
         self.generator = generator
 
     async def read_and_generate_rss(self, self_url: URL) -> str:
-        feed_urls = self.feeds_service.get_feeds()
-        items = await self.parser.read_rss_feeds(feed_urls)
+        feeds_and_exclusions = self.feeds_service.get_feeds_and_exclusions()
+        items = await self.parser.read_rss_feeds(feeds_and_exclusions.feeds)
         return self.generator.generate_new_rss_feed(items, self_url=self_url)

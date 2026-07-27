@@ -1,12 +1,9 @@
-from typing import TYPE_CHECKING, Annotated, override
+from typing import Annotated, override
 
 from wireup import Inject, injectable
 
 from rss_agg import domain
-from rss_agg.services.feeds_services.base_feeds_service import FeedsService
-
-if TYPE_CHECKING:
-    from collections.abc import Iterable
+from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions, FeedsService
 
 
 @injectable(as_type=FeedsService)
@@ -20,8 +17,8 @@ class FileFeedsService(FeedsService):
         self.base_url = base_url
 
     @override
-    def get_feeds(self) -> Iterable[domain.FeedUrl]:
-        feeds = []
+    def get_feeds_and_exclusions(self) -> FeedsAndExclusions:
+        feeds, exclusions = [], []
         with self.feeds_file.open() as f:
             for path in f:
                 if path.strip():
@@ -30,7 +27,7 @@ class FileFeedsService(FeedsService):
                             continue
                         case _:
                             feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
-        return feeds
+        return FeedsAndExclusions(feeds, exclusions)
 
 
 FILE_INJECTABLES = [FileFeedsService]

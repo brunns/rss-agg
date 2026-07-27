@@ -7,6 +7,7 @@ from mockito import mock
 from yarl import URL
 
 from rss_agg.services import FeedsService, RSSGenerator, RSSParser, RSSService
+from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -22,7 +23,7 @@ async def test_rss_service_orchestration(when: Callable[..., Any]):
     ]
 
     mock_feeds_service = mock(FeedsService)
-    when(mock_feeds_service).get_feeds().thenReturn(expected_urls)
+    when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(FeedsAndExclusions(expected_urls, []))
 
     mock_items = [ET.Element("item"), ET.Element("item")]
     mock_parser = mock(RSSParser)
@@ -47,7 +48,7 @@ async def test_rss_service_handles_empty_feeds(when: Callable[..., Any]):
     self_url = URL("https://myfeed.com")
 
     mock_feeds_service = mock(FeedsService)
-    when(mock_feeds_service).get_feeds().thenReturn([])
+    when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(FeedsAndExclusions([], []))
 
     mock_parser = mock(RSSParser)
     when(mock_parser).read_rss_feeds([]).thenReturn([])

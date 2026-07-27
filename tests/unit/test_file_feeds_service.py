@@ -19,11 +19,11 @@ def test_feeds_service_returns_urls(fs: FakeFilesystem):
     service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
 
     # When
-    result = service.get_feeds()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
     # Then
     assert_that(
-        result,
+        feeds_and_exclusions.feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
@@ -38,10 +38,10 @@ def test_feeds_service_handles_empty_file(fs: FakeFilesystem):
     service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
 
     # When
-    result = service.get_feeds()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
     # Then
-    assert_that(result, empty())
+    assert_that(feeds_and_exclusions.feeds, empty())
 
 
 def test_feeds_service_skips_blank_lines(fs: FakeFilesystem):
@@ -51,11 +51,11 @@ def test_feeds_service_skips_blank_lines(fs: FakeFilesystem):
     service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
 
     # When
-    result = service.get_feeds()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
     # Then
     assert_that(
-        result,
+        feeds_and_exclusions.feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
@@ -70,11 +70,11 @@ def test_feeds_service_ignores_commented_lines(fs: FakeFilesystem):
     service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
 
     # When
-    result = service.get_feeds()
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
 
     # Then
     assert_that(
-        result,
+        feeds_and_exclusions.feeds,
         contains_exactly(
             is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
             is_url().with_host("www.theguardian.com").and_path("/world/rss"),
