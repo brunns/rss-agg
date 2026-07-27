@@ -4,9 +4,11 @@ from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from rss_agg import domain
 
 
 class FeedsService(ABC):
     @abstractmethod
-    def get_feeds(self) -> list[domain.FeedUrl]: ...
+    def get_feeds(self) -> Iterable[domain.FeedUrl]: ...

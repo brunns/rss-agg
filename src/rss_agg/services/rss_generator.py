@@ -1,13 +1,16 @@
 import logging
 from datetime import UTC, datetime
 from email.utils import format_datetime, parsedate_to_datetime
-from typing import Annotated
+from typing import TYPE_CHECKING, Annotated
 from xml.etree import ElementTree as ET
 
 from wireup import Inject, injectable
 from yarl import URL  # noqa: TC002
 
 from rss_agg import domain  # noqa: TC001
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +32,7 @@ class RSSGenerator:
         self.feed_link = feed_link
         self.max_items = max_items
 
-    def generate_new_rss_feed(self, items: list[ET.Element], self_url: URL) -> str:
+    def generate_new_rss_feed(self, items: Iterable[ET.Element], self_url: URL) -> str:
         ET.register_namespace("atom", RSSGenerator.ATOM_NS)
 
         root = ET.Element("rss", version="2.0")

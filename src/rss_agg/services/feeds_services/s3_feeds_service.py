@@ -1,4 +1,4 @@
-from typing import Annotated, override
+from typing import TYPE_CHECKING, Annotated, override
 
 from boto3 import Session
 from botocore.client import BaseClient  # noqa: TC002
@@ -6,6 +6,9 @@ from wireup import Inject, injectable
 
 from rss_agg import domain
 from rss_agg.services.feeds_services.base_feeds_service import FeedsService
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 @injectable
@@ -45,7 +48,7 @@ class S3FeedsService(FeedsService):
         self.object_name = object_name
 
     @override
-    def get_feeds(self) -> list[domain.FeedUrl]:
+    def get_feeds(self) -> Iterable[domain.FeedUrl]:
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.object_name)
         content = response["Body"].read().decode()
         return [domain.FeedUrl(self.base_url / path.strip() / "rss") for path in content.splitlines() if path.strip()]

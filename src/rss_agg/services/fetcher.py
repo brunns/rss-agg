@@ -10,7 +10,7 @@ from rss_agg import domain
 from rss_agg.logging_utils import log_duration
 
 if TYPE_CHECKING:
-    from collections.abc import Collection, Mapping
+    from collections.abc import Collection, Iterable, Mapping
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class Fetcher:
         )
         self.retries = retries
 
-    async def fetch_all(self, feed_urls: list[domain.FeedUrl]) -> Collection[domain.RssContent]:
+    async def fetch_all(self, feed_urls: Iterable[domain.FeedUrl]) -> Collection[domain.RssContent]:
         transport = AsyncHTTPTransport(http2=True, retries=self.retries, limits=self.limits)
         async with AsyncClient(
             headers=self.HEADERS, timeout=self.timeout, follow_redirects=True, transport=transport
