@@ -32,10 +32,15 @@ def _generate_rss_xml(
     ET.SubElement(channel, "pubDate").text = "Sun, 6 Sep 2009 16:20:00 +0000"
 
     for i in range(1, count + 1):
-        item = ET.Element("item")
+        item = ET.SubElement(channel, "item")
         ET.SubElement(item, "title").text = f"Test article {i}"
-        ET.SubElement(item, "description").text = f"Test article {i}"
         ET.SubElement(item, "link").text = f"https://example.com/article{i}"
+        ET.SubElement(item, "description").text = f"Test article {i}"
+        for a in range(3):
+            ET.SubElement(item, "author").text = f"Author {a} of article {i}"
+        category = ET.SubElement(item, "category")
+        category.text = f"Category for {i}"
+        category.set("domain", f"https://example.com/article{i}")
         ET.SubElement(item, "guid").text = guid_override or f"guid-{i}"
 
         time_str = time_formatter(i)
@@ -44,12 +49,6 @@ def _generate_rss_xml(
         if include_dc_date:
             dc_date = ET.SubElement(item, f"{{{DC_NS}}}date")
             dc_date.text = f"2009-09-06T{time_str}+00:00"
-
-        cat_elem = ET.SubElement(item, "category")
-        cat_elem.text = f"Category for {i}"
-        cat_elem.set("domain", f"https://example.com/article{i}")
-
-        channel.append(item)
 
     return ET.tostring(rss_root, encoding="unicode")
 
