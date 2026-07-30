@@ -1,5 +1,9 @@
 # profile/andrewrawnsley
+- australia-news/australian-politics
 - football
+- profile/owen-jones
+- profile/simonjenkins
+- thefilter-us
 books
 commentisfree
 education/kings-college-london
