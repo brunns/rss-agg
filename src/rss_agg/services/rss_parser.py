@@ -52,4 +52,10 @@ class RSSParser:
     @staticmethod
     def _is_excluded(item: ET.Element, exclusions: set[ExcludeTag]) -> bool:
         categories = {URL(domain) for cat in item.findall("category") if (domain := cat.get("domain"))}
-        return bool(categories & exclusions)
+        is_excluded = bool(categories & exclusions)
+        if is_excluded:
+            logger.debug(
+                "exclusion",
+                extra={"exclusions": exclusions, "categories": categories, "cause": categories & exclusions},
+            )
+        return is_excluded

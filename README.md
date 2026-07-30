@@ -147,7 +147,7 @@ import this
 Run CLI - outputs RSS to stdout
 
 ```sh
-uv run cli -vv
+uv run cli -vvv
 ```
 
 ### web

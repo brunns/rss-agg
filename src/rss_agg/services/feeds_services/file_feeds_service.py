@@ -1,10 +1,13 @@
 # Copyright 2024-2026 Simon Brunning
+import logging
 from typing import Annotated, override
 
 from wireup import Inject, injectable
 
 from rss_agg import domain
 from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions, FeedsService
+
+logger = logging.getLogger(__name__)
 
 
 @injectable(as_type=FeedsService)
@@ -30,7 +33,9 @@ class FileFeedsService(FeedsService):
                             exclusions.append(domain.FeedUrl(self.base_url / path[1:].strip()))
                         case _:
                             feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
-        return FeedsAndExclusions(feeds, exclusions)
+        feeds_and_exclusions = FeedsAndExclusions(feeds, exclusions)
+        logger.debug("feeds_and_exclusions-items", extra={"feeds": feeds, "exclusions": exclusions})
+        return feeds_and_exclusions
 
 
 FILE_INJECTABLES = [FileFeedsService]
