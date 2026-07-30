@@ -1,6 +1,8 @@
 # profile/andrewrawnsley
 - australia-news/australian-politics
-- football
+- business/australia-economy
+- football/football
+- profile/adrian-chiles
 - profile/owen-jones
 - profile/simonjenkins
 - thefilter-us
