@@ -4,6 +4,7 @@
 - football
 - football/football
 - football/footballpolitics
+- law/law-australia
 - profile/adrian-chiles
 - profile/owen-jones
 - profile/simonjenkins
