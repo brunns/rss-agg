@@ -49,6 +49,7 @@ us-news/us-politics
 us/commentisfree
 world/estonia
 world/feminism
+world/iran
 world/israel
 world/palestinian-territories
 world/sudan
