@@ -87,7 +87,7 @@ def test_s3_feeds_service_ignores_commented_lines():
     )
 
 
-def test_feeds_service_returns_excluded_tags():
+def test_s3_feeds_service_returns_excluded_tags():
     # Given - S3 object content has blank lines between valid entries
     body = mock()
     when(body).read().thenReturn(b"uk\n\nworld\n\n# sausages\n\n- football")
