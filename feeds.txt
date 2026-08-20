@@ -1,6 +1,7 @@
 # profile/andrewrawnsley
 - australia-news/australian-politics
 - business/australia-economy
+- food/australian-food-and-drink
 - football
 - football/football
 - football/footballpolitics
