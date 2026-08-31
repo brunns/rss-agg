@@ -9,7 +9,7 @@ permissions:
 jobs:
 
   test:
-    uses: ./.github/workflows/test-job.yml
+    uses: $/.github/workflows/test-job.yml
 
   deploy:
     runs-on: ubuntu-latest
