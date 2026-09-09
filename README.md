@@ -300,7 +300,7 @@ Environment: WORKFLOW=ci.yml
 git push
 sleep 5
 RUN_ID=$(gh run list --workflow="$WORKFLOW" --limit=1 --json databaseId --jq '.[0].databaseId')
-gh run watch "$RUN_ID" --exit-status --compact
+gh run watch "$RUN_ID" --exit-status
 ```
 
 ### deploy
@@ -315,7 +315,7 @@ Environment: WORKFLOW=cd.yml
 gh workflow run "$WORKFLOW"
 sleep 5
 RUN_ID=$(gh run list --workflow="$WORKFLOW" --limit=1 --json databaseId --jq '.[0].databaseId')
-gh run watch "$RUN_ID" --exit-status --compact
+gh run watch "$RUN_ID" --exit-status
 ```
 
 ### healthcheck
