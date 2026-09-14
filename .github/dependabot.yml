@@ -18,8 +18,11 @@ updates:
     cooldown:
       default-days: 7
     groups:
-      dev-dependencies:
+      dev:
         dependency-type: "development"
+      boto:
+        patterns:
+          - "boto*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
