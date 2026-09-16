@@ -9,9 +9,9 @@ from typing import Any
 import wireup
 from yarl import URL
 
-from rss_agg import domain
-from rss_agg.logging_utils import init_logging
+from rss_agg.domain import domain
 from rss_agg.services import BASE_INJECTABLES, FILE_INJECTABLES, RSSService
+from rss_agg.utils.logging_utils import init_logging
 
 VERSION = "0.1.0"
 

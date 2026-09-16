@@ -5,7 +5,7 @@ from hamcrest import assert_that, contains_exactly, instance_of, same_instance
 from mockito import mock, when
 from yarl import URL
 
-from rss_agg.domain import AwsAccessKey, AwsRegion, AwsSecretAccessKey, BaseUrl, BucketName, ObjectName
+from rss_agg.domain.domain import AwsAccessKey, AwsRegion, AwsSecretAccessKey, BaseUrl, BucketName, ObjectName
 from rss_agg.services.feeds_services.s3_feeds_service import S3FeedsService, boto3_session_factory, s3_client_factory
 
 

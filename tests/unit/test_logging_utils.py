@@ -4,7 +4,7 @@ from io import StringIO
 
 from hamcrest import assert_that, equal_to, greater_than, has_length
 
-from rss_agg.logging_utils import init_logging, log_duration
+from rss_agg.utils.logging_utils import init_logging, log_duration
 
 
 def test_init_logging_debug_level() -> None:

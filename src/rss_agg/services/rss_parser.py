@@ -7,13 +7,13 @@ from defusedxml.ElementTree import fromstring
 from wireup import injectable
 from yarl import URL
 
-from rss_agg.logging_utils import log_duration
+from rss_agg.utils.logging_utils import log_duration
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from xml.etree import ElementTree as ET
 
-    from rss_agg.domain import ExcludeTag
+    from rss_agg.domain.domain import ExcludeTag
     from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
 
 

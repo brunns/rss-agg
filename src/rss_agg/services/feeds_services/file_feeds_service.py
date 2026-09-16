@@ -4,7 +4,7 @@ from typing import Annotated, override
 
 from wireup import Inject, injectable
 
-from rss_agg import domain
+from rss_agg.domain import domain
 from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions, FeedsService
 
 logger = logging.getLogger(__name__)

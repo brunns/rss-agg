@@ -70,8 +70,8 @@ The application is a [Flask](https://flask.palletsprojects.com/) async web app d
 
 Good places to start investigating the code are:
 
-* [web.py](src/rss_agg/web.py), the application entry point.
-* [routes.py](src/rss_agg/routes.py), the Flask route definitions.
+* [web.py](src/rss_agg/core/web/web.py), the application entry point.
+* [routes.py](src/rss_agg/core/web/routes.py), the Flask route definitions.
 
 On each request, [RSSService](src/rss_agg/services/rss_service.py) orchestrates the full pipeline:
 

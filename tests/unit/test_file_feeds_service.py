@@ -6,7 +6,7 @@ from brunns.matchers.url import is_url
 from hamcrest import assert_that, contains_exactly, empty
 from yarl import URL
 
-from rss_agg.domain import BaseUrl, FeedsFile
+from rss_agg.domain.domain import BaseUrl, FeedsFile
 from rss_agg.services.feeds_services import FileFeedsService
 
 if TYPE_CHECKING:

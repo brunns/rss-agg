@@ -5,7 +5,7 @@ from boto3 import Session
 from botocore.client import BaseClient  # noqa: TC002
 from wireup import Inject, injectable
 
-from rss_agg import domain
+from rss_agg.domain import domain
 from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions, FeedsService
 
 

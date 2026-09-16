@@ -8,7 +8,7 @@ from xml.etree import ElementTree as ET
 from wireup import Inject, injectable
 from yarl import URL  # noqa: TC002
 
-from rss_agg import domain  # noqa: TC001
+from rss_agg.domain import domain  # noqa: TC001
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

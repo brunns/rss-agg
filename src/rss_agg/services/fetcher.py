@@ -7,8 +7,8 @@ from httpx2 import AsyncClient, AsyncHTTPTransport, Limits
 from httpx2 import Timeout as HttpxTimeout
 from wireup import Inject, injectable
 
-from rss_agg import domain
-from rss_agg.logging_utils import log_duration
+from rss_agg.domain import domain
+from rss_agg.utils.logging_utils import log_duration
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Iterable, Mapping

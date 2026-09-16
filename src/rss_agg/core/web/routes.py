@@ -6,8 +6,8 @@ from flask import Blueprint, Response, request
 from wireup import Injected  # noqa: TC002
 from yarl import URL
 
-from rss_agg.logging_utils import log_duration
 from rss_agg.services import RSSService  # noqa: TC001
+from rss_agg.utils.logging_utils import log_duration
 
 logger = logging.getLogger(__name__)
 rss_blueprint = Blueprint("rss", __name__)

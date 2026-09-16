@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, NamedTuple
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from rss_agg import domain
+    from rss_agg.domain import domain
 
 
 class FeedsAndExclusions(NamedTuple):

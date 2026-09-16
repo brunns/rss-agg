@@ -8,11 +8,11 @@ import wireup
 from flask import Flask, typing
 from yarl import URL
 
-from rss_agg import domain
-from rss_agg.logging_utils import init_logging
-from rss_agg.routes import rss_blueprint
+from rss_agg.core.web.routes import rss_blueprint
+from rss_agg.domain import domain
 from rss_agg.services import BASE_INJECTABLES
 from rss_agg.services.feeds_services import FILE_INJECTABLES, S3_INJECTABLES
+from rss_agg.utils.logging_utils import init_logging
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

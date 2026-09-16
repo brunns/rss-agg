@@ -9,7 +9,7 @@ from brunns.matchers.werkzeug import is_werkzeug_response as is_response
 from hamcrest import assert_that, has_length
 from mbtest.imposters import Imposter, Predicate, Response, Stub
 
-from rss_agg.flask_app_factory import create_app
+from rss_agg.core.web.flask_app_factory import create_app
 
 if TYPE_CHECKING:
     from collections.abc import Generator

@@ -15,4 +15,4 @@ exec $GUNICORN \
   --access-logfile - \
   --error-logfile - \
   --no-control-socket \
-  rss_agg.web:app
+  rss_agg.core.web.web:app

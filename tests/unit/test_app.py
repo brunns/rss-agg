@@ -9,7 +9,7 @@ from hamcrest import assert_that, equal_to, instance_of
 from mockito import mock
 from mockito.matchers import ANY
 
-from rss_agg.flask_app_factory import create_app
+from rss_agg.core.web.flask_app_factory import create_app
 from rss_agg.services import RSSService
 
 if TYPE_CHECKING:

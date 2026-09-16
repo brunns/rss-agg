@@ -46,7 +46,7 @@ add-bounds = "major"
 exclude-newer = "7 days"
 
 [project.scripts]
-cli = "rss_agg.cli:main"
+cli = "rss_agg.core.cli.cli:main"
 
 [tool.ruff]
 line-length = 120
@@ -71,7 +71,11 @@ min-file-size = 64
 pythonpath = ["."]
 
 [tool.coverage.run]
-omit = ["src/rss_agg/cli.py", "src/rss_agg/web.py", "src/rss_agg/logging_config.py"]
+omit = [
+    "src/rss_agg/core/cli/cli.py",
+    "src/rss_agg/core/web/web.py",
+    "src/rss_agg/utils/logging_config.py"
+]
 
 [tool.pyright]
 include = ["src/"]
@@ -84,3 +88,14 @@ root_package = "rss_agg"
 name = "Acyclic siblings"
 type = "acyclic_siblings"
 ancestors = ["rss_agg"]
+
+[[tool.importlinter.contracts]]
+name = "Layers"
+type = "layers"
+containers = ["rss_agg"]
+layers = [
+     "core",
+     "(services)",
+     "domain | utils",
+]
+exhaustive = true

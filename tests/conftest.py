@@ -4,7 +4,7 @@ from xml.etree import ElementTree as ET
 
 import pytest
 
-from rss_agg.flask_app_factory import create_app
+from rss_agg.core.web.flask_app_factory import create_app
 
 if TYPE_CHECKING:
     from collections.abc import Callable
