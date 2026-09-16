@@ -196,7 +196,7 @@ uv run ruff check . --fix-only
 
 Code quality & security checks
 
-Requires: lint-code, type-checking
+Requires: lint-code, type-checking, lint-imports
 
 RunDeps: async
 
@@ -215,6 +215,14 @@ Type checking
 
 ```sh 
 uv run pyright
+```
+
+### lint-imports
+
+Lint imports/code structure
+
+```sh 
+uv run lint-imports
 ```
 
 ### audit

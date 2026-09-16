@@ -31,6 +31,7 @@ dev = [
     "pytest-httpx2>=1.0",
     "ruff>=0.16.1",
     "scripttest>=3.0",
+    "import-linter>=2.15"
 ]
 
 [build-system]
@@ -75,3 +76,11 @@ omit = ["src/rss_agg/cli.py", "src/rss_agg/web.py", "src/rss_agg/logging_config.
 [tool.pyright]
 include = ["src/"]
 pythonVersion = "3.14"
+
+[tool.importlinter]
+root_package = "rss_agg"
+
+[[tool.importlinter.contracts]]
+name = "Acyclic siblings"
+type = "acyclic_siblings"
+ancestors = ["rss_agg"]
