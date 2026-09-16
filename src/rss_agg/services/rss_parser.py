@@ -13,9 +13,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
     from xml.etree import ElementTree as ET
 
-    from rss_agg.domain.domain import ExcludeTag
-    from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
-
+    from rss_agg.domain import domain
 
 from rss_agg.services import Fetcher  # noqa: TC001
 
@@ -27,7 +25,7 @@ class RSSParser:
     def __init__(self, fetcher: Fetcher) -> None:
         self.fetcher = fetcher
 
-    async def read_rss_feeds(self, feeds_and_exclusions: FeedsAndExclusions) -> Iterable[ET.Element]:
+    async def read_rss_feeds(self, feeds_and_exclusions: domain.FeedsAndExclusions) -> Iterable[ET.Element]:
         exclusions = set(feeds_and_exclusions.exclusions)
         items: dict[str, ET.Element] = OrderedDict()
         responses = await self.fetcher.fetch_all(feeds_and_exclusions.feeds)
@@ -39,7 +37,7 @@ class RSSParser:
         logger.debug("deduped-items", extra={"count": len(items)})
         return list(items.values())
 
-    def _parse_feed_items(self, response: str, exclusions: set[ExcludeTag]) -> Iterable[tuple[str, ET.Element]]:
+    def _parse_feed_items(self, response: str, exclusions: set[domain.ExcludeTag]) -> Iterable[tuple[str, ET.Element]]:
         if not response:
             return
 
@@ -50,7 +48,7 @@ class RSSParser:
                 yield guid, item
 
     @staticmethod
-    def _is_excluded(item: ET.Element, exclusions: set[ExcludeTag]) -> bool:
+    def _is_excluded(item: ET.Element, exclusions: set[domain.ExcludeTag]) -> bool:
         categories = {URL(domain) for cat in item.findall("category") if (domain := cat.get("domain"))}
         is_excluded = bool(categories & exclusions)
         if is_excluded:

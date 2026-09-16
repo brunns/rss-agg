@@ -7,8 +7,8 @@ from hamcrest import assert_that, equal_to
 from mockito import mock
 from yarl import URL
 
+from rss_agg.domain import domain
 from rss_agg.services import FeedsService, RSSGenerator, RSSParser, RSSService
-from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 async def test_rss_service_orchestration(when: Callable[..., Any]):
     # Given
     self_url = URL("https://myfeed.com")
-    feeds_and_exclusions = FeedsAndExclusions(
+    feeds_and_exclusions = domain.FeedsAndExclusions(
         [
             URL("https://www.theguardian.com/uk/rss"),
             URL("https://www.theguardian.com/world/rss"),
@@ -50,7 +50,7 @@ async def test_rss_service_orchestration(when: Callable[..., Any]):
 async def test_rss_service_handles_empty_feeds(when: Callable[..., Any]):
     # Given
     self_url = URL("https://myfeed.com")
-    feeds_and_exclusions = FeedsAndExclusions([], [])
+    feeds_and_exclusions = domain.FeedsAndExclusions([], [])
 
     mock_feeds_service = mock(FeedsService)
     when(mock_feeds_service).get_feeds_and_exclusions().thenReturn(feeds_and_exclusions)

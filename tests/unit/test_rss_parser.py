@@ -8,8 +8,8 @@ from mockito import mock
 from mockito.matchers import ANY
 from yarl import URL
 
+from rss_agg.domain import domain
 from rss_agg.services import Fetcher, RSSParser
-from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -20,7 +20,7 @@ async def test_parses_rss(rss_string: str, when: Callable[..., Any]):
     # Given
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn([rss_string])
-    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [])
+    feeds_and_exclusions = domain.FeedsAndExclusions([URL("https://example.com/")], [])
 
     parser = RSSParser(mock_fetcher)
 
@@ -36,7 +36,7 @@ async def test_deduplicates_on_guid(rss_string_with_duplicate_guids: str, when: 
     # Given
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn([rss_string_with_duplicate_guids])
-    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [])
+    feeds_and_exclusions = domain.FeedsAndExclusions([URL("https://example.com/")], [])
 
     parser = RSSParser(mock_fetcher)
 
@@ -58,7 +58,7 @@ async def test_skips_items_without_guid(when: Callable[..., Any]):
     )
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn([feed_xml])
-    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [])
+    feeds_and_exclusions = domain.FeedsAndExclusions([URL("https://example.com/")], [])
 
     parser = RSSParser(mock_fetcher)
 
@@ -74,7 +74,7 @@ async def test_handles_empty_response(when: Callable[..., Any]):
     # Given - fetcher returns an empty string (e.g. from a feed with no body)
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn([""])
-    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [])
+    feeds_and_exclusions = domain.FeedsAndExclusions([URL("https://example.com/")], [])
 
     parser = RSSParser(mock_fetcher)
 
@@ -90,7 +90,7 @@ async def test_raises_on_invalid_xml(when: Callable[..., Any]):
     # Given - fetcher returns something that isn't XML at all
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn(["not valid xml"])
-    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [])
+    feeds_and_exclusions = domain.FeedsAndExclusions([URL("https://example.com/")], [])
 
     parser = RSSParser(mock_fetcher)
 
@@ -104,7 +104,9 @@ async def test_ignores_items_with_category_matching_excluded(rss_string: str, wh
     # Given
     mock_fetcher = mock(Fetcher)
     when(mock_fetcher).fetch_all(ANY).thenReturn([rss_string])
-    feeds_and_exclusions = FeedsAndExclusions([URL("https://example.com/")], [URL("https://example.com/article2")])
+    feeds_and_exclusions = domain.FeedsAndExclusions(
+        [URL("https://example.com/")], [URL("https://example.com/article2")]
+    )
 
     parser = RSSParser(mock_fetcher)
 

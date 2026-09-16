@@ -1,8 +1,11 @@
 # Copyright 2024-2026 Simon Brunning
 from pathlib import Path
-from typing import Literal, NewType
+from typing import TYPE_CHECKING, Literal, NamedTuple, NewType
 
 from yarl import URL
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 AwsAccessKey = NewType("AwsAccessKey", str)
 AwsRegion = NewType("AwsRegion", str)
@@ -25,3 +28,8 @@ Retries = NewType("Retries", int)
 RssContent = NewType("RssContent", str)
 S3Endpoint = NewType("S3Endpoint", URL)
 Timeout = NewType("Timeout", int)
+
+
+class FeedsAndExclusions(NamedTuple):
+    feeds: Iterable[FeedUrl]
+    exclusions: Iterable[ExcludeTag]

@@ -6,7 +6,7 @@ from botocore.client import BaseClient  # noqa: TC002
 from wireup import Inject, injectable
 
 from rss_agg.domain import domain
-from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions, FeedsService
+from rss_agg.services.feeds_services.base_feeds_service import FeedsService
 
 
 @injectable
@@ -46,7 +46,7 @@ class S3FeedsService(FeedsService):
         self.object_name = object_name
 
     @override
-    def get_feeds_and_exclusions(self) -> FeedsAndExclusions:
+    def get_feeds_and_exclusions(self) -> domain.FeedsAndExclusions:
         feeds, exclusions = [], []
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.object_name)
         content = response["Body"].read().decode()
@@ -60,7 +60,7 @@ class S3FeedsService(FeedsService):
                     case _:
                         feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
 
-        return FeedsAndExclusions(feeds, exclusions)
+        return domain.FeedsAndExclusions(feeds, exclusions)
 
 
 S3_INJECTABLES = [boto3_session_factory, s3_client_factory, S3FeedsService]

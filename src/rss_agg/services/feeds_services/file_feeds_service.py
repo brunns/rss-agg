@@ -5,7 +5,7 @@ from typing import Annotated, override
 from wireup import Inject, injectable
 
 from rss_agg.domain import domain
-from rss_agg.services.feeds_services.base_feeds_service import FeedsAndExclusions, FeedsService
+from rss_agg.services.feeds_services.base_feeds_service import FeedsService
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class FileFeedsService(FeedsService):
         self.base_url = base_url
 
     @override
-    def get_feeds_and_exclusions(self) -> FeedsAndExclusions:
+    def get_feeds_and_exclusions(self) -> domain.FeedsAndExclusions:
         feeds, exclusions = [], []
         with self.feeds_file.open() as f:
             for path in f:
@@ -33,7 +33,7 @@ class FileFeedsService(FeedsService):
                             exclusions.append(domain.FeedUrl(self.base_url / path[1:].strip()))
                         case _:
                             feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
-        feeds_and_exclusions = FeedsAndExclusions(feeds, exclusions)
+        feeds_and_exclusions = domain.FeedsAndExclusions(feeds, exclusions)
         logger.debug("feeds_and_exclusions-items", extra={"feeds": feeds, "exclusions": exclusions})
         return feeds_and_exclusions
 
