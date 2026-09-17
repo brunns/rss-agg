@@ -222,7 +222,7 @@ uv run pyright
 Lint imports/code structure
 
 ```sh 
-uv run lint-imports
+uv run lint-imports --no-logo --show-timings
 ```
 
 ### audit
