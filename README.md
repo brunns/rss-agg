@@ -85,7 +85,7 @@ On each request, [RSSService](src/rss_agg/services/rss_service.py) orchestrates 
     * Feeds may be excluded (by prefixing with a `-`). Items on these feeds will be excluded, even if they are also on 
       an included feed.
 * [Fetcher](src/rss_agg/services/fetcher.py) retrieves all feeds concurrently using 
-  [httpx](https://www.python-httpx.org/) with HTTP/2 and connection pooling.
+  [httpx2](https://github.com/pydantic/httpx2) with HTTP/2 and connection pooling.
 * [RSSParser](src/rss_agg/services/rss_parser.py) parses the responses with 
   [defusedxml](https://github.com/tiran/defusedxml) and de-duplicates items by GUID.
 * [RSSGenerator](src/rss_agg/services/rss_generator.py) sorts by date, applies a configurable item limit, and emits a 
