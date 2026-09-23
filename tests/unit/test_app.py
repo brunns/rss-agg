@@ -28,7 +28,7 @@ def test_get_data_route_logic(client: FlaskClient, container: AsyncContainer, wh
     when(mock_service).read_and_generate_rss(self_url=ANY).thenReturn(expected_rss)
 
     # When
-    with container.override.injectable(RSSService, new=mock_service):
+    with container.override({RSSService: mock_service}):
         response = client.get("/")
 
     # Then
