@@ -31,7 +31,8 @@ dev = [
     "pytest-httpx2>=1.0",
     "ruff>=0.16.1",
     "scripttest>=3.0",
-    "import-linter>=2.15"
+    "import-linter>=2.15",
+    "pytest-randomly>=5.0.0",
 ]
 
 [build-system]
