@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
         with:
           enable-cache: true
       - uses: joerdav/setup-xc@eaed99ccd40453d5ab8fe50e7dfd033e6f302e98 # v1
@@ -37,6 +37,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: "secret-scanning"
-        uses: trufflesecurity/trufflehog@363923b901c911a9164f50b6c423f47c15372b1c # v3.97.4
+        uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
         with:
           extra_args: --results=verified,unknown --exclude-detectors lob
