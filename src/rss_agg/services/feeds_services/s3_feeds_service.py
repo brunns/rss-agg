@@ -51,14 +51,12 @@ class S3FeedsService(FeedsService):
         response = self.s3_client.get_object(Bucket=self.bucket_name, Key=self.object_name)
         content = response["Body"].read().decode()
         for path in content.splitlines():
-            if path.strip():
-                match path[0]:
-                    case "#":
-                        continue
+            if stripped := path.partition("#")[0].strip():
+                match stripped[0]:
                     case "-":
-                        exclusions.append(domain.FeedUrl(self.base_url / path[1:].strip()))
+                        exclusions.append(domain.FeedUrl(self.base_url / stripped[1:].strip()))
                     case _:
-                        feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
+                        feeds.append(domain.FeedUrl(self.base_url / stripped / "rss"))
 
         return domain.FeedsAndExclusions(feeds, exclusions)
 

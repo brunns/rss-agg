@@ -64,10 +64,48 @@ def test_feeds_service_skips_blank_lines(fs: FakeFilesystem):
     )
 
 
+def test_feeds_service_strips_whitespace(fs: FakeFilesystem):
+    # Given
+    feeds_file = Path("/tmp/feeds.txt")
+    fs.create_file(str(feeds_file), contents="uk \n world \n")
+    service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
+
+    # When
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
+
+    # Then
+    assert_that(
+        feeds_and_exclusions.feeds,
+        contains_exactly(
+            is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
+            is_url().with_host("www.theguardian.com").and_path("/world/rss"),
+        ),
+    )
+
+
 def test_feeds_service_ignores_commented_lines(fs: FakeFilesystem):
     # Given
     feeds_file = Path("/tmp/empty.txt")
     fs.create_file(str(feeds_file), contents="uk\n\nworld\n\n#sausages\n\n# chips")
+    service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
+
+    # When
+    feeds_and_exclusions = service.get_feeds_and_exclusions()
+
+    # Then
+    assert_that(
+        feeds_and_exclusions.feeds,
+        contains_exactly(
+            is_url().with_host("www.theguardian.com").and_path("/uk/rss"),
+            is_url().with_host("www.theguardian.com").and_path("/world/rss"),
+        ),
+    )
+
+
+def test_feeds_service_ignores_comments_at_end(fs: FakeFilesystem):
+    # Given
+    feeds_file = Path("/tmp/empty.txt")
+    fs.create_file(str(feeds_file), contents="uk # a comment\n\nworld# another comment\n\n")
     service = FileFeedsService(FeedsFile(feeds_file), BaseUrl(URL("https://www.theguardian.com")))
 
     # When

@@ -25,14 +25,12 @@ class FileFeedsService(FeedsService):
         feeds, exclusions = [], []
         with self.feeds_file.open() as f:
             for path in f:
-                if path.strip():
-                    match path[0]:
-                        case "#":
-                            continue
+                if stripped := path.partition("#")[0].strip():
+                    match stripped[0]:
                         case "-":
-                            exclusions.append(domain.FeedUrl(self.base_url / path[1:].strip()))
+                            exclusions.append(domain.FeedUrl(self.base_url / stripped[1:].strip()))
                         case _:
-                            feeds.append(domain.FeedUrl(self.base_url / path.strip() / "rss"))
+                            feeds.append(domain.FeedUrl(self.base_url / stripped / "rss"))
         feeds_and_exclusions = domain.FeedsAndExclusions(feeds, exclusions)
         logger.debug("feeds_and_exclusions-items", extra={"feeds": feeds, "exclusions": exclusions})
         return feeds_and_exclusions
