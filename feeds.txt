@@ -1,4 +1,5 @@
-# profile/andrewrawnsley
+# profile/andrewrawnsley # No longer with the grauniad
+# profile/marinahyde # She's gone. :cry:
 - australia-news/australian-education
 - australia-news/australian-politics
 - business/australia-economy
@@ -27,7 +28,6 @@ profile/gracedent
 profile/johnnaughton
 profile/jonathanfreedland
 profile/lucymangan
-profile/marinahyde
 science
 society/alcohol
 society/benefits
