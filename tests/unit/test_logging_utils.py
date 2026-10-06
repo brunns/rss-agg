@@ -16,7 +16,7 @@ def test_init_logging_debug_level() -> None:
     init_logging(verbosity=3, handler=handler, silence_packages=())
 
     # Then logging is configured at DEBUG level
-    assert_that(logging.getLogger().level, logging.DEBUG)
+    assert_that(logging.getLogger().level, equal_to(logging.DEBUG))
 
 
 def test_log_duration_with_log_start() -> None:
