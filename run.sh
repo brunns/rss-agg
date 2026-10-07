@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PYTHONOPTIMIZE=2
+
 # Use uv run if available, otherwise use python3 directly
 if command -v uv >/dev/null 2>&1; then
   GUNICORN="uv run gunicorn"
