@@ -297,7 +297,7 @@ def matcher_docstring(name: str, module: str, search_path: list[str]) -> str | N
     for path in package_sources(module, search_path):
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"))
-        except (SyntaxError, UnicodeDecodeError):
+        except SyntaxError, UnicodeDecodeError:
             continue
         for node in tree.body:
             if isinstance(node, ast.FunctionDef) and node.name == name:
