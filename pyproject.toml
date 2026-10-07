@@ -61,6 +61,7 @@ ignore = ["COM812", "ISC001", "D", "PGH003", "FBT001", "FBT002"]
 "tests/*" = ["S101", "S105", "S106", "S108", "PLR2004", "E501", "ANN", "INP", "S314"]
 "lambda_function.py" = ["ANN401"]
 "tests/integration/test_cli.py" = ["PTH109"]
+"scripts/*" = ["INP", "E501"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 5
