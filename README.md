@@ -385,6 +385,17 @@ Environment: OBJECT=feeds.txt
 aws s3 cp "$FEEDS_FILE" s3://"$BUCKET"/"$OBJECT"
 ```
 
+### assertion-docs
+
+Document test assertions
+
+Requires: test
+
+```sh
+uv run scripts/assertion_docs.py
+open build/assertion_docs.html
+```
+
 ## Initial setup steps
 
 Use [brunns-python-template](https://github.com/brunns/brunns-python-template) or similar.
