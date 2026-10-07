@@ -2,6 +2,7 @@
 import logging
 from io import StringIO
 
+import pytest
 from hamcrest import assert_that, equal_to, greater_than, has_length
 
 from rss_agg.utils.logging_utils import init_logging, log_duration
