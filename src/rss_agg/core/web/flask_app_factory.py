@@ -46,7 +46,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
 
 def build_config() -> Mapping[str, Any]:
     return {
-        "feeds_service": os.environ.get("FEEDS_SERVICE", "FileFeedsService"),
+        "feeds_service": domain.FeedsServiceName(os.environ.get("FEEDS_SERVICE", "FileFeedsService")),
         "feeds_file": domain.FeedsFile(Path(os.environ.get("FEEDS_FILE", "feeds.txt"))),
         "base_url": domain.BaseUrl(URL("https://www.theguardian.com")),
         "max_items": domain.MaxItems(int(os.environ.get("MAX_ITEMS", "50"))),

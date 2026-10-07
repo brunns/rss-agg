@@ -1,6 +1,6 @@
 # Copyright 2024-2026 Simon Brunning
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal, NamedTuple, NewType
+from typing import TYPE_CHECKING, NamedTuple, NewType
 
 from yarl import URL
 
@@ -18,7 +18,7 @@ FeedTitle = NewType("FeedTitle", str)
 FeedUrl = NewType("FeedUrl", URL)
 ExcludeTag = NewType("ExcludeTag", URL)
 FeedsFile = NewType("FeedsFile", Path)
-FeedsServiceName = Literal["FileFeedsService", "S3FeedsService"]
+FeedsServiceName = NewType("FeedsServiceName", str)
 KeepaliveExpiry = NewType("KeepaliveExpiry", int)
 MaxConnections = NewType("MaxConnections", int)
 MaxItems = NewType("MaxItems", int)
