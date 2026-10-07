@@ -1,24 +1,25 @@
 # Copyright 2024-2026 Simon Brunning
 import logging
+import warnings
+from contextlib import contextmanager
 from io import StringIO
 
-import pytest
 from hamcrest import assert_that, equal_to, greater_than, has_length
 
 from rss_agg.utils.logging_utils import init_logging, log_duration
 
 
-@pytest.mark.xfail(reason="TODO: Ben fixed the assertion, but the test fails now. Sigh.")
 def test_init_logging_debug_level() -> None:
     """Test init_logging with DEBUG verbosity sets debug format and filters warnings."""
     # Given
-    handler = logging.StreamHandler(stream=StringIO())
+    with restore_logging():
+        handler = logging.StreamHandler(stream=StringIO())
 
-    # When
-    init_logging(verbosity=3, handler=handler, silence_packages=())
+        # When
+        init_logging(verbosity=3, handler=handler, silence_packages=())
 
-    # Then logging is configured at DEBUG level
-    assert_that(logging.getLogger().level, equal_to(logging.DEBUG))
+        # Then
+        assert_that(logging.getLogger().level, equal_to(logging.DEBUG))
 
 
 def test_log_duration_with_log_start() -> None:
@@ -56,19 +57,45 @@ def test_log_duration_default_no_start_log() -> None:
 def test_init_logging_verbosity_filtering() -> None:
     """Test that verbosity beyond the maximum is filtered to DEBUG level."""
     # Given
+    with restore_logging():
+        root = logging.getLogger()
+        saved_handlers = root.handlers[:]
+        saved_level = root.level
+        root.handlers.clear()  # Ensure basicConfig is not a no-op
+
+        # When
+        try:
+            handler = logging.StreamHandler(stream=StringIO())
+            init_logging(verbosity=99, handler=handler, silence_packages=())
+
+            # Then
+            assert_that(root.level, equal_to(logging.DEBUG))
+        finally:
+            root.handlers.clear()
+            root.handlers.extend(saved_handlers)
+            root.setLevel(saved_level)
+
+
+@contextmanager
+def restore_logging():
     root = logging.getLogger()
-    saved_handlers = root.handlers[:]
-    saved_level = root.level
-    root.handlers.clear()  # Ensure basicConfig is not a no-op
+    original_level = root.level
+    original_handlers = root.handlers[:]
+    child_levels = {
+        name: logger.level
+        for name, logger in logging.Logger.manager.loggerDict.items()
+        if isinstance(logger, logging.Logger)
+    }
 
-    # When
     try:
-        handler = logging.StreamHandler(stream=StringIO())
-        init_logging(verbosity=99, handler=handler, silence_packages=())
-
-        # Then
-        assert_that(root.level, equal_to(logging.DEBUG))
+        with warnings.catch_warnings():
+            yield
     finally:
+        root.setLevel(original_level)
+        for h in root.handlers:
+            if h not in original_handlers:
+                h.close()
         root.handlers.clear()
-        root.handlers.extend(saved_handlers)
-        root.setLevel(saved_level)
+        root.handlers.extend(original_handlers)
+        for name, level in child_levels.items():
+            logging.getLogger(name).setLevel(level)

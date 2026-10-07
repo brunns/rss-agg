@@ -33,7 +33,7 @@ def init_logging(
         warnings.filterwarnings("ignore")
         msg_format = "%(asctime)s %(levelname)-8s %(name)s %(module)s.py:%(funcName)s():%(lineno)d %(message)s"
     handler.setFormatter(JsonFormatter(msg_format))
-    logging.basicConfig(level=level, format=msg_format, handlers=[handler])
+    logging.basicConfig(level=level, format=msg_format, handlers=[handler], force=True)
 
     for package in silence_packages:
         logging.getLogger(package).setLevel(max([level, logging.WARNING]))
