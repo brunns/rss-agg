@@ -25,6 +25,7 @@ updates:
         patterns:
           - "boto*"
 
+  # CI/CD - Github Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
