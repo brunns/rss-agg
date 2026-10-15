@@ -259,8 +259,8 @@ Environment: IMAGE_NAME=deployment_package.zip
 
 ```sh
 rm -rf build/ terraform/"$IMAGE_NAME"
-uv export --no-dev --python 3.14 --format requirements-txt --output-file requirements.txt
-uv pip install -r requirements.txt --target build --python 3.14
+uv export --no-dev --no-emit-project --prune boto3 --python 3.14 --format requirements-txt --output-file requirements.txt
+uv pip install -r requirements.txt --no-deps --target build --python 3.14
 cp -r src/rss_agg build/
 cp run.sh build/
 cp feeds.txt build/
