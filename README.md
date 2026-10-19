@@ -294,6 +294,20 @@ Directory: ./terraform
 terraform plan
 ```
 
+### graph
+
+Show infrastructure graph
+
+Requires: terraform-init
+
+Directory: ./terraform
+
+```sh
+mkdir -p ../build
+terraform graph -type=plan | dot -Tpng -o ../build/infra.png
+open ../build/infra.png
+```
+
 ### push
 
 Push to origin, and monitor CI workflow 
