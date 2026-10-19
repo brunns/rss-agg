@@ -17,6 +17,8 @@ from rss_agg.utils.logging_utils import init_logging
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+DEBUG = 3
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,7 +34,7 @@ def create_app(config_override: Mapping[str, Any] | None = None) -> tuple[Flask,
     app = Flask(__name__)
     app.register_blueprint(rss_blueprint)
 
-    config = {**build_config(), **config_override}
+    config = {**build_config(), **config_override, "debug": bool(verbosity >= DEBUG)}
     injectables = build_injectables(config)
     container = wireup.create_async_container(config=config, injectables=injectables)
 

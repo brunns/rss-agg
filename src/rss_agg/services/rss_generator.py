@@ -27,11 +27,14 @@ class RSSGenerator:
         feed_description: Annotated[domain.FeedDescription, Inject(config="feed_description")],
         feed_link: Annotated[domain.FeedLink, Inject(config="feed_link")],
         max_items: Annotated[domain.MaxItems, Inject(config="max_items")],
+        *,
+        debug: Annotated[bool, Inject(config="debug")],
     ) -> None:
         self.feed_title = feed_title
         self.feed_description = feed_description
         self.feed_link = feed_link
         self.max_items = max_items
+        self.debug = debug
 
     def generate_new_rss_feed(self, items: Iterable[ET.Element], self_url: URL) -> str:
         ET.register_namespace("atom", RSSGenerator.ATOM_NS)
@@ -62,7 +65,8 @@ class RSSGenerator:
             channel.append(item)
 
         ET.indent(root, space=" ")
-        return ET.tostring(root, encoding="unicode")
+        as_string = ET.tostring(root, encoding="unicode")
+        return as_string if self.debug else ET.canonicalize(as_string, strip_text=True)
 
     @staticmethod
     def _get_date(item: ET.Element) -> datetime:

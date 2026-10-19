@@ -14,6 +14,7 @@ from rss_agg.services import BASE_INJECTABLES, FILE_INJECTABLES, RSSService
 from rss_agg.utils.logging_utils import init_logging
 
 VERSION = "0.1.0"
+DEBUG = 3
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,9 @@ def main() -> None:
     logger.debug("args", extra=vars(args))
 
     config = build_config(args)
-    container = wireup.create_sync_container(injectables=list(BASE_INJECTABLES) + FILE_INJECTABLES, config={**config})
+    container = wireup.create_sync_container(
+        injectables=list(BASE_INJECTABLES) + FILE_INJECTABLES, config={**config, "debug": args.verbosity >= DEBUG}
+    )
 
     rss_service = container.get(RSSService)
 

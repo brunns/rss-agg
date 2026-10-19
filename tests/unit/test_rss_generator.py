@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from xml.etree import ElementTree as ET
 
 from brunns.matchers.rss import is_rss_entry, is_rss_feed
-from hamcrest import assert_that, contains_inanyorder, has_entry, has_length, not_
+from hamcrest import assert_that, contains_inanyorder, contains_string, has_entry, has_length, not_
 from yarl import URL
 
 from rss_agg.services import RSSGenerator
@@ -11,7 +11,7 @@ from rss_agg.services import RSSGenerator
 
 def test_builds_rss_structure():
     # Given
-    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"), 1)
+    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"), 1, debug=False)
     item = ET.Element("item")
     ET.SubElement(item, "pubDate").text = "Sun, 6 Sep 2009 15:20:00 +0000"
     ET.SubElement(item, "title").text = "Test article"
@@ -37,7 +37,7 @@ def test_builds_rss_structure():
 def test_handles_missing_or_invalid_pubdate():
     """Covers line 87 (latest_date == datetime.min) and the fallback in _get_date."""
     # Given
-    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1)
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1, debug=False)
     item = ET.Element("item")
     ET.SubElement(item, "title").text = "No Date Article"
     # No pubDate element added at all
@@ -54,7 +54,7 @@ def test_handles_missing_or_invalid_pubdate():
 def test_removes_dc_date_elements():
     """Covers line 102 (item.remove(dc_date))."""
     # Given
-    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1)
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1, debug=False)
     item = ET.Element("item")
     ET.SubElement(item, "title").text = "DC Date Article"
     ET.SubElement(item, "pubDate").text = "Mon, 01 Jan 2024 00:00:00 +0000"
@@ -76,7 +76,7 @@ def test_removes_dc_date_elements():
 def test_sorts_items_by_date_descending():
     """Tests the sorting logic (line 82) to ensure coverage of various dates."""
     # Given
-    generator = RSSGenerator("some title", "description", URL("https://example.com"), 10)
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 10, debug=False)
 
     old_item = ET.Element("item")
     ET.SubElement(old_item, "title").text = "Old"
@@ -96,7 +96,7 @@ def test_sorts_items_by_date_descending():
 
 def tests_limits_to_max_items():
     # Given
-    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"), 2)
+    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"), 2, debug=False)
     item = ET.Element("item")
     ET.SubElement(item, "pubDate").text = "Sun, 6 Sep 2009 15:20:00 +0000"
     ET.SubElement(item, "title").text = "Test article"
@@ -114,7 +114,7 @@ def tests_limits_to_max_items():
 
 def test_handles_invalid_pubdate_string():
     # Given - item with a pubDate that cannot be parsed
-    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1)
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 1, debug=False)
     item = ET.Element("item")
     ET.SubElement(item, "title").text = "Bad Date Article"
     ET.SubElement(item, "pubDate").text = "not-a-date"
@@ -131,10 +131,40 @@ def test_handles_invalid_pubdate_string():
 
 def test_generates_empty_feed():
     # Given
-    generator = RSSGenerator("some title", "description", URL("https://example.com"), 10)
+    generator = RSSGenerator("some title", "description", URL("https://example.com"), 10, debug=False)
 
     # When
     actual = generator.generate_new_rss_feed([], URL("https://example.com"))
 
     # Then
     assert_that(actual, is_rss_feed().with_title("some title").with_entries(has_length(0)))
+
+
+def test_whitespace_suppressed_without_debug():
+    # Given
+    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"), 1, debug=True)
+    item = ET.Element("item")
+    ET.SubElement(item, "pubDate").text = "Sun, 6 Sep 2009 15:20:00 +0000"
+    ET.SubElement(item, "title").text = "Test article"
+    ET.SubElement(item, "link").text = "https://example.com/foo"
+
+    # When
+    actual = generator.generate_new_rss_feed([item], URL("https://example.com"))
+
+    # Then
+    assert_that(actual, contains_string("  "))
+
+
+def test_whitespace_not_suppressed_with_debug():
+    # Given
+    generator = RSSGenerator("some title", "some description", URL("https://some.example.com"), 1, debug=False)
+    item = ET.Element("item")
+    ET.SubElement(item, "pubDate").text = "Sun, 6 Sep 2009 15:20:00 +0000"
+    ET.SubElement(item, "title").text = "Test article"
+    ET.SubElement(item, "link").text = "https://example.com/foo"
+
+    # When
+    actual = generator.generate_new_rss_feed([item], URL("https://example.com"))
+
+    # Then
+    assert_that(actual, not_(contains_string("  ")))
