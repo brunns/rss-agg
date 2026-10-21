@@ -45,6 +45,7 @@ packages = ["src/rss_agg"]
 [tool.uv]
 add-bounds = "major"
 exclude-newer = "7 days"
+exclude-newer-package = { certifi = false }
 
 [project.scripts]
 cli = "rss_agg.core.cli.cli:main"
