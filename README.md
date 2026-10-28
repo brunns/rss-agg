@@ -187,34 +187,16 @@ uv run pytest tests/integration/ -s --durations=10
 
 Format code
 
-Requires: fix-python, fix-terraform
-
-### fix-python
-
-Format & fix Python code
-
 ```sh 
 uv run ruff format .
 uv run ruff check . --fix-only
-```
-
-### fix-terraform
-
-Format terraform code
-
-Requires: terraform-init
-
-Directory: ./terraform
-
-```sh
-terraform fmt -recursive
 ```
 
 ### lint
 
 Code quality & security checks
 
-Requires: lint-code, type-checking, lint-imports, lint-terraform
+Requires: lint-code, type-checking, lint-imports
 
 RunDeps: async
 
@@ -241,19 +223,6 @@ Lint imports/code structure
 
 ```sh 
 uv run lint-imports --no-logo --show-timings
-```
-
-### lint-terraform
-
-Lint terraform code
-
-Requires: terraform-init
-
-Directory: ./terraform
-
-```sh
-terraform validate
-terraform fmt -check -recursive
 ```
 
 ### audit
@@ -304,8 +273,6 @@ cd ..
 ### terraform-init
 
 Initialise terraform
-
-run: Once
 
 Directory: ./terraform
 
