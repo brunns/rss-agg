@@ -26,22 +26,22 @@ module "s3_feeds" {
 module "lambda" {
   source = "./modules/lambda"
 
-  name_suffix                = random_string.suffix.result
-  memory_size                = var.memory_size
-  lambda_timeout             = var.lambda_timeout
-  feeds_service              = var.feeds_service
-  feeds_file                 = var.feeds_file
-  feeds_bucket_arn           = module.s3_feeds.bucket_arn
-  feeds_bucket_name          = var.feeds_bucket_name
-  feeds_object_name          = var.feeds_object_name
-  max_items                  = var.max_items
-  max_connections            = var.max_connections
-  max_keepalive_connections  = var.max_keepalive_connections
-  keepalive_expiry           = var.keepalive_expiry
-  retries                    = var.retries
-  fetch_timeout              = var.fetch_timeout
-  deployment_zip             = "deployment_package.zip"
-  log_level                  = var.log_level
+  name_suffix               = random_string.suffix.result
+  memory_size               = var.memory_size
+  lambda_timeout            = var.lambda_timeout
+  feeds_service             = var.feeds_service
+  feeds_file                = var.feeds_file
+  feeds_bucket_arn          = module.s3_feeds.bucket_arn
+  feeds_bucket_name         = var.feeds_bucket_name
+  feeds_object_name         = var.feeds_object_name
+  max_items                 = var.max_items
+  max_connections           = var.max_connections
+  max_keepalive_connections = var.max_keepalive_connections
+  keepalive_expiry          = var.keepalive_expiry
+  retries                   = var.retries
+  fetch_timeout             = var.fetch_timeout
+  deployment_zip            = "deployment_package.zip"
+  log_level                 = var.log_level
 }
 
 module "api_gateway" {
