@@ -202,6 +202,8 @@ uv run ruff check . --fix-only
 
 Format terraform code
 
+Requires: terraform-init
+
 Directory: ./terraform
 
 ```sh
@@ -244,6 +246,8 @@ uv run lint-imports --no-logo --show-timings
 ### lint-terraform
 
 Lint terraform code
+
+Requires: terraform-init
 
 Directory: ./terraform
 
