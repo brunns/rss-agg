@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
 resource "aws_iam_role" "lambda_exec" {
   name = "rss_aggregator_lambda_exec_role_${var.name_suffix}"
 

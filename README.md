@@ -57,6 +57,7 @@ On a Mac, you can install most of these with [homebrew](https://brew.sh/) and [a
 
 ```sh
 brew install uv xc gh 1password-cli awscli asdf colima libxml2 fzf gum # And follow any additional setup instructions brew gives you
+brew install --cask terraform-linters/tap/tflint
 asdf plugin add terraform
 asdf plugin add nodejs
 asdf install
@@ -245,11 +246,30 @@ uv run lint-imports --no-logo --show-timings
 
 Lint terraform code
 
+Requires: check-terraform-formatting, tflint
+
+RunDeps: async
+
+### check-terraform-formatting
+
+Check terraform formatting
+
 Directory: ./terraform
 
 ```sh
 # terraform validate  #$ needs terrafornm init?
 terraform fmt -check -recursive
+```
+
+### tflint
+
+Lint terraform code with tflint
+
+Directory: ./terraform
+
+```sh
+tflint --init
+tflint --recursive
 ```
 
 ### audit

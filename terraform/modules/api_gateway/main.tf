@@ -1,3 +1,14 @@
+terraform {
+  required_version = ">= 1.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
 resource "aws_api_gateway_rest_api" "this" {
   name        = "Flask API"
   description = "API Gateway for Flask application"

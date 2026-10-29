@@ -3,12 +3,26 @@ provider "aws" {
 }
 
 terraform {
+  required_version = ">= 1.0"
+
   backend "s3" {
     bucket       = "brunns-rss-agg-terraform-state"
     key          = "rss-agg"
     region       = "eu-west-2"
     encrypt      = true
     use_lockfile = true
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
 }
 
@@ -47,8 +61,7 @@ module "lambda" {
 module "api_gateway" {
   source = "./modules/api_gateway"
 
-  name_suffix         = random_string.suffix.result
-  lambda_function_arn = module.lambda.lambda_arn
-  lambda_invoke_arn   = module.lambda.lambda_invoke_arn
-  lambda_name         = module.lambda.lambda_name
+  name_suffix       = random_string.suffix.result
+  lambda_invoke_arn = module.lambda.lambda_invoke_arn
+  lambda_name       = module.lambda.lambda_name
 }
