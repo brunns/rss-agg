@@ -190,6 +190,8 @@ Format code
 
 Requires: fix-python, fix-terraform
 
+RunDeps: async
+
 ### fix-python
 
 Format & fix Python code
