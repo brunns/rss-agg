@@ -5,8 +5,8 @@ resource "aws_iam_role" "lambda_exec" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
         Principal = { Service = "lambda.amazonaws.com" }
       }
     ]
@@ -39,16 +39,16 @@ resource "aws_iam_role_policy_attachment" "s3_feeds_read" {
 }
 
 resource "aws_lambda_function" "this" {
-  description   = "Aggregate, de-duplicate and republish RSS feeds"
-  filename      = var.deployment_zip
-  function_name = "rss_aggregator"
-  role          = aws_iam_role.lambda_exec.arn
-  handler       = "run.sh"
-  runtime       = "python3.14"
-  architectures = ["arm64"]
-  memory_size   = var.memory_size
-  timeout       = var.lambda_timeout
-  publish       = true
+  description      = "Aggregate, de-duplicate and republish RSS feeds"
+  filename         = var.deployment_zip
+  function_name    = "rss_aggregator"
+  role             = aws_iam_role.lambda_exec.arn
+  handler          = "run.sh"
+  runtime          = "python3.14"
+  architectures    = ["arm64"]
+  memory_size      = var.memory_size
+  timeout          = var.lambda_timeout
+  publish          = true
   source_code_hash = filebase64sha256(var.deployment_zip)
 
   layers = [

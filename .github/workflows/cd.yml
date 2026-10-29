@@ -41,8 +41,7 @@ jobs:
           docker compose version
 
       - run: xc build
-      - run: terraform init
-        working-directory: ./terraform
+      - run: xc terraform-init
       - name: "Run terraform apply"
         id: apply
         run: |
