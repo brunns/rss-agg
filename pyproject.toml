@@ -11,7 +11,7 @@ dependencies = [
     "gunicorn>=26.0,<26.3",
     "httpx2[http2]~=2.9",
     "python-json-logger>=4.1",
-    "wireup~=2.12.0",
+    "wireup>=2.12,<2.14",
     "yarl>=1.24.5",
 ]
 
