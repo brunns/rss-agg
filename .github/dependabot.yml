@@ -66,3 +66,17 @@ updates:
       all:
         patterns:
           - "*"
+
+  # Terraform
+  - package-ecosystem: "terraform"
+    directory: "/terraform"
+    schedule:
+      interval: "monthly"
+    labels:
+      - "terraform"
+    commit-message:
+      prefix: "chore (terraform)"
+    assignees:
+      - "brunns"
+    cooldown:
+      default-days: 7
