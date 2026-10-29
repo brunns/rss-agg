@@ -21,9 +21,15 @@ updates:
     groups:
       development:
         dependency-type: "development"
+      httpx2:
+        patterns:
+          - "httpx2"
+          - "httpcore2"
       boto:
         patterns:
           - "boto*"
+          - "jmespath"
+          - "s3transfer"
 
   # CI/CD - Github Actions
   - package-ecosystem: "github-actions"
