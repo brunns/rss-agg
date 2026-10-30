@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sleep 5
+RUN_ID=$(gh run list --workflow="$1" --limit=1 --json databaseId --jq '.[0].databaseId')
+gh run watch "$RUN_ID" --exit-status
