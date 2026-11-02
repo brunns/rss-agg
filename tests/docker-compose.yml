@@ -6,7 +6,7 @@ services:
       - "2525:2525"
       - "4545:4545"
   garage:
-    image: "dxflrs/garage:v2.4.1"
+    image: "dxflrs/garage:v2.5.0"
     ports:
       - "3900:3900"
       - "3903:3903"
