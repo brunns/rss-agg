@@ -1,33 +1,25 @@
-# profile/andrewrawnsley # No longer with the grauniad
-# profile/marinahyde # She's gone. :cry:
-- australia-news/australian-education
-- australia-news/australian-politics
-- business/australia-economy
-- food/australian-food-and-drink
-- football
-- football/football
-- football/footballpolitics
-- law/law-australia
-- profile/adrian-chiles
-- profile/owen-jones
-- profile/simonjenkins
-- thefilter-us
+artanddesign
 books
+business/marksspencer
 commentisfree
 education/kings-college-london
 environment/climate-crisis
 food
+# food/breakfast
+# food/cheese
 games
 help/insideguardian
 music
 news/series/pass-notes
 politics
 profile/alexispetridis
+# profile/andrewrawnsley # No longer with the grauniad
 profile/georgemonbiot
 profile/gracedent
 profile/johnnaughton
 profile/jonathanfreedland
 profile/lucymangan
+# profile/marinahyde # She's gone. :cry:
 science
 society/alcohol
 society/benefits
@@ -56,3 +48,15 @@ world/israel
 world/palestinian-territories
 world/sudan
 world/ukraine
+- australia-news/australian-education
+- australia-news/australian-politics
+- business/australia-economy
+- food/australian-food-and-drink
+- football
+- football/football
+- football/footballpolitics
+- law/law-australia
+- profile/adrian-chiles
+- profile/owen-jones
+- profile/simonjenkins
+- thefilter-us
